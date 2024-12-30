@@ -7,6 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
+@if(isset($error))
+        <div id="error-alert" 
+             class="fixed top-4 z-50 bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 opacity-100">
+            <span>{{ $error }}</span>
+        </div>
+        <script>
+            setTimeout(() => {
+                const alert = document.getElementById('error-alert');
+                if (alert) {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 150); // Remove after fade-out
+                }
+            }, 3000);
+        </script>
+    @endif
 <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1 max-h-screen-xl">
     <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
         <div class="mt-12 flex flex-col items-center">
@@ -17,7 +32,7 @@
                 Login to Dashboard
             </h1>
             <div class="w-full flex-1 mt-8">
-                <form class="mx-auto max-w-xs" method="post" action="/">
+                <form class="mx-auto max-w-xs" method="post" action="/login">
                     @csrf
                     <div class="relative mt-6">
                         <input type="text" name="user" id="user" placeholder="Username" class="peer mt-2 w-full bg-transparent border-b-2  border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autocomplete="NA" />

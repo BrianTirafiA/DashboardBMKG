@@ -10,7 +10,7 @@
 <div class="w-full max-w-md space-y-6">
 
     <div class="flex justify-center mb-6">
-        <img src="{{ asset('assets/logo_bmkg.png') }}" alt="Logo BMKG" class="h-40">
+        <img src="{{ asset('assets/logo-bmkg.png') }}" alt="Logo BMKG" class="h-40">
     </div>
 
     <div class="w-full max-w-md p-8 space-y-4 bg-white rounded-lg shadow-lg">

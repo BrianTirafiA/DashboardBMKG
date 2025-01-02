@@ -17,11 +17,6 @@ class userServiceTest extends TestCase
         $this->userService = $this->app->make(UserService::class);
     }
 
-    public function testSample()
-    {
-        self::assertTrue(true);
-    }
-
     public function testLogin()
     {
         self::assertTrue($this->userService->login("test","test123"));

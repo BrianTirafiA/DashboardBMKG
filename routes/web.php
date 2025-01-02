@@ -12,3 +12,11 @@ Route::controller(\App\Http\Controllers\UserController::class)->group(function()
     Route::post('/logout', 'doLogOut')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 });
 Route::view('/home', 'home')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+
+Route::get('/itasset', function () {
+    return view('itAsset.dashboard');
+});
+
+Route::get('/qcdashboard', function () {
+    return view('home');
+});

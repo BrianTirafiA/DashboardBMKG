@@ -9,9 +9,15 @@ class PinController extends Controller
 {
     public function showMap()
     {
-        $stations = Station::getUniqueStations();
+        // Retrieve all necessary data for the map
+        $stations = station::getUniqueStations(); // Retrieve stations or any data you need
 
-        // Pass data to the Blade view
-        return view('home', compact('stations'));
+        // Optionally, fetch all flags data as well
+        // $allFlagsData  = station::AllFlags(); // Call your method for all flags
+
+        //return view('home', compact('stations', 'allFlagsData'));
+
+    return view('home', compact('stations'));
     }
+
 }

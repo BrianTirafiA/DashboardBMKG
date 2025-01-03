@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PinController;
 
 Route::get('/', [HomeController::class, 'home']);
 
@@ -16,6 +17,9 @@ Route::view('/home', 'home')->middleware([\App\Http\Middleware\OnlyMemberMiddlew
 Route::get('/itasset', function () {
     return view('itAsset.dashboard');
 });
+
+Route::get('/qcdashboard', [PinController::class, 'showMap']);
+Route::get('/home', [PinController::class, 'showMap']);
 
 Route::get('/qcdashboard', function () {
     return view('home');

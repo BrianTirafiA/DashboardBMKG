@@ -17,13 +17,6 @@
             </div>
           </div>
         </div>
-
-        <button id="mobile-menu-button" class="md:hidden" aria-expanded="false">
-        <!-- Open Icon -->
-          <svg class="h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
         
         <div class="hidden md:block">
           <div class="ml-4 flex items-center md:ml-6">
@@ -75,7 +68,7 @@
 
     </script>
 
-        <div class="-mr-2 flex md:hidden">
+<div class="-mr-2 flex md:hidden">
           <!-- Mobile menu button -->
           <button type="button" id="mobile-menu-button" class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-controls="mobile-menu" aria-expanded="false">
             <span class="absolute -inset-0.5"></span>
@@ -90,16 +83,15 @@
             </svg>
           </button>
         </div>
-      <!-- </div>
-    </div> -->
-
+      </div>
+    </div>
 
     <!-- Mobile menu, show/hide based on menu state. -->
     <div id="mobile-menu" class="md:hidden hidden overflow-hidden transition-all duration-300 ease-in-out transform opacity-0 scale-95 origin-top">
       <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
         <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">QC Dashboard</a>
-        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">It Asset</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
         <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
         <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
         <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Reports</a>

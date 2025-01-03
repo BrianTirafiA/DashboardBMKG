@@ -42,6 +42,30 @@
   </header>
   <main>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="text-center mt-4">
+        <label for="flagVal" class="font-semibold text-lg">Select Flag Type: </label>
+        <select id="flagVal" class="px-4 py-2 border rounded">
+            <option value="average_flag">Average Flag</option>
+            <option value="rr_flag">RR Flag</option>
+            <option value="pp_air_flag">PP Air Flag</option>
+            <option value="rh_avg_flag">RH Avg Flag</option>
+            <option value="sr_avg_flag">SR Avg Flag</option>
+            <option value="sr_max_flag">SR Max Flag</option>
+            <option value="nr_flag">NR Flag</option>
+            <option value="wd_avg_flag">WD Avg Flag</option>
+            <option value="ws_avg_flag">WS Avg Flag</option>
+            <option value="ws_max_flag">WS Max Flag</option>
+            <option value="wl_flag">WL Flag</option>
+            <option value="tt_air_avg_flag">TT Air Avg Flag</option>
+            <option value="tt_air_min_flag">TT Air Min Flag</option>
+            <option value="tt_air_max_flag">TT Air Max Flag</option>
+            <option value="tt_sea_flag">TT Sea Flag</option>
+            <option value="ws_50cm_flag">WS 50cm Flag</option>
+            <option value="wl_pan_flag">WL Pan Flag</option>
+            <option value="ev_pan_flag">EV Pan Flag</option>
+            <option value="tt_pan_flag">TT Pan Flag</option>
+        </select>
+        </div>
         <div id="map"></div>
 
         <script>
@@ -115,30 +139,51 @@
             `);
             }
 
-            // Iterate over the stations and create markers on the map
-            stations.forEach((station) => {
-                createCircleMarker(station.latt_station, station.long_station, station.average_flag, station);
+            function addMarkers() {
+        const selectedFlag = document.getElementById('flagVal').value;
+        map.eachLayer((layer) => {
+            if (layer instanceof L.CircleMarker) {
+                map.removeLayer(layer);
+            }
+        });
+        stations.forEach((station) => {
+            createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
+        });
+    }
 
-            });
+    // Add initial markers
+    addMarkers();
+
+    // Update markers when dropdown changes
+    document.getElementById('flagVal').addEventListener('change', addMarkers);
         });
       </script>
 
 <div class="chart-container" style="max-width: 400px; margin: 0 auto; border: 2px solid #000;">
-<div class="text-center mt-4">
-    <label for="flagType" class="font-semibold text-lg">Select Flag Type: </label>
-    <select id="flagType" class="px-4 py-2 border rounded">
-        <option value="average_flag">Average Flag</option>
-        <option value="rr_flag">RR Flag</option>
-        <option value="pp_air_flag">PP Air Flag</option>
-        <option value="rh_avg_flag">RH Avg Flag</option>
-        <option value="sr_avg_flag">SR Avg Flag</option>
-        <option value="sr_max_flag">SR Max Flag</option>
-        <option value="nr_flag">NR Flag</option>
-        <option value="wd_avg_flag">WD Avg Flag</option>
-        <option value="ws_avg_flag">WS Avg Flag</option>
-        <option value="ws_max_flag">WS Max Flag</option>
-    </select>
-</div>
+    <div class="text-center mt-4">
+        <label for="flagType" class="font-semibold text-lg">Select Flag Type: </label>
+        <select id="flagType" class="px-4 py-2 border rounded">
+            <option value="average_flag">Average Flag</option>
+            <option value="rr_flag">RR Flag</option>
+            <option value="pp_air_flag">PP Air Flag</option>
+            <option value="rh_avg_flag">RH Avg Flag</option>
+            <option value="sr_avg_flag">SR Avg Flag</option>
+            <option value="sr_max_flag">SR Max Flag</option>
+            <option value="nr_flag">NR Flag</option>
+            <option value="wd_avg_flag">WD Avg Flag</option>
+            <option value="ws_avg_flag">WS Avg Flag</option>
+            <option value="ws_max_flag">WS Max Flag</option>
+            <option value="wl_flag">WL Flag</option>
+            <option value="tt_air_avg_flag">TT Air Avg Flag</option>
+            <option value="tt_air_min_flag">TT Air Min Flag</option>
+            <option value="tt_air_max_flag">TT Air Max Flag</option>
+            <option value="tt_sea_flag">TT Sea Flag</option>
+            <option value="ws_50cm_flag">WS 50cm Flag</option>
+            <option value="wl_pan_flag">WL Pan Flag</option>
+            <option value="ev_pan_flag">EV Pan Flag</option>
+            <option value="tt_pan_flag">TT Pan Flag</option>
+        </select>
+    </div>
     <canvas id="flagChart"></canvas>
 </div>
 

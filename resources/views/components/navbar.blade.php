@@ -20,9 +20,9 @@
 
         <button id="mobile-menu-button" class="md:hidden" aria-expanded="false">
         <!-- Open Icon -->
-        <svg class="h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+          <svg class="h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
         </button>
         
         <div class="hidden md:block">
@@ -36,6 +36,9 @@
                   <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                 </button>
               </div>
+              <form id="logout-form" method="post" action="/logout" style="display: none;"> 
+                @csrf
+                </form>
               <div id="profile-dropdown-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden">
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
@@ -44,8 +47,52 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      <!-- </div>
+    </div> -->
+
+    <script>
+          function toggleProfileMenu() {
+            const menu = document.getElementById('profile-dropdown-menu');
+            const isHidden = menu.classList.contains('hidden');
+
+            if (isHidden) {
+              menu.classList.remove('hidden');
+              setTimeout(() => {
+              menu.classList.remove('opacity-0', 'scale-95');
+              menu.classList.add('opacity-100', 'scale-100');
+              }, 10); // Small timeout for smooth transition
+            } else {
+              menu.classList.add('opacity-0', 'scale-95');
+              menu.classList.remove('opacity-100', 'scale-100');
+              setTimeout(() => {
+                menu.classList.add('hidden');
+              }, 300); // Delay until animation is complete
+            }
+
+            const expanded = isHidden ? 'true' : 'false';
+            document.getElementById('user-menu-button').setAttribute('aria-expanded', expanded);
+          }
+
+    </script>
+
+        <div class="-mr-2 flex md:hidden">
+          <!-- Mobile menu button -->
+          <button type="button" id="mobile-menu-button" class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Open main menu</span>
+            <!-- Menu open: "hidden", Menu closed: "block" -->
+            <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            <!-- Menu open: "block", Menu closed: "hidden" -->
+            <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      <!-- </div>
+    </div> -->
+
 
     <!-- Mobile menu, show/hide based on menu state. -->
     <div id="mobile-menu" class="md:hidden hidden overflow-hidden transition-all duration-300 ease-in-out transform opacity-0 scale-95 origin-top">

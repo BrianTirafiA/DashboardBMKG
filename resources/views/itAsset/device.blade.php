@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Asset: Dashboard</title>
+    <title>IT Asset: Device</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -12,7 +12,7 @@
     <x-navbar :menu-items="[
         ['label' => 'QC Dashboard', 'link' => '/qcdashboard', 'active' => false],
         ['label' => 'It Asset', 'link' => '/itasset', 'active' => true],
-        ['label' => 'Lending Items', 'link' => '/lendingitems', 'active' => false],
+        ['label' => 'Projects', 'link' => '#', 'active' => false],
         ['label' => 'Calendar', 'link' => '#', 'active' => false],
         ['label' => 'Reports', 'link' => '#', 'active' => false],
     ]" />
@@ -23,8 +23,8 @@
   </header>
 
   <x-sidebar-asset :menu-items="[
-        ['label' => 'Dashboard', 'link' => '/itasset/dashboard', 'active' => true],
-        ['label' => 'Device', 'link' => '/itasset/device', 'active' => false],
+        ['label' => 'Dashboard', 'link' => '/itasset/dashboard', 'active' => false],
+        ['label' => 'Device', 'link' => '/itasset/device', 'active' => true],
         ['label' => 'Rack', 'link' => '/itasset/rack', 'active' => false],
         ['label' => 'Power', 'link' => '/itasset/power', 'active' => false],
         ['label' => 'Maintenance', 'link' => '/itasset/maintenance', 'active' => false],

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Asset: Dashboard</title>
+    <title>IT Asset: Power</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -23,10 +23,10 @@
   </header>
 
   <x-sidebar-asset :menu-items="[
-        ['label' => 'Dashboard', 'link' => '/itasset/dashboard', 'active' => true],
+        ['label' => 'Dashboard', 'link' => '/itasset/dashboard', 'active' => false],
         ['label' => 'Device', 'link' => '/itasset/device', 'active' => false],
         ['label' => 'Rack', 'link' => '/itasset/rack', 'active' => false],
-        ['label' => 'Power', 'link' => '/itasset/power', 'active' => false],
+        ['label' => 'Power', 'link' => '/itasset/power', 'active' => true],
         ['label' => 'Maintenance', 'link' => '/itasset/maintenance', 'active' => false],
         ['label' => 'Report', 'link' => '/itasset/report', 'active' => false],
         ['label' => 'Log', 'link' => '/itasset/log', 'active' => false],

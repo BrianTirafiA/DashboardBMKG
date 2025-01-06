@@ -47,6 +47,7 @@
         <div>
             <label for="flagVal" class="font-semibold text-lg">Select Flag Type: </label>
             <select id="flagVal" class="px-4 py-2 border rounded">
+                <option value="All">All Flag</option>
                 <option value="average_flag">Average Flag</option>
                 <option value="rr_flag">RR Flag</option>
                 <option value="pp_air_flag">PP Air Flag</option>
@@ -194,9 +195,25 @@
                 return matchesType && matchesProvince;
             });
 
+        //     if (selectedFlag === "All") {
+        //     const flagsToInclude = [
+        //         "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
+        //         "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
+        //         "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
+        //         "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
+        //     ];
+
+        //     filteredStations.forEach(station => {
+        //         flagsToInclude.forEach(flag => {
+        //             createCircleMarker(station.latt_station, station.long_station, station[flag], station);
+        //         });
+        //     });
+        // } else {
+            // When a specific flag is selected, display only that flag
             filteredStations.forEach(station => {
                 createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
             });
+        // }
         }
 
         addMarkers();
@@ -208,12 +225,123 @@
 </script>
 
 
+<div class="flex justify-center items-start space-x-6 mt-6">
+    <!-- First Chart Container (Taller Chart) -->
+    <div class="chart-container" style="width: 600px; height: 400px;">
+        <canvas id="flagTypeChart"></canvas>
+    </div>
 
-<div class="chart-container" style="max-width: 400px; margin: 0 auto; border: 2px solid #000;">
-    <canvas id="flagChart"></canvas>
+    <!-- Second Chart Container (Shorter Chart) -->
+    <div class="chart-container" style="width: 400px; height: 300px;">
+        <canvas id="flagChart"></canvas>
+    </div>
 </div>
 
 <!-- Dropdown for selecting flag type -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stations = @json($stations);
+
+        let chartInstance = null;
+
+        function updateChart() {
+            const selectedFlag = document.getElementById('flagVal').value;
+            const selectedType = document.getElementById('TypeVal').value;
+            const selectedProvince = document.getElementById('provinceVal').value;
+
+            const filteredStations = stations.filter((station) => {
+                const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+                const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+                return matchesType && matchesProvince;
+            });
+
+            // Group data by machine type and calculate percentages
+            const groupedData = {};
+            filteredStations.forEach((station) => {
+                const flagValue = station[selectedFlag];
+                if (!groupedData[station.tipe_station]) {
+                    groupedData[station.tipe_station] = Array(10).fill(0);
+                }
+                if (flagValue >= 0 && flagValue <= 9) {
+                    groupedData[station.tipe_station][flagValue]++;
+                }
+            });
+
+            // Calculate percentages for each value (0-9) per machine type
+            const labels = Object.keys(groupedData);
+            const datasets = [];
+            const colors = ['#0d4a70', '#228b3b', '#40ad5a', '#9ccb86', '#eeb479', '#e9e29c', '#ffc61e', '#8f003b', '#9A194E', '#ff1f5b'];
+
+            for (let i = 0; i < 10; i++) {
+                const data = labels.map((label) => {
+                    const totalForType = groupedData[label].reduce((sum, count) => sum + count, 0);
+                    const percentage = totalForType > 0 ? (groupedData[label][i] / totalForType) * 100 : 0;
+                    return percentage;
+                });
+                datasets.push({
+                    label: `Value ${i}`,
+                    data,
+                    backgroundColor: colors[i],
+                });
+            }
+
+            // Destroy existing chart if it exists
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            // Create a new chart
+            const ctx = document.getElementById('flagTypeChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets,
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw.toFixed(2)}%`;
+                                },
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            max: 100, // Ensure the Y-axis max is 100%
+                            ticks: {
+                                callback: function (value) {
+                                    return `${value}%`;
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+        }
+
+        // Event listeners for dropdown changes
+        document.getElementById('flagVal').addEventListener('change', updateChart);
+        document.getElementById('TypeVal').addEventListener('change', updateChart);
+        document.getElementById('provinceVal').addEventListener('change', updateChart);
+
+        // Initial chart rendering
+        updateChart();
+    });
+</script>
+
 
 
 <script>

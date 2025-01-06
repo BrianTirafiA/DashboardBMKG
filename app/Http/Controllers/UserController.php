@@ -37,7 +37,7 @@ class UserController extends Controller
 
         if($this->userService->login($user, $password)){
             $request->session()->put("user", $user);
-            return redirect ("/home");
+            return redirect ("/qcdashboard");
         }
 
         return response()->view("login", [

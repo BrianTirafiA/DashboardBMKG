@@ -30,7 +30,7 @@ class UserControllerTest extends TestCase
         $this->withSession([
             "user" => "test"            
         ])->get('/login')
-            ->assertRedirect("/home");
+            ->assertRedirect("/qcdashboard");
     }
 
     public function testLoginSuccess()
@@ -38,7 +38,7 @@ class UserControllerTest extends TestCase
         $this->post('/login', [
          "user" => "test",
          "password" => "test123"
-        ])->assertRedirect("/home")
+        ])->assertRedirect("/qcdashboard")
         ->assertSessionHas("user", "test");
     }
 
@@ -49,7 +49,7 @@ class UserControllerTest extends TestCase
         ])->post('/login', [
             "user" => "test",
             "password" => "test123"
-           ])->assertRedirect("/home");
+           ])->assertRedirect("/qcdashboard");
     }
 
     public function testLoginValidateError()

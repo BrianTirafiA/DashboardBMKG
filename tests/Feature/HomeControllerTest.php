@@ -20,6 +20,6 @@ class HomeControllerTest extends TestCase
         $this->withSession([
             "user" => "test"
         ])->get('/')
-            ->assertRedirect("/home");
+            ->assertRedirect("/qcdashboard");
     }
 }

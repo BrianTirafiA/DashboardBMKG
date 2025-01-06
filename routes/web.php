@@ -12,15 +12,10 @@ Route::controller(\App\Http\Controllers\UserController::class)->group(function()
     Route::post('/login', 'doLogin')->middleware([\App\Http\Middleware\OnlyGuestMiddleware::class]);
     Route::post('/logout', 'doLogOut')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 });
-Route::view('/home', 'home')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+Route::view('/qcdashboard', 'home')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 
 Route::get('/itasset', function () {
     return view('itAsset.dashboard');
 });
 
 Route::get('/qcdashboard', [PinController::class, 'showMap']);
-Route::get('/home', [PinController::class, 'showMap']);
-
-Route::get('/qcdashboard', function () {
-    return view('home');
-});

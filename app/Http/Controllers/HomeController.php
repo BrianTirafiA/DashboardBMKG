@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function home(Request $request): Redirectresponse{
         if($request->session()->exists("user")){
-            return redirect("/home");
+            return redirect("/qcdashboard");
         } else {
             return redirect("/login");
         }

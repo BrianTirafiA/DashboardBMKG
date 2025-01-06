@@ -12,7 +12,7 @@
     <x-navbar :menu-items="[
         ['label' => 'QC Dashboard', 'link' => '/qcdashboard', 'active' => false],
         ['label' => 'It Asset', 'link' => '/itasset', 'active' => true],
-        ['label' => 'Projects', 'link' => '#', 'active' => false],
+        ['label' => 'Lending Items', 'link' => '/lendingitems', 'active' => false],
         ['label' => 'Calendar', 'link' => '#', 'active' => false],
         ['label' => 'Reports', 'link' => '#', 'active' => false],
     ]" />

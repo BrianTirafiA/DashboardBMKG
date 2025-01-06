@@ -34,4 +34,8 @@ Route::get('/lendingitems', function () {
     return view('lending-asset.dashboard-lending');
 });
 
+Route::get('/user', function () {
+    return view('lending-asset.user');
+});
+
 Route::get('/qcdashboard', [PinController::class, 'showMap']);

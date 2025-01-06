@@ -18,4 +18,8 @@ Route::get('/itasset', function () {
     return view('itAsset.dashboard');
 });
 
+Route::get('/lendingitems', function () {
+    return view('lending-asset.dashboard-lending');
+});
+
 Route::get('/qcdashboard', [PinController::class, 'showMap']);

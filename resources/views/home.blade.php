@@ -68,6 +68,7 @@
                 <option value="tt_pan_flag">TT Pan Flag</option>
             </select>
         </div>
+
         <!-- Machine Type Dropdown -->
         <div>
             <label for="TypeVal" class="font-semibold text-lg">Select Machine Type: </label>
@@ -82,13 +83,54 @@
                 <option value="soil">SOIL</option>
             </select>
         </div>
+
+        <!-- Province Filter Dropdown -->
+        <div>
+            <label for="provinceVal" class="font-semibold text-lg">Select Province: </label>
+            <select id="provinceVal" class="px-4 py-2 border rounded">
+                <option value="All">All Provinces</option>
+                <option value="Bali">Bali</option>
+                <option value="Banten">Banten</option>
+                <option value="Bengkulu">Bengkulu</option>
+                <option value="DI Yogyakarta">DI Yogyakarta</option>
+                <option value="DKI Jakarta">DKI Jakart</option>
+                <option value="Gorontalo">Gorontalo</option>
+                <option value="Jambi">Jambi</option>
+                <option value="Jawa Barat">Jawa Barat</option>
+                <option value="Jawa Tengah">Jawa Tengah</option>
+                <option value="Jawa Timur">Jawa Timur</option>
+                <option value="Kalimantan Barat">Kalimantan Barat</option>
+                <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                <option value="Kalimantan Timur">Kalimantan Timur</option>
+                <option value="Kalimantan Utara">Kalimantan Utara</option>
+                <option value="Kepulauan Bangka Belitung">Kepulauan Bangka Belitung</option>
+                <option value="Kepulauan Riau">Kepulauan Riau</option>
+                <option value="Lampung">Lampung</option>
+                <option value="Maluku">Maluku</option>
+                <option value="Maluku Utara">Maluku Utara</option>
+                <option value="Nanggroe Aceh Darusalam">Nanggroe Aceh Darusalam</option>
+                <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                <option value="Papua">Papua</option>
+                <option value="Papua Barat">Papua Barat</option>
+                <option value="Riau">Riau</option>
+                <option value="Sulawesi Barat">Sulawesi Barat</option>
+                <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                <option value="Sulawesi Utara">Sulawesi Utara</option>
+                <option value="Sumatera Barat">Sumatera Barat</option>
+                <option value="Sumatera Selatan">Sumatera Selatan</option>
+                <option value="Sumatera Utara">Sumatera Utara</option>
+            </select>
+        </div>
     </div>
     <div id="map" class="mt-6"></div>
 </div>
 
-
 <script>
-    // Get the station data passed from the controller
+    // Get the station data and province list from the controller
     const stations = @json($stations);
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -104,90 +146,67 @@
         ];
         map.setMaxBounds(bounds);
 
-        // Set zoom limits
-        map.setMinZoom(5); // Minimum zoom level
-        map.setMaxZoom(15); // Maximum zoom level
+        map.setMinZoom(5);
+        map.setMaxZoom(15);
 
-        // Function to get color based on value (0-9)
         function getColor(value) {
             const colors = [
-                '#0d4a70', // mostly valid 0
-                '#228b3b', '#40ad5a', '#9ccb86', // mostly One flag 1,2,3
-                '#eeb479', '#e9e29c', '#ffc61e', // mostly Double flag 4,5,6
-                '#8f003b', // mostly Triple flag 7
-                '#9A194E', // 8
-                '#ff1f5b', // mostly Missing 9
+                '#0d4a70', '#228b3b', '#40ad5a', '#9ccb86',
+                '#eeb479', '#e9e29c', '#ffc61e',
+                '#8f003b', '#9A194E', '#ff1f5b',
             ];
             return colors[value];
         }
 
-        // Function to create a circle marker
         function createCircleMarker(lat, lon, value, station) {
             L.circleMarker([lat, lon], {
-                radius: 10, // Size of the circle
-                fillColor: getColor(value), // Color based on value
-                color: getColor(value), // Border color
-                weight: 1, // Border width
-                opacity: 1, // Border opacity
-                fillOpacity: 0.6, // Fill opacity
+                radius: 10,
+                fillColor: getColor(value),
+                color: getColor(value),
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6,
             })
                 .addTo(map)
                 .bindPopup(`
                     <strong>Station Name:</strong> ${station.name_station} <br>
-                <strong>Station Type:</strong> ${station.tipe_station} <br>
-                <strong>rr_flag:</strong> ${station.rr_flag} <br>
-                <strong>pp_air_flag:</strong> ${station.pp_air_flag} <br>
-                <strong>rh_avg_flag:</strong> ${station.rh_avg_flag} <br>
-                <strong>sr_avg_flag:</strong> ${station.sr_avg_flag} <br>
-                <strong>sr_max_flag:</strong> ${station.sr_max_flag} <br>
-                <strong>nr_flag:</strong> ${station.nr_flag} <br>
-                <strong>wd_avg_flag:</strong> ${station.wd_avg_flag} <br>
-                <strong>ws_avg_flag:</strong> ${station.ws_avg_flag} <br>
-                <strong>ws_max_flag:</strong> ${station.ws_max_flag} <br>
-                <strong>wl_flag:</strong> ${station.wl_flag} <br>
-                <strong>tt_air_avg_flag:</strong> ${station.tt_air_avg_flag} <br>
-                <strong>tt_air_min_flag:</strong> ${station.tt_air_min_flag} <br>
-                <strong>tt_air_max_flag:</strong> ${station.tt_air_max_flag} <br>
-                <strong>tt_sea_flag:</strong> ${station.tt_sea_flag} <br>
-                <strong>ws_50cm_flag:</strong> ${station.ws_50cm_flag} <br>
-                <strong>wl_pan_flag:</strong> ${station.wl_pan_flag} <br>
-                <strong>ev_pan_flag:</strong> ${station.ev_pan_flag} <br>
-                <strong>tt_pan_flag:</strong> ${station.tt_pan_flag} <br>
-                <strong>Average Flag Value:</strong> ${station.average_flag}
+                    <strong>Province:</strong> ${station.nama_propinsi} <br>
+                    <strong>Station Type:</strong> ${station.tipe_station} <br>
+                    <strong>rr_flag:</strong> ${station.rr_flag} <br>
+                    <strong>Average Flag Value:</strong> ${station.average_flag}
                 `);
         }
 
-        // Function to filter stations based on selected flag and machine type
         function addMarkers() {
             const selectedFlag = document.getElementById('flagVal').value;
             const selectedType = document.getElementById('TypeVal').value;
+            const selectedProvince = document.getElementById('provinceVal').value;
 
-            // Remove existing markers
             map.eachLayer((layer) => {
                 if (layer instanceof L.CircleMarker) {
                     map.removeLayer(layer);
                 }
             });
 
-            // Filter stations based on the selected type
-            const filteredStations = selectedType === 'All'
-                ? stations
-                : stations.filter(station => station.tipe_station === selectedType);
+            const filteredStations = stations.filter(station => {
+                const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+                const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+                return matchesType && matchesProvince;
+            });
 
-            // Add markers for filtered stations
-            filteredStations.forEach((station) => {
+            filteredStations.forEach(station => {
                 createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
             });
         }
 
-        // Add initial markers
         addMarkers();
 
-        // Update markers when dropdowns change
         document.getElementById('flagVal').addEventListener('change', addMarkers);
         document.getElementById('TypeVal').addEventListener('change', addMarkers);
+        document.getElementById('provinceVal').addEventListener('change', addMarkers);
     });
 </script>
+
 
 
 <div class="chart-container" style="max-width: 400px; margin: 0 auto; border: 2px solid #000;">

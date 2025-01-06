@@ -93,7 +93,7 @@
                 <option value="Banten">Banten</option>
                 <option value="Bengkulu">Bengkulu</option>
                 <option value="DI Yogyakarta">DI Yogyakarta</option>
-                <option value="DKI Jakarta">DKI Jakart</option>
+                <option value="DKI Jakarta">DKI Jakarta</option>
                 <option value="Gorontalo">Gorontalo</option>
                 <option value="Jambi">Jambi</option>
                 <option value="Jawa Barat">Jawa Barat</option>
@@ -210,30 +210,6 @@
 
 
 <div class="chart-container" style="max-width: 400px; margin: 0 auto; border: 2px solid #000;">
-    <div class="text-center mt-4">
-        <label for="flagType" class="font-semibold text-lg">Select Flag Type: </label>
-        <select id="flagType" class="px-4 py-2 border rounded">
-            <option value="average_flag">Average Flag</option>
-            <option value="rr_flag">RR Flag</option>
-            <option value="pp_air_flag">PP Air Flag</option>
-            <option value="rh_avg_flag">RH Avg Flag</option>
-            <option value="sr_avg_flag">SR Avg Flag</option>
-            <option value="sr_max_flag">SR Max Flag</option>
-            <option value="nr_flag">NR Flag</option>
-            <option value="wd_avg_flag">WD Avg Flag</option>
-            <option value="ws_avg_flag">WS Avg Flag</option>
-            <option value="ws_max_flag">WS Max Flag</option>
-            <option value="wl_flag">WL Flag</option>
-            <option value="tt_air_avg_flag">TT Air Avg Flag</option>
-            <option value="tt_air_min_flag">TT Air Min Flag</option>
-            <option value="tt_air_max_flag">TT Air Max Flag</option>
-            <option value="tt_sea_flag">TT Sea Flag</option>
-            <option value="ws_50cm_flag">WS 50cm Flag</option>
-            <option value="wl_pan_flag">WL Pan Flag</option>
-            <option value="ev_pan_flag">EV Pan Flag</option>
-            <option value="tt_pan_flag">TT Pan Flag</option>
-        </select>
-    </div>
     <canvas id="flagChart"></canvas>
 </div>
 
@@ -242,84 +218,118 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Get the station data
-        const stations = @json($stations);
+    // Get the station data
+    const stations = @json($stations);
 
-        let chartInstance = null; // Variable to store chart instance
+    let chartInstance = null; // Variable to store chart instance
 
-        // Function to update chart based on selected flag type
-        function updateChart(flagType) {
-            // Step 1: Gather flag data
-            const flagCounts = Array(10).fill(0); // Array to store counts for values 0-9
+    // Function to update the chart
+    function updateChart() {
+        // Get filter values
+        const selectedFlag = document.getElementById('flagVal').value;
+        const selectedType = document.getElementById('TypeVal').value;
+        const selectedProvince = document.getElementById('provinceVal').value;
 
-            stations.forEach((station) => {
-                const flagValue = station[flagType]; // Use selected flag type
-                if (flagValue >= 0 && flagValue <= 9) {
-                    flagCounts[flagValue]++;
-                }
-            });
+        // Step 1: Filter stations based on selected criteria
+        const filteredStations = stations.filter((station) => {
+            const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+            const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+            return matchesType && matchesProvince;
+        });
 
-            // Step 2: Calculate percentages
-            const totalFlags = flagCounts.reduce((a, b) => a + b, 0);
-            const flagPercentages = flagCounts.map((count) => ((count / totalFlags) * 100).toFixed(2));
+        // Step 2: Gather flag data from filtered stations
+        const flagCounts = Array(10).fill(0);
 
-            // If chart instance already exists, destroy it to avoid duplicate charts
-            if (chartInstance) {
-                chartInstance.destroy();
+        filteredStations.forEach((station) => {
+            const flagValue = station[selectedFlag];
+            if (flagValue >= 0 && flagValue <= 9) {
+                flagCounts[flagValue]++;
             }
+        });
 
-            // Step 3: Create the chart
-            const ctx = document.getElementById('flagChart').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'pie', // Change to 'bar' for a bar chart
-                data: {
-                    labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-                    datasets: [{
-                        label: `Flag Distribution (${flagType})`,
-                        data: flagPercentages,
-                        backgroundColor: [
-                            '#0d4a70', '#228b3b', '#40ad5a', '#9ccb86',
-                            '#eeb479', '#e9e29c', '#ffc61e', '#8f003b',
-                            '#000000', '#ff1f5b'
-                        ],
-                    }],
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.raw;
-                                    return `${value}%`;
-                                }
-                            }
-                        }
-                    },
+        // Step 3: Calculate total and percentages
+        const totalFlags = flagCounts.reduce((a, b) => a + b, 0);
+        const flagPercentages = flagCounts.map((count) =>
+            totalFlags > 0 ? ((count / totalFlags) * 100).toFixed(2) : 0
+        );
 
-                    layout: {
-                        padding: {
-                            top: 10,
-                            right: 10,
-                            bottom: 10,
-                            left: 10
-                        }
-                    },
-                },
-            });
+        // If chart instance already exists, destroy it
+        if (chartInstance) {
+            chartInstance.destroy();
         }
 
-        // Initial chart load with 'average_flag'
-        updateChart('average_flag');
+        // Step 4: Create or update the chart
+        const ctx = document.getElementById('flagChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+                datasets: [{
+                    label: `Flag Distribution (${selectedFlag})`,
+                    data: flagPercentages, // Use the calculated percentages
+                    backgroundColor: [
+                        '#0d4a70', '#228b3b', '#40ad5a', '#9ccb86',
+                        '#eeb479', '#e9e29c', '#ffc61e', '#8f003b',
+                        '#000000', '#ff1f5b'
+                    ],
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right', // Set legend position
+                        labels: {
+                            usePointStyle: true, // Use points in the legend
+                            generateLabels: (chart) => {
+                                const data = chart.data;
+                                return data.labels.map((label, i) => {
+                                    const value = data.datasets[0].data[i];
+                                    const meta = chart.getDatasetMeta(0);
+                                    const isHidden = meta.data[i].hidden || false;
+                                    return {
+                                        text: `${label} (${value}%)`,
+                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                        hidden: isHidden,
+                                        index: i,
+                                    };
+                                });
+                            },
+                        },
+                        onClick: (e, legendItem, legend) => {
+                            const dataset = legend.chart.data.datasets[0];
+                            const index = legendItem.index;
+                            const meta = legend.chart.getDatasetMeta(0);
 
-        // Event listener for dropdown change
-        document.getElementById('flagType').addEventListener('change', (event) => {
-            updateChart(event.target.value);
+                            // Toggle visibility
+                            meta.data[index].hidden = !meta.data[index].hidden;
+
+                            // Recalculate and update the chart
+                            legend.chart.update();
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const percentage = context.raw;
+                                return `Value ${context.label}: ${percentage}%`;
+                            },
+                        },
+                    },
+                },
+            },
         });
-    });
+    }
+
+    // Event listeners for dropdown changes
+    document.getElementById('flagVal').addEventListener('change', updateChart);
+    document.getElementById('TypeVal').addEventListener('change', updateChart);
+    document.getElementById('provinceVal').addEventListener('change', updateChart);
+
+    // Initial chart load
+    updateChart();
+});
+
 </script>
 
 

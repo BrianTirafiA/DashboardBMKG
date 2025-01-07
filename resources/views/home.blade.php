@@ -152,9 +152,9 @@
 
         function getColor(value) {
             const colors = [
-                '#0d4a70', '#228b3b', '#40ad5a', '#9ccb86',
-                '#eeb479', '#e9e29c', '#ffc61e',
-                '#8f003b', '#9A194E', '#ff1f5b',
+                '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+                '#e1cf23', '#f8af3e', '#f7941f',
+                '#ec5828', '#e91c23', '#b21a26',
             ];
             return colors[value];
         }
@@ -271,7 +271,11 @@
             // Calculate percentages for each value (0-9) per machine type
             const labels = Object.keys(groupedData);
             const datasets = [];
-            const colors = ['#0d4a70', '#228b3b', '#40ad5a', '#9ccb86', '#eeb479', '#e9e29c', '#ffc61e', '#8f003b', '#9A194E', '#ff1f5b'];
+            const colors = [
+                '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+                '#e1cf23', '#f8af3e', '#f7941f',
+                '#ec5828', '#e91c23', '#b21a26',
+            ];
 
             for (let i = 0; i < 10; i++) {
                 const data = labels.map((label) => {
@@ -396,10 +400,10 @@
                     label: `Flag Distribution (${selectedFlag})`,
                     data: flagPercentages, // Use the calculated percentages
                     backgroundColor: [
-                        '#0d4a70', '#228b3b', '#40ad5a', '#9ccb86',
-                        '#eeb479', '#e9e29c', '#ffc61e', '#8f003b',
-                        '#000000', '#ff1f5b'
-                    ],
+                '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+                '#e1cf23', '#f8af3e', '#f7941f',
+                '#ec5828', '#e91c23', '#b21a26',
+            ],
                 }],
             },
             options: {

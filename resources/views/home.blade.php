@@ -26,13 +26,7 @@
   ```
 -->
 <div class="min-h-full">
-  <x-navbar :menu-items="[
-    ['label' => 'QC Dashboard', 'link' => '/qcdashboard', 'active' => true],
-    ['label' => 'It Asset', 'link' => '/itasset', 'active' => false],
-    ['label' => 'Projects', 'link' => '#', 'active' => false],
-    ['label' => 'Calendar', 'link' => '#', 'active' => false],
-    ['label' => 'Reports', 'link' => '#', 'active' => false],
-  ]" />
+  <x-navbar-all/>
 
 
   <header class="bg-white shadow">

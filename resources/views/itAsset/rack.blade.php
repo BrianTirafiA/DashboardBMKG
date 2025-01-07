@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Asset: Rack</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<!-- resources/views/your-view.blade.php -->
+<x-layout-server>
+  <h2 class="text-2xl font-semibold">Konten Utama Elhanif</h2>
+  <p>Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p>
+  <!-- Tambahkan konten lainnya di sini -->
 
-<body class="h-full">
-<div class="min-h-full">
-  <x-navbar-all/>  
-
-
-  <x-sidebar-server/>
-
-</div>
-</body>
-</html>
+  <div class="flex space-x-6">
+    <!-- Panggil Komponen Rak -->
+    <x-rack-table />
+    <x-rack-table />
+    <x-rack-table />
+  </div>
+</x-layout-server>

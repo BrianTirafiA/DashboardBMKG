@@ -17,7 +17,11 @@ Route::view('/qcdashboard', 'home')->middleware([\App\Http\Middleware\OnlyMember
 Route::view('/home', 'home')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 Route::view('/itasset', 'itAsset.dashboard')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 Route::view('/itasset/dashboard', 'itAsset.dashboard')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
-Route::view('/itasset/device', 'itAsset.device')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+Route::view('/itasset/device/kvm', 'itAsset.device.device-kvm')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+Route::view('/itasset/device/server', 'itAsset.device.device-server')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+Route::view('/itasset/device/fan', 'itAsset.device.device-fan')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+Route::view('/itasset/device/ups', 'itAsset.device.device-ups')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
+
 Route::view('/itasset/rack', 'itAsset.rack')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 Route::view('/itasset/power', 'itAsset.power')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);
 Route::view('/itasset/report', 'itAsset.report')->middleware([\App\Http\Middleware\OnlyMemberMiddleware::class]);

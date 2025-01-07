@@ -51,4 +51,5 @@ Route::get('/itasset', function () {
 });
 
 
-Route::get('/qcdashboard', [PinController::class, 'showMap']);
+//Route::get('/qcdashboard', [PinController::class, 'showMap']);
+Route::get('/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');

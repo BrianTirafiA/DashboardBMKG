@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div class="ms-5 me-2 flex p-6 px-0 overflow-scroll">
+    <div class="ms-5 me-5 flex p-6 px-0 overflow-hidden ">
         <div class="w-full rounded-xl overflow-hidden border border-blue-gray-100">
             <table class="w-full mt-4 text-left table-auto">
                 <thead>

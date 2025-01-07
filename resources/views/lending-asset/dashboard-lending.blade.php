@@ -18,7 +18,7 @@
         </div>    
     
         <!-- Sidebar 2 (Hide/Show Button) -->    
-        <div id="sidebar2" class="hidden relative flex h-[calc(150vh-2rem)] w-[3rem] flex-col rounded-xl bg-[#F1F5F9] bg-clip-border justify-center p-4 text-gray-700 mt-9 me-5 mb-5 ms-5 shadow-xl shadow-blue-gray-900 items-center md:block transition-transform duration-300">    
+        <div id="sidebar2" class="xl:hidden relative flex h-[calc(150vh-2rem)] w-[3rem] flex-col rounded-xl bg-[#F1F5F9] bg-clip-border justify-center p-4 text-gray-700 mt-9 me-5 mb-5 shadow-xl shadow-blue-gray-900 items-center md:block transition-transform duration-300">    
             <div class="flex items-center justify-center h-full w-full">    
                 <button id="hide-unhide" class="flex items-center justify-center">    
                     <span class="arrow-icon">    
@@ -41,7 +41,7 @@
     <x-footer/>    
 </div>    
     
-<script>    
+<!-- <script>    
     document.addEventListener('DOMContentLoaded', function() {    
         const sidebar = document.getElementById('sidebar');    
         const sidebar2 = document.getElementById('sidebar2');    
@@ -82,6 +82,6 @@
             }    
         });    
     });    
-</script>    
+</script>     -->
 </body>    
 </html>  

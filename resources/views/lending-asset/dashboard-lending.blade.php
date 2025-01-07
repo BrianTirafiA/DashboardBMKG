@@ -4,4 +4,6 @@
        <p class="mb-5">Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p>
        <!-- Tambahkan konten lainnya di sini -->
 
+       <x-login-component/>
+
    </x-lend-layout-template>

@@ -27,13 +27,14 @@
   <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard Quality Control AWS Center</h1>
-      <h3>Distinct Dates in the Selected Range</h3>
+      <h3>Showing the latest data from</h3>
         <ul>
             @foreach ($distinct_dates as $date)
-                <li>{{ \Carbon\Carbon::parse($date->date)->format('Y-m-d') }}</li>
+                <li>• {{ \Carbon\Carbon::parse($date->date)->format('Y-m-d') }}</li>
             @endforeach
         </ul>
 
+        <h3>Stations Added in the Selected Range ({{ $addedStationsCount }})</h3>
     </div>
   </header>
   <main>
@@ -41,7 +42,7 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <!-- Flag Type Dropdown -->
             <div>
-                <label for="flagVal" class="font-semibold text-lg">Select Flag Type: </label>
+                <label for="flagVal" class="font-semibold text-lg" style="font-weight: bold; color: #333;">Select Flag Type: </label>
                 <select id="flagVal" class="px-4 py-2 border rounded">
                     <option value="All">All Flag</option>
                     <option value="average_flag">Average Flag</option>
@@ -68,7 +69,7 @@
 
             <!-- Machine Type Dropdown -->
             <div>
-                <label for="TypeVal" class="font-semibold text-lg">Select Machine Type: </label>
+                <label for="TypeVal" class="font-semibold text-lg" style="font-weight: bold; color: #333;">Select Machine Type: </label>
                 <select id="TypeVal" class="px-4 py-2 border rounded">
                     <option value="All">All Machine</option>
                     <option value="aws">AWS</option>
@@ -83,7 +84,7 @@
 
             <!-- Province Filter Dropdown -->
             <div>
-                <label for="provinceVal" class="font-semibold text-lg">Select Province: </label>
+                <label for="provinceVal" class="font-semibold text-lg" style="font-weight: bold; color: #333;">Select Province: </label>
                 <select id="provinceVal" class="px-4 py-2 border rounded">
                     <option value="All">All Provinces</option>
                     <option value="Bali">Bali</option>
@@ -123,12 +124,30 @@
                 </select>
             </div>
             <div>
-                <form action="{{ route('stations.filter') }}" method="GET">
-                    <input type="date" name="start_date" id="start_date" required placeholder="Select start date">
-                    <input type="date" name="end_date" id="end_date" required placeholder="Select end date">
-                    <button type="submit">Filter</button>
-                </form>
-            </div>
+    <form action="{{ route('stations.filter') }}" method="GET" style="display: flex; flex-direction: column; gap: 15px;">
+        <label for="start_date" style="font-weight: bold; color: #333;">Start Date</label>
+        <input type="date" name="start_date" id="start_date" required placeholder="Select start date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+
+        <label for="end_date" style="font-weight: bold; color: #333;">End Date</label>
+        <input type="date" name="end_date" id="end_date" required placeholder="Select end date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+
+        <button type="submit" style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
+            Filter
+        </button>
+    </form>
+</div>
+
+<style>
+    form input[type="date"]:focus,
+    form button:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    form button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
         </div>
             <div id="map" class="mt-6"></div>
     </div>
@@ -310,6 +329,11 @@
   </div>
 </div>
 
+<div class="flex flex-wrap justify-center items-start gap-3 lg:gap-4 mt-4">
+  <div class="chart-container w-full sm:w-3/4 lg:w-1/2 lg:ml-auto">
+  <div id="countContainer" style="width: 100%; height: 600px;"></div>
+  </div>
+</div>
 
 
 

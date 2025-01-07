@@ -168,9 +168,9 @@
         const stations = @json($stations);
 
         document.addEventListener('DOMContentLoaded', () => {
-            const map = L.map('map', { attributionControl: false }).setView([-0.7893, 113.9213], 5);
+            const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
 
-            const initialCenter = [-0.7893, 113.9213];
+            const initialCenter = [-2.0, 118.0];
             const initialZoom = 5;
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -329,9 +329,9 @@
   </div>
 </div>
 
-<div class="flex flex-wrap justify-center items-start gap-3 lg:gap-4 mt-4">
-  <div class="chart-container w-full sm:w-3/4 lg:w-1/2 lg:ml-auto">
-  <div id="countContainer" style="width: 100%; height: 600px;"></div>
+<div class="flex flex-wrap justify-center items-start mt-4">
+  <div class="chart-container w-full sm:w-3/4 lg:w-1/2">
+    <canvas id="stationChart" width="400" height="200"></canvas>
   </div>
 </div>
 
@@ -592,6 +592,94 @@
         });
 
     </script>
+
+<script>
+    // Prepare data for the chart
+    const stationLabels = @json(array_column($stationCounts, 'tipe_station'));
+    const stationData = @json(array_column($stationCounts, 'count'));
+
+    // Calculate the total
+    const totalStations = stationData.reduce((sum, value) => sum + value, 0);
+
+    // Create the chart
+    const ctx = document.getElementById('stationChart').getContext('2d');
+    const stationChart = new Chart(ctx, {
+        type: 'bar', // Change to 'pie' or 'doughnut' for other types
+        data: {
+            labels: stationLabels,
+            datasets: [{
+                label: 'Number of Stations',
+                data: stationData,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        generateLabels: function(chart) {
+                            const labels = chart.data.labels;
+                            const data = chart.data.datasets[0].data;
+                            const colors = chart.data.datasets[0].backgroundColor;
+
+                            // Generate legend items for each station type
+                            const stationLegends = labels.map((label, index) => ({
+                                text: `${label}: ${data[index]}`,
+                                fillStyle: colors[index],
+                                hidden: false,
+                                lineCap: 'butt',
+                                lineDash: [],
+                                lineDashOffset: 0,
+                                lineJoin: 'miter',
+                                pointStyle: 'circle',
+                                strokeStyle: colors[index],
+                                textAlign: 'left'
+                            }));
+
+                            // Add a "Total" legend item
+                            stationLegends.push({
+                                text: `Total: ${totalStations}`,
+                                fillStyle: 'rgba(0, 0, 0, 0)', // Transparent (no color block)
+                                hidden: false,
+                                lineCap: 'butt',
+                                lineDash: [],
+                                lineDashOffset: 0,
+                                lineJoin: 'miter',
+                                pointStyle: 'rect',
+                                strokeStyle: 'rgba(0, 0, 0, 0)',
+                                textAlign: 'left'
+                            });
+
+                            return stationLegends;
+                        }
+                    },
+                    onClick: null // Disable the default onclick behavior
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 
 
 

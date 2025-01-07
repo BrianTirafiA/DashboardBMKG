@@ -53,11 +53,13 @@ class PinController extends Controller
                 }
             }
         }
+
+        $stationCounts = Station::getTipeStationCounts();
     
         // Remove duplicate station names and count them
         $addedStationsCount = count(array_unique($addedStations));
     
         // Pass the added stations count to the view
-        return view('home', compact('stations', 'distinct_dates', 'addedStationsCount'));
+        return view('home', compact('stations', 'distinct_dates', 'addedStationsCount', 'stationCounts'));
     }
 }

@@ -103,6 +103,27 @@ class station extends Model
     }
 }
 
+public static function getTipeStationCounts()
+{
+    // Query to get the latest data for each station
+    $query = "
+        WITH latest_stations AS (
+            SELECT DISTINCT ON (name_station)
+                name_station, tipe_station
+            FROM stations
+            ORDER BY name_station ASC, DATE(tanggal) DESC, tanggal DESC
+        )
+        SELECT tipe_station, COUNT(*) AS count
+        FROM latest_stations
+        GROUP BY tipe_station
+        ORDER BY count DESC
+    ";
+
+    // Execute the query and return the results
+    return \DB::select($query);
+}
+
+
 
     
     

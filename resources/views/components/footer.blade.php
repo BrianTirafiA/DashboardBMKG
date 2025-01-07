@@ -4,7 +4,7 @@
             <div class="sm:flex sm:mt-4">
                 <div class="mt-8 sm:mt-0 sm:w-full flex flex-col lg:flex-row justify-between">
                     <div class="mb-14 lg:mb-0 mt-1">
-                        <div class="mb-7 flex flex-row items-center bg-white rounded-md p-1.5 w-fit">
+                        <div class="mb-7 flex flex-row items-center bg-[#F1F5F9] rounded-md p-1.5 w-fit">
                             <img src="{{ asset('assets/logo-bmkg.png') }}" width="35" class="object-contain mr-4 ms-2" alt="BMKG Logo">
                             <span class="font-semibold font-['Barlow'] text-xl text-bmkg-primary-text cursor-default me-2">
                                 <p> ASSET MANAGEMENT SYSTEM</p>
@@ -25,7 +25,7 @@
                             <span class="font-medium text-base text-blue-500 mb-1 mt-4 md:mt-0 lg:mb-3 w-fit">Laman BMKG</span>
                             <span class="mb-1 w-fit">
                                 <a target="_blank" class="text-white text-sm hover:text-blue-400 flex flex-row items-center w-fit" href="https://bmkg.go.id/">
-                                    <div class="bg-white rounded-2xl flex justify-center items-center mr-4 w-14 h-14 p-3">
+                                    <div class="bg-[#F1F5F9] rounded-2xl flex justify-center items-center mr-4 w-14 h-14 p-3">
                                         <img src="{{ asset('assets/logo-bmkg.png') }}" class="object-contain w-full" alt="BMKG Logo">
                                     </div>
                                     <div class="flex flex-col max-w-96 xl:max-w-64 2xl:max-w-96">

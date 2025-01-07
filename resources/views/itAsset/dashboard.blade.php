@@ -12,7 +12,7 @@
     <x-navbar :menu-items="[
         ['label' => 'QC Dashboard', 'link' => '/qcdashboard', 'active' => false],
         ['label' => 'It Asset', 'link' => '/itasset', 'active' => true],
-        ['label' => 'Lending Items', 'link' => '/lendingitems', 'active' => false],
+        ['label' => 'Lending Items', 'link' => '/lendasset/lendingitems', 'active' => false],
         ['label' => 'Calendar', 'link' => '#', 'active' => false],
         ['label' => 'Reports', 'link' => '#', 'active' => false],
     ]" />
@@ -22,7 +22,8 @@
     </div>
   </header>
 
-  <x-sidebar-asset :menu-items="[
+  <x-sidebar-server/>
+  <!-- <x-sidebar-asset :menu-items="[
         ['label' => 'Dashboard', 'link' => '/itasset/dashboard', 'active' => true],
         ['label' => 'Device', 'link' => '/itasset/device', 'active' => false],
         ['label' => 'Rack', 'link' => '/itasset/rack', 'active' => false],
@@ -30,7 +31,7 @@
         ['label' => 'Maintenance', 'link' => '/itasset/maintenance', 'active' => false],
         ['label' => 'Report', 'link' => '/itasset/report', 'active' => false],
         ['label' => 'Log', 'link' => '/itasset/log', 'active' => false],
-    ]" />
+    ]" /> -->
 </div>
 </body>
 </html>

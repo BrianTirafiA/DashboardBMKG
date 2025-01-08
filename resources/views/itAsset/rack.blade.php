@@ -4,10 +4,12 @@
   <p>Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p>
   <!-- Tambahkan konten lainnya di sini -->
 
-  <div class="flex space-x-6">
+  <div class="flex w-full h-screen overflow-y-auto">
     <!-- Panggil Komponen Rak -->
-    <x-rack-table />
-    <x-rack-table />
-    <x-rack-table />
+    <x-rack-table class="flex-1 border rounded-lg" />
+    <x-rack-table class="flex-1 border rounded-lg" />
+    <x-rack-table class="flex-1 border rounded-lg" />
   </div>
+
+
 </x-layout-server>

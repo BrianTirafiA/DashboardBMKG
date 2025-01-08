@@ -1,21 +1,18 @@
-<!-- Template Rak (rak.blade.php atau komponen lainnya) -->
-<div class="w-full sm:w-1/3 p-3">
-    <div class="overflow-x-auto bg-white rounded-lg border shadow-sm">
-        <table class="min-w-full">
-            <thead class="bg-gray-100">
+<div class="overflow-y-auto max-h-96 rounded-lg border border-gray-300">
+    <table class="min-w-full table-auto border-collapse">
+        <thead>
+            <tr>
+                <th class="px-4 py-2 border text-center bg-gray-100 text-xs">Posisi</th>
+                <th class="px-4 py-2 border text-center bg-gray-100 text-xs">Nama Device</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for ($i = 42; $i >= 1; $i--)
                 <tr>
-                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b">Posisi</th>
-                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-600 border-b">Nama Device</th>
+                    <td class="px-4 py-2 border text-center text-xs">U{{ $i }}</td>
+                    <td class="px-4 py-2 border text-center text-xs">Device {{ $i }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @for ($i = 1; $i <= $capacity; $i++)
-                    <tr>
-                        <td class="px-4 py-0 text-gray-700 font-sm border-b">U{{ $i }}</td>
-                        <td class="px-4 py-0 text-gray-700 font-sm border-b">Device {{ $i }}</td>
-                    </tr>
-                @endfor
-            </tbody>
-        </table>
-    </div>
+            @endfor
+        </tbody>
+    </table>
 </div>

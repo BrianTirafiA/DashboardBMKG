@@ -19,10 +19,10 @@
                             </svg>',
                 'active' => str_starts_with($currentRoute, url('/itasset/device')), // Kunci active untuk dropdown 
                 'items' => [
-                    ['title' => 'Switch', 'link' => '/itasset/device/fan', 'active' => $currentRoute === '/itasset/device/switch'],
+                    ['title' => 'Server', 'link' => '/itasset/device/server', 'active' => $currentRoute === '/itasset/device/server'],
                     ['title' => 'KVM', 'link' => '/itasset/device/kvm', 'active' => $currentRoute === '/itasset/device/kvm'],
-                    ['title' => 'UPS', 'link' => '/itasset/device/server', 'active' => $currentRoute === '/itasset/device/ups'],
-                    ['title' => 'Fan', 'link' => '/itasset/device/ups', 'active' => $currentRoute === '/itasset/device/fan'],
+                    ['title' => 'UPS', 'link' => '/itasset/device/ups', 'active' => $currentRoute === '/itasset/device/ups'],
+                    ['title' => 'Fan', 'link' => '/itasset/device/fan', 'active' => $currentRoute === '/itasset/device/fan'],
                 ],
             ],
             [

@@ -6,9 +6,9 @@
         [
             'type' => 'static',
             'title' => 'Dashboard',
-            'link' => '/lendasset/lendingitems',
+            'link' => '/admin/lendasset/lendingitems',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="w-5 h-5"> <path fill-rule="evenodd" d="M2.25 2.25a.75.75 0 000 1.5H3v10.5a3 3 0 003 3h1.21l-1.172 3.513a.75.75 0 001.424.474l.329-.987h8.418l.33.987a.75.75 0 001.422-.474l-1.17-3.513H18a3 3 0 003-3V3.75h.75a.75.75 0 000-1.5H2.25zm6.04 16.5l.5-1.5h6.42l.5 1.5H8.29zm7.46-12a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0v-6zm-3 2.25a.75.75 0 00-1.5 0v3.75a.75.75 0 001.5 0V9zm-3 2.25a.75.75 0 00-1.5 0v1.5a.75.75 0 001.5 0v-1.5z" clip-rule="evenodd"></path></svg>',
-            'active' => $currentRoute === 'lendasset/lendingitems', // Menandai aktif
+            'active' => $currentRoute === 'admin/lendasset/lendingitems', // Menandai aktif
         ],
         [
             'type' => 'dropdown',
@@ -18,9 +18,9 @@
                         </svg>',
             'active' => false, // Kunci active untuk dropdown
             'items' => [
-                ['title' => 'Pengajuan', 'link' => '/lendasset/transaksi-pengajuan', 'active' => $currentRoute === 'lendasset/transaksi-pengajuan'],
-                ['title' => 'Peminjaman', 'link' => '/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'lendasset/transaksi-peminjaman'],
-                ['title' => 'Pengembalian', 'link' => '/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'lendasset/transaksi-peminjaman'],
+                ['title' => 'Pengajuan', 'link' => '/admin/lendasset/transaksi-pengajuan', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengajuan'],
+                ['title' => 'Peminjaman', 'link' => '/admin/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-peminjaman'],
+                ['title' => 'Pengembalian', 'link' => '/admin/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-peminjaman'],
             ],
         ],
         [
@@ -31,9 +31,9 @@
                         </svg>',
             'active' => false, // Kunci active untuk dropdown
             'items' => [
-                ['title' => 'Mingguan', 'link' => '/lendasset/report-week', 'active' => $currentRoute === 'lendasset/report-week'],
-                ['title' => 'Bulanan', 'link' => '/lendasset/report-month', 'active' => $currentRoute === 'lendasset/report-month'],
-                ['title' => 'Tahunan', 'link' => '/lendasset/report-year', 'active' => $currentRoute === 'lendasset/report-year'],
+                ['title' => 'Mingguan', 'link' => '/admin/lendasset/report-week', 'active' => $currentRoute === 'admin/lendasset/report-week'],
+                ['title' => 'Bulanan', 'link' => '/admin/lendasset/report-month', 'active' => $currentRoute === 'admin/lendasset/report-month'],
+                ['title' => 'Tahunan', 'link' => '/admin/lendasset/report-year', 'active' => $currentRoute === 'admin/lendasset/report-year'],
             ],
         ],
         [
@@ -44,9 +44,9 @@
                         </svg>',
             'active' => false, // Kunci active untuk dropdown
             'items' => [
-                ['title' => 'Barang / Lisensi', 'link' => '/lendasset/items', 'active' => $currentRoute === 'lendasset/items'],
-                ['title' => 'Kategori', 'link' => '/lendasset/kategori', 'active' => $currentRoute === 'lendasset/kategori'],
-                ['title' => 'Lokasi', 'link' => '/lendasset/lokasi', 'active' => $currentRoute === 'lendasset/lokasi'],
+                ['title' => 'Barang / Lisensi', 'link' => '/admin/lendasset/items', 'active' => $currentRoute === 'admin/lendasset/items'],
+                ['title' => 'Kategori', 'link' => '/admin/lendasset/kategori', 'active' => $currentRoute === 'admin/lendasset/kategori'],
+                ['title' => 'Lokasi', 'link' => '/admin/lendasset/lokasi', 'active' => $currentRoute === 'admin/lendasset/lokasi'],
             ],
         ],
         [
@@ -57,27 +57,27 @@
                         </svg>',
             'active' => false, // Kunci active untuk dropdown
             'items' => [
-                ['title' => 'Pengguna', 'link' => '/lendasset/user', 'active' => $currentRoute === 'lendasset/user'],
-                ['title' => 'Unit Kerja', 'link' => '/lendasset/unitkerja', 'active' => $currentRoute === 'lendasset/unitkerja'],
+                ['title' => 'Pengguna', 'link' => '/admin/lendasset/user', 'active' => $currentRoute === 'admin/lendasset/user'],
+                ['title' => 'Unit Kerja', 'link' => '/admin/lendasset/unitkerja', 'active' => $currentRoute === 'admin/lendasset/unitkerja'],
             ],
         ],
         [
             'type' => 'static',
             'title' => 'Settings',
-            'link' => '/lendasset/settings',
+            'link' => '/admin/lendasset/settings',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
                         <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                         </svg>',
-            'active' => $currentRoute === 'lendasset/settings', // Menandai aktif
+            'active' => $currentRoute === 'admin/lendasset/settings', // Menandai aktif
         ],
         [
             'type' => 'static',
             'title' => 'Edit FAQ',
-            'link' => '/lendasset/edit-faq',
+            'link' => '/admin/lendasset/edit-faq',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-square-fill" viewBox="0 0 16 16">
                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm3.496 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927"/>
                         </svg>',
-            'active' => $currentRoute === 'lendasset/edit-faq', // Menandai aktif
+            'active' => $currentRoute === 'admin/lendasset/edit-faq', // Menandai aktif
         ],
     ];
     @endphp

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OnlyMemberMiddleware
+class OnlyAuthenticatedMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,6 @@ class OnlyMemberMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->session()->exists("user")){
-            return $next($request);
-        } else {
-            return redirect("/login");
-        }
+        return $next($request);
     }
 }

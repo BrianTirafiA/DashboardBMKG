@@ -14,7 +14,7 @@ Route::get('/', [HomeController::class, 'home']);
 Route::controller(UserController::class)->group(function () {  
     Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class);  
     Route::post('/login', 'doLogin')->middleware(OnlyGuestMiddleware::class);  
-    Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(LogoutMiddleware::class);
+    Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(middleware: LogoutMiddleware::class);
 });  
   
 // Admin Routes  
@@ -30,6 +30,12 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/report', 'itAsset.report');  
         Route::view('/maintenance', 'itAsset.maintenance');  
         Route::view('/log', 'itAsset.log');  
+        Route::prefix('device')->group(function(){
+            Route::view('/kvm', 'itAsset.device.device-kvm');  
+            Route::view('/server', 'itAsset.device.device-server');  
+            Route::view('/ups', 'itAsset.device.device-ups');  
+            Route::view('/fan', 'itAsset.device.device-fan');  
+        });
     });  
   
     Route::prefix('lendasset')->group(function () {  

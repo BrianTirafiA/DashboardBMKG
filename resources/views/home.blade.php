@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="{{ mix('js/app.js') }}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -25,11 +27,18 @@
   <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard Quality Control AWS Center</h1>
+      <h3>Distinct Dates in the Selected Range</h3>
+        <ul>
+            @foreach ($distinct_dates as $date)
+                <li>{{ \Carbon\Carbon::parse($date->date)->format('Y-m-d') }}</li>
+            @endforeach
+        </ul>
+
     </div>
   </header>
   <main>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="flex items-center space-x-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <!-- Flag Type Dropdown -->
             <div>
                 <label for="flagVal" class="font-semibold text-lg">Select Flag Type: </label>
@@ -113,9 +122,27 @@
                     <option value="Sumatera Utara">Sumatera Utara</option>
                 </select>
             </div>
+            <div>
+                <form action="{{ route('stations.filter') }}" method="GET">
+                    <input type="date" name="start_date" id="start_date" required placeholder="Select start date">
+                    <input type="date" name="end_date" id="end_date" required placeholder="Select end date">
+                    <button type="submit">Filter</button>
+                </form>
+            </div>
         </div>
             <div id="map" class="mt-6"></div>
     </div>
+
+    <script>
+        // Initialize flatpickr for the date fields
+        flatpickr("#start_date", {
+            dateFormat: "Y-m-d",
+        });
+
+        flatpickr("#end_date", {
+            dateFormat: "Y-m-d",
+        });
+    </script>
 
     <script>
         // Get the station data and province list from the controller
@@ -123,6 +150,9 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const map = L.map('map', { attributionControl: false }).setView([-0.7893, 113.9213], 5);
+
+            const initialCenter = [-0.7893, 113.9213];
+            const initialZoom = 5;
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
@@ -158,9 +188,26 @@
                     .addTo(map)
                     .bindPopup(`
                         <strong>Station Name:</strong> ${station.name_station} <br>
-                        <strong>Province:</strong> ${station.nama_propinsi} <br>
                         <strong>Station Type:</strong> ${station.tipe_station} <br>
+                        <strong>Province :</strong> ${station.nama_propinsi} <br>
                         <strong>rr_flag:</strong> ${station.rr_flag} <br>
+                        <strong>pp_air_flag:</strong> ${station.pp_air_flag} <br>
+                        <strong>rh_avg_flag:</strong> ${station.rh_avg_flag} <br>
+                        <strong>sr_avg_flag:</strong> ${station.sr_avg_flag} <br>
+                        <strong>sr_max_flag:</strong> ${station.sr_max_flag} <br>
+                        <strong>nr_flag:</strong> ${station.nr_flag} <br>
+                        <strong>wd_avg_flag:</strong> ${station.wd_avg_flag} <br>
+                        <strong>ws_avg_flag:</strong> ${station.ws_avg_flag} <br>
+                        <strong>ws_max_flag:</strong> ${station.ws_max_flag} <br>
+                        <strong>wl_flag:</strong> ${station.wl_flag} <br>
+                        <strong>tt_air_avg_flag:</strong> ${station.tt_air_avg_flag} <br>
+                        <strong>tt_air_min_flag:</strong> ${station.tt_air_min_flag} <br>
+                        <strong>tt_air_max_flag:</strong> ${station.tt_air_max_flag} <br>
+                        <strong>tt_sea_flag:</strong> ${station.tt_sea_flag} <br>
+                        <strong>ws_50cm_flag:</strong> ${station.ws_50cm_flag} <br>
+                        <strong>wl_pan_flag:</strong> ${station.wl_pan_flag} <br>
+                        <strong>ev_pan_flag:</strong> ${station.ev_pan_flag} <br>
+                        <strong>tt_pan_flag:</strong> ${station.tt_pan_flag} <br>
                         <strong>Average Flag Value:</strong> ${station.average_flag}
                     `);
             }
@@ -197,11 +244,40 @@
             //     });
             // } else {
                 // When a specific flag is selected, display only that flag
-                filteredStations.forEach(station => {
-                    createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
-                });
+                // filteredStations.forEach(station => {
+                //     createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
+                // });
             // }
+
+                if (selectedFlag === "All") {
+                    // When "All" is selected, show only the average flag value
+                    filteredStations.forEach(station => {
+                        createCircleMarker(station.latt_station, station.long_station, station.average_flag, station);
+                    });
+                } else {
+                    // When a specific flag is selected, show the values for that flag
+                    filteredStations.forEach(station => {
+                        createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
+                    });
+                }
             }
+
+            const resetButton = L.control({ position: 'topright' });
+            resetButton.onAdd = () => {
+                const button = L.DomUtil.create('button', 'reset-button');
+                button.innerHTML = 'Reset View';
+                button.style.backgroundColor = '#fff';
+                button.style.border = '1px solid #ccc';
+                button.style.padding = '5px 10px';
+                button.style.cursor = 'pointer';
+
+                button.onclick = () => {
+                    map.setView(initialCenter, initialZoom);
+                };
+
+                return button;
+            };
+            resetButton.addTo(map);
 
             addMarkers();
 
@@ -211,18 +287,32 @@
         });
     </script>
 
+    <style>
+        .reset-button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 
-    <div class="flex justify-center items-start space-x-6 mt-6">
-        <!-- First Chart Container (Taller Chart) -->
-        <div class="chart-container" style="width: 600px; height: 400px;">
-            <canvas id="flagTypeChart"></canvas>
-        </div>
 
-        <!-- Second Chart Container (Shorter Chart) -->
-        <div class="chart-container" style="width: 400px; height: 300px;">
-            <canvas id="flagChart"></canvas>
-        </div>
+<div class="flex flex-wrap justify-center items-start gap-3 lg:gap-4 mt-4">
+  <!-- First Chart Container (Taller Chart) -->
+  <div class="chart-container w-full sm:w-3/4 lg:w-1/2 lg:ml-auto">
+    <div class="relative h-[50vh] lg:h-[80vh] max-h-600px">
+      <canvas id="flagTypeChart"></canvas>
     </div>
+  </div>
+
+  <!-- Second Chart Container (Shorter Chart) -->
+  <div class="chart-container w-full sm:w-2/3 lg:w-1/3 lg:ml-auto">
+    <div class="relative h-[50vh] lg:h-[60vh] max-h-400px">
+      <canvas id="flagChart"></canvas>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 <!-- Dropdown for selecting flag type -->
 
@@ -243,16 +333,27 @@
                     return matchesType && matchesProvince;
                 });
 
+                const flagsToInclude = [
+                    "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
+                    "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
+                    "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
+                    "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
+                ];
+
                 // Group data by machine type and calculate percentages
                 const groupedData = {};
+
                 filteredStations.forEach((station) => {
-                    const flagValue = station[selectedFlag];
-                    if (!groupedData[station.tipe_station]) {
-                        groupedData[station.tipe_station] = Array(10).fill(0);
-                    }
-                    if (flagValue >= 0 && flagValue <= 9) {
-                        groupedData[station.tipe_station][flagValue]++;
-                    }
+                    const applicableFlags = selectedFlag === 'All' ? flagsToInclude : [selectedFlag];
+                    applicableFlags.forEach((flag) => {
+                        const flagValue = station[flag];
+                        if (!groupedData[station.tipe_station]) {
+                            groupedData[station.tipe_station] = Array(10).fill(0);
+                        }
+                        if (flagValue >= 0 && flagValue <= 9) {
+                            groupedData[station.tipe_station][flagValue]++;
+                        }
+                    });
                 });
 
                 // Calculate percentages for each value (0-9) per machine type
@@ -359,20 +460,37 @@
                 // Step 2: Gather flag data from filtered stations
                 const flagCounts = Array(10).fill(0);
 
-                filteredStations.forEach((station) => {
-                    const flagValue = station[selectedFlag];
-                    if (flagValue >= 0 && flagValue <= 9) {
-                        flagCounts[flagValue]++;
-                    }
-                });
+                if (selectedFlag === "All") {
+                    const flagsToInclude = [
+                        "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
+                        "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
+                        "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
+                        "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
+                    ];
 
-                // Step 3: Calculate total and percentages
+                    flagsToInclude.forEach(flag => {
+                        filteredStations.forEach((station) => {
+                            const flagValue = station[flag];
+                            if (flagValue >= 0 && flagValue <= 9) {
+                                flagCounts[flagValue]++;
+                            }
+                        });
+                    });
+                } else {
+                    // Use the selected flag to update the chart
+                    filteredStations.forEach((station) => {
+                        const flagValue = station[selectedFlag];
+                        if (flagValue >= 0 && flagValue <= 9) {
+                            flagCounts[flagValue]++;
+                        }
+                    });
+                }
+
                 const totalFlags = flagCounts.reduce((a, b) => a + b, 0);
                 const flagPercentages = flagCounts.map((count) =>
                     totalFlags > 0 ? ((count / totalFlags) * 100).toFixed(2) : 0
                 );
 
-                // If chart instance already exists, destroy it
                 if (chartInstance) {
                     chartInstance.destroy();
                 }

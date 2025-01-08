@@ -1,7 +1,3 @@
-<!-- <div 
-  class="absolute inset-0 bg-cover bg-center sm:bg-contain lg:bg-cover" 
-  style="background-image: url('{{ asset('assets/cloudanime.webp') }}');">
-</div> -->
 <div>
 <div class="relative flex items-center justify-center min-h-screen">
     <div class="w-[85rem] h-[55rem] lg:h-[37rem] ms-4 me-4 p-7 bg-[#F1F5F9] rounded-xl shadow-md border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">

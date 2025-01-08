@@ -18,7 +18,7 @@ class StationsSeeder extends Seeder
         $file = Storage::path('data.csv');
         $handle = fopen($file, 'r');
         $header = true;
-        $startRow = 332427; // Set the row where you want to start
+        $startRow = 666224; // Set the row where you want to start
         $endRow = 332427;
         $currentRow = 0;
 

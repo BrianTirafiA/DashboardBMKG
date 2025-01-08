@@ -6,12 +6,15 @@
     <title>Login Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gray-100 items-center justify-center">
 @if(isset($error))
-        <div id="error-alert" 
-             class="fixed top-4 z-50 bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 opacity-100">
-            <span>{{ $error }}</span>
-        </div>
+        <div class="flex justify-center items-center min-h-screen">  
+        <div id="error-alert"  
+            class="fixed top-4 z-50 bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 opacity-100">  
+            <span>{{ $error }}</span>  
+        </div>  
+        </div>  
+
         <script>
             setTimeout(() => {
                 const alert = document.getElementById('error-alert');
@@ -22,7 +25,10 @@
             }, 3000);
         </script>
     @endif
-<div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1 max-h-screen-xl">
+
+    <x-login-component />
+
+<!-- <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1 max-h-screen-xl">
     <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
         <div class="mt-12 flex flex-col items-center">
             <div class="flex justify-center mb-6">
@@ -59,6 +65,6 @@
             style="background-image: url('assets/cloud-sky.jpg')">
         </div>
     </div>
-</div>
+</div> -->
 </body>
 </html>

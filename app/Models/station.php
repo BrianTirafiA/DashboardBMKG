@@ -9,6 +9,7 @@ class station extends Model
 {
     use HasFactory;
 
+    //Data template
     protected $fillable = [
         'tanggal', 'long_station', 'latt_station', 'name_station', 'nama_propinsi', 'nama_kota', 
         'tipe_station', 'rr_flag', 'pp_air_flag', 'rh_avg_flag', 'sr_avg_flag', 'sr_max_flag',
@@ -17,6 +18,7 @@ class station extends Model
         'ev_pan_flag', 'tt_pan_flag',
     ];
 
+    // Main function to filter data based on the latest reading of unique station
     public static function getUniqueStations($startDate = null, $endDate = null)
     {
         $query = "
@@ -27,13 +29,12 @@ class station extends Model
             FROM stations
         ";
     
-        // If dates are provided, adjust to include the full range for both start and end date
+        // Parsing the start and end of day if date range are set
         if ($startDate && $endDate) {
-            // Parse the start and end dates
             $startDateTime = \Carbon\Carbon::parse($startDate)->startOfDay(); // Start of the day (00:00:00)
             $endDateTime = \Carbon\Carbon::parse($endDate)->endOfDay(); // End of the day (23:59:59)
             
-            $query .= " WHERE tanggal >= ? AND tanggal <= ?"; // Use <= to include the entire end date
+            $query .= " WHERE tanggal >= ? AND tanggal <= ?";
         }
     
         // Order by station name, date (descending), and time (descending) to get the latest data for each station
@@ -75,33 +76,54 @@ class station extends Model
             if (count($flags) > 0) {
                 $station->average_flag = round(array_sum($flags) / count($flags), 0);
             } else {
-                $station->average_flag = 0; // Set to 0 if no valid flags exist
+                $station->average_flag = 9; // Set to 9(Missing) if no valid flags exist
             }
         }
     
         return $stations;
     }
     
-    
+    // For showing date showed in the dashboard
     public static function getDistinctDates($startDate = null, $endDate = null)
-{
-    $query = "
-        SELECT DISTINCT DATE(tanggal) as date
-        FROM stations
-    ";
+    {
+        $query = "
+            SELECT DISTINCT DATE(tanggal) as date
+            FROM stations
+        ";
 
-    // If dates are provided, add the WHERE clause to filter by date range
-    if ($startDate && $endDate) {
-        $query .= " WHERE tanggal BETWEEN ? AND ?";
+        // If dates are provided, add the WHERE clause to filter by date range
+        if ($startDate && $endDate) {
+            $query .= " WHERE tanggal BETWEEN ? AND ?";
+        }
+
+        // Execute the query with or without date parameters
+        if ($startDate && $endDate) {
+            return \DB::select($query, [$startDate, $endDate]);
+        } else {
+            return \DB::select($query);
+        }
     }
 
-    // Execute the query with or without date parameters
-    if ($startDate && $endDate) {
-        return \DB::select($query, [$startDate, $endDate]);
-    } else {
+    // Query latest amount of station type
+    public static function getTipeStationCounts()
+    {
+        $query = "
+            WITH latest_stations AS (
+                SELECT DISTINCT ON (name_station)
+                    name_station, tipe_station
+                FROM stations
+                ORDER BY name_station ASC, DATE(tanggal) DESC, tanggal DESC
+            )
+            SELECT tipe_station, COUNT(*) AS count
+            FROM latest_stations
+            GROUP BY tipe_station
+            ORDER BY count DESC
+        ";
+
         return \DB::select($query);
     }
-}
+
+
 
     
     
@@ -155,6 +177,7 @@ class station extends Model
     //     return $stations;
     // }
 
+    // Showing all data reading(Unfiltered) [Not currently in use]
     public static function AllFlags()
     {
         $allflags = \DB::select("
@@ -200,20 +223,8 @@ class station extends Model
         ];
     }
 
-    // Return the combined flag data
     return $allFlagsData;
 
     }
-
-    //Method to get the latest unique stations
-    // public static function getUniqueStations()
-    // {
-    //     return \DB::select("
-    //         SELECT DISTINCT ON (name_station) 
-    //             name_station, latt_station, long_station, rr_flag 
-    //         FROM stations
-    //         ORDER BY name_station ASC, tanggal DESC
-    //     ");
-    // }
 
 }

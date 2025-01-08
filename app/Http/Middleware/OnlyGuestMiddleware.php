@@ -16,7 +16,7 @@ class OnlyGuestMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if($request->session()->exists("user")){
-            return redirect("/qcdashboard");
+            return redirect("/admin/qcdashboard");
         } else {
             return $next($request);
         }

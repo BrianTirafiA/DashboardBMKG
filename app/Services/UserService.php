@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\User;
+
 interface UserService
 {
-    function login(string $user, string $password): bool;
+    public function login(string $user, string $password): ?User;
 }

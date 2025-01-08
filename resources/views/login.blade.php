@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 items-center justify-center">
-@if(isset($error))
+    @if(isset($error))
         <div class="flex justify-center items-center min-h-screen">  
         <div id="error-alert"  
             class="fixed top-4 z-50 bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 opacity-100">  

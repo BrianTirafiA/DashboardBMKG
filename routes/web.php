@@ -5,19 +5,20 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;  
 use App\Http\Controllers\PinController;  
 use App\Http\Middleware\OnlyGuestMiddleware;  
-use App\Http\Middleware\OnlyMemberMiddleware;  
+use App\Http\Middleware\OnlyAdminMiddleware;  
 use App\Http\Middleware\OnlyUserMiddleware;  
-  
+use App\Http\Middleware\LogoutMiddleware;  
+
 Route::get('/', [HomeController::class, 'home']);  
   
 Route::controller(UserController::class)->group(function () {  
     Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class);  
     Route::post('/login', 'doLogin')->middleware(OnlyGuestMiddleware::class);  
-    Route::post('/logout', 'doLogOut')->middleware(OnlyMemberMiddleware::class);
+    Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(LogoutMiddleware::class);
 });  
   
 // Admin Routes  
-Route::prefix('admin')->middleware(OnlyMemberMiddleware::class)->group(function () {  
+Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function () {  
     Route::view('/qcdashboard', 'home');  
     Route::view('/home', 'home');  
   
@@ -51,8 +52,9 @@ Route::prefix('admin')->middleware(OnlyMemberMiddleware::class)->group(function 
   
 // User Routes  
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {  
-    Route::view('/dashboard', 'user.dashboard'); // Placeholder - Replace with your actual user routes  
+    Route::view('/dashboard', 'lending-asset.user-dashboard'); // Placeholder - Replace with your actual user routes  
     // Add more user routes here...  
 });  
   
+Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');  
   

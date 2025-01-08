@@ -67,7 +67,6 @@ class UserController extends Controller
      */
     public function doLogOut(Request $request)
     {
-        // Middleware yang sudah menangani logout dan pengalihan ke login
-        return response()->json(['message' => 'You have been logged out.'], 200);
+        return redirect('/login')->with('success', 'Logout berhasil!');
     }
 }

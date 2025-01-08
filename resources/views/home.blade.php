@@ -33,36 +33,35 @@
                         <li>• {{ \Carbon\Carbon::parse($date->date)->format('Y-m-d') }}</li>
                     @endforeach
                 </ul>
-                <h3>Stations Added in the Selected Range ({{ $addedStationsCount }})</h3>
+                <h3>Stations Added in the Selected Range ({{ $addedStationsCount }}) data count({{ $fetchCount }})</h3>
             </div>
         </header>
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div style="max-width: 300px;">
+                    <form action="{{ route('stations.filter') }}" method="GET" style="display: flex; flex-direction: column; gap: 15px;">
+                        <label for="start_date" style="font-weight: bold; color: #333;">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" required placeholder="Select start date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+
+                        <label for="end_date" style="font-weight: bold; color: #333;">End Date</label>
+                        <input type="date" name="end_date" id="end_date" required placeholder="Select end date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+
+                        <button type="submit" style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
+                            Filter
+                        </button>
+                    </form>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
                     <!-- Flag Type Dropdown -->
                     <div>
                         <label for="flagVal" class="font-semibold text-lg" style="font-weight: bold; color: #333;">Select Flag Type: </label>
                         <select id="flagVal" class="px-4 py-2 border rounded">
                             <option value="All">All Flag</option>
                             <option value="average_flag">Average Flag</option>
-                            <option value="rr_flag">RR Flag</option>
-                            <option value="pp_air_flag">PP Air Flag</option>
-                            <option value="rh_avg_flag">RH Avg Flag</option>
-                            <option value="sr_avg_flag">SR Avg Flag</option>
-                            <option value="sr_max_flag">SR Max Flag</option>
-                            <option value="nr_flag">NR Flag</option>
-                            <option value="wd_avg_flag">WD Avg Flag</option>
-                            <option value="ws_avg_flag">WS Avg Flag</option>
-                            <option value="ws_max_flag">WS Max Flag</option>
-                            <option value="wl_flag">WL Flag</option>
-                            <option value="tt_air_avg_flag">TT Air Avg Flag</option>
-                            <option value="tt_air_min_flag">TT Air Min Flag</option>
-                            <option value="tt_air_max_flag">TT Air Max Flag</option>
-                            <option value="tt_sea_flag">TT Sea Flag</option>
-                            <option value="ws_50cm_flag">WS 50cm Flag</option>
-                            <option value="wl_pan_flag">WL Pan Flag</option>
-                            <option value="ev_pan_flag">EV Pan Flag</option>
-                            <option value="tt_pan_flag">TT Pan Flag</option>
+                            @foreach($dropdownOptions['flags'] as $flag)
+                                <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -71,13 +70,9 @@
                         <label for="TypeVal" class="font-semibold text-lg" style="font-weight: bold; color: #333;">Select Machine Type: </label>
                         <select id="TypeVal" class="px-4 py-2 border rounded">
                             <option value="All">All Machine</option>
-                            <option value="aws">AWS</option>
-                            <option value="arg">ARG</option>
-                            <option value="aaws">AAWS</option>
-                            <option value="asrs">ASRS</option>
-                            <option value="iklimmikro">IKRO</option>
-                            <option value="awsship">AWS Ship</option>
-                            <option value="soil">SOIL</option>
+                            @foreach($dropdownOptions['machineTypes'] as $machineType)
+                                <option value="{{ $machineType }}">{{ $machineType }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -86,54 +81,12 @@
                         <label for="provinceVal" class="font-semibold text-lg" style="font-weight: bold; color: #333;">Select Province: </label>
                         <select id="provinceVal" class="px-4 py-2 border rounded">
                             <option value="All">All Provinces</option>
-                            <option value="Bali">Bali</option>
-                            <option value="Banten">Banten</option>
-                            <option value="Bengkulu">Bengkulu</option>
-                            <option value="DI Yogyakarta">DI Yogyakarta</option>
-                            <option value="DKI Jakarta">DKI Jakarta</option>
-                            <option value="Gorontalo">Gorontalo</option>
-                            <option value="Jambi">Jambi</option>
-                            <option value="Jawa Barat">Jawa Barat</option>
-                            <option value="Jawa Tengah">Jawa Tengah</option>
-                            <option value="Jawa Timur">Jawa Timur</option>
-                            <option value="Kalimantan Barat">Kalimantan Barat</option>
-                            <option value="Kalimantan Selatan">Kalimantan Selatan</option>
-                            <option value="Kalimantan Tengah">Kalimantan Tengah</option>
-                            <option value="Kalimantan Timur">Kalimantan Timur</option>
-                            <option value="Kalimantan Utara">Kalimantan Utara</option>
-                            <option value="Kepulauan Bangka Belitung">Kepulauan Bangka Belitung</option>
-                            <option value="Kepulauan Riau">Kepulauan Riau</option>
-                            <option value="Lampung">Lampung</option>
-                            <option value="Maluku">Maluku</option>
-                            <option value="Maluku Utara">Maluku Utara</option>
-                            <option value="Nanggroe Aceh Darusalam">Nanggroe Aceh Darusalam</option>
-                            <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
-                            <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
-                            <option value="Papua">Papua</option>
-                            <option value="Papua Barat">Papua Barat</option>
-                            <option value="Riau">Riau</option>
-                            <option value="Sulawesi Barat">Sulawesi Barat</option>
-                            <option value="Sulawesi Selatan">Sulawesi Selatan</option>
-                            <option value="Sulawesi Tengah">Sulawesi Tengah</option>
-                            <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
-                            <option value="Sulawesi Utara">Sulawesi Utara</option>
-                            <option value="Sumatera Barat">Sumatera Barat</option>
-                            <option value="Sumatera Selatan">Sumatera Selatan</option>
-                            <option value="Sumatera Utara">Sumatera Utara</option>
+                            @foreach($dropdownOptions['provinces'] as $province)
+                                <option value="{{ $province }}">{{ $province }}</option>
+                            @endforeach
                         </select>
                     </div>
                 <div>
-                <form action="{{ route('stations.filter') }}" method="GET" style="display: flex; flex-direction: column; gap: 15px;">
-                    <label for="start_date" style="font-weight: bold; color: #333;">Start Date</label>
-                    <input type="date" name="start_date" id="start_date" required placeholder="Select start date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
-
-                    <label for="end_date" style="font-weight: bold; color: #333;">End Date</label>
-                    <input type="date" name="end_date" id="end_date" required placeholder="Select end date" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
-
-                    <button type="submit" style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
-                        Filter
-                    </button>
-                </form>
             </div>
 
             <style>

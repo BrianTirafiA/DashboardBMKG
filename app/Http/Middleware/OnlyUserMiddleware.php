@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OnlyGuestMiddleware
+class OnlyUserMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,18 +17,10 @@ class OnlyGuestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!$request->session()->exists("user")){
+        if($request->session()->exists("user") && $request->session()->get("role") === 'user'){
             return $next($request);
         } else {
-            // Redirect berdasarkan role
-            $role = $request->session()->get('role');
-            if($role === 'admin'){
-                return redirect("/admin/qcdashboard");
-            } elseif($role === 'user'){
-                return redirect("/user/dashboard");
-            } else {
-                return redirect("/login")->with('error', 'Invalid user role');
-            }
+            return redirect("/login")->with('error', 'Unauthorized access');
         }
     }
 }

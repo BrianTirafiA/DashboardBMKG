@@ -11,31 +11,16 @@
                 </p>
             </div>
             <div class="flex flex-col gap-2 shrink-0 sm:flex-row">
-                <button type="button" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                <!-- <button type="button" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
                     view all
-                </button>
+                </button> -->
                 <button type="button" class="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                    Add member
+                    <p>{{ $add }}</p>
                 </button>
             </div>
         </div>
         <div id='kategori' class="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div class="block w-full overflow-hidden md:w-max">
-                <nav>
-                    <ul role="tablist" class="relative flex flex-row p-1 rounded-lg bg-blue-gray-50 bg-opacity-60">
-                        <li role="tab" class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900" data-value="all">
-                            <div class="z-20 text-inherit">&nbsp;&nbsp;All&nbsp;&nbsp;</div>
-                            <div class="absolute inset-0 z-10 h-full bg-white rounded-md shadow"></div>
-                        </li>
-                        <li role="tab" class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900" data-value="monitored">
-                            <div class="z-20 text-inherit">&nbsp;&nbsp;Monitored&nbsp;&nbsp;</div>
-                        </li>
-                        <li role="tab" class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900" data-value="unmonitored">
-                            <div class="z-20 text-inherit">&nbsp;&nbsp;Unmonitored&nbsp;&nbsp;</div>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            
             <div class="w-full md:w-72">
                 <div class="relative h-10 w-full min-w-[200px] bg-white">
                     <div class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500">
@@ -95,7 +80,7 @@
                         @endforeach
                         <!-- Actions -->
                         <td class=" border-b border-blue-gray-100 ">
-                            <div class="flex items-center gap-2 items-center justify-center w-auto">
+                            <div class="flex items-center gap-2 justify-center w-auto">
                                 <button class="text-blue-500 flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>

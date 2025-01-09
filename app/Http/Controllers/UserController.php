@@ -23,6 +23,13 @@ class UserController extends Controller
             ]);
     }
 
+    public function register(): Response{
+        return response()
+            ->view("register", [
+                "title" => "Register Account"
+            ]);
+    }
+
     public function doLogin(Request $request): Response|RedirectResponse
     {
         $user = $request->input('user');
@@ -65,7 +72,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function doLogOut(Request $request)
+    public function doLogOut(Request $request): Response|RedirectResponse
     {
         return redirect('/login')->with('success', 'Logout berhasil!');
     }

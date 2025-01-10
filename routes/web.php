@@ -47,13 +47,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/user', 'lending-asset.admin.user');    
         Route::view('/unitkerja', 'lending-asset.admin.unitkerja');    
         Route::view('/settings', 'lending-asset.admin.settings');   
-        Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');  
-        Route::get('/edit-faq/create', [PertanyaanController::class, 'create'])->name('faq.create');  
-        Route::post('/edit-faq/store', [PertanyaanController::class, 'store'])->name('faq.store');  
-        Route::get('/edit-faq/edit/{id}', [PertanyaanController::class, 'edit'])->name('faq.edit');  
-        Route::post('/edit-faq/update/{id}', [PertanyaanController::class, 'update'])->name('faq.update');  
-
-          
+        Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');      
     });    
 });    
     
@@ -75,3 +69,7 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 
     
 Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    
+
+// Rute resource untuk FAQ  
+Route::resource('/edit-faq', \App\Http\Controllers\PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
+

@@ -18,4 +18,14 @@ class UserServiceImpl implements UserService
 
         return $userRecord;
     }
+
+    public function register(array $data): User  
+    {  
+        return User::create([  
+            'name' => $data['user'],  
+            'email' => $data['email'],  
+            'password' => Hash::make($data['password']),  
+            'role' => 'pending', // Set role sesuai kebutuhan  
+        ]);  
+    }  
 }

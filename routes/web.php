@@ -1,66 +1,77 @@
-<?php  
+<?php    
+    
+use App\Http\Controllers\HomeController;    
+use App\Http\Controllers\UserController;    
+use App\Http\Controllers\PertanyaanController;
+use Illuminate\Support\Facades\Route;    
+use App\Http\Controllers\PinController;    
+use App\Http\Middleware\OnlyGuestMiddleware;    
+use App\Http\Middleware\OnlyAdminMiddleware;    
+use App\Http\Middleware\OnlyUserMiddleware;    
+use App\Http\Middleware\LogoutMiddleware;    
   
-use App\Http\Controllers\HomeController;  
-use App\Http\Controllers\UserController;  
-use Illuminate\Support\Facades\Route;  
-use App\Http\Controllers\PinController;  
-use App\Http\Middleware\OnlyGuestMiddleware;  
-use App\Http\Middleware\OnlyAdminMiddleware;  
-use App\Http\Middleware\OnlyUserMiddleware;  
-use App\Http\Middleware\LogoutMiddleware;  
-
 Route::get('/', [HomeController::class, 'home']);  
+    
+Route::controller(UserController::class)->group(function () {    
+    Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class);    
+    Route::post('/login', 'doLogin')->middleware(OnlyGuestMiddleware::class);    
+    Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(LogoutMiddleware::class);  
+});    
+    
+// Admin Routes    
+Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function () {    
+    Route::view('/qcdashboard', 'home');    
+    Route::view('/home', 'home');    
+    
+    Route::prefix('itasset')->group(function () {    
+        Route::view('/dashboard', 'itAsset.dashboard');    
+        Route::view('/device', 'itAsset.device');    
+        Route::view('/rack', 'itAsset.rack');    
+        Route::view('/power', 'itAsset.power');    
+        Route::view('/report', 'itAsset.report');    
+        Route::view('/maintenance', 'itAsset.maintenance');    
+        Route::view('/log', 'itAsset.log');    
+    });    
+    
+    Route::prefix('lendasset')->group(function () {    
+        Route::view('/lendingitems', 'lending-asset.admin.dashboard-lending');    
+        Route::view('/transaksi-pengajuan', 'lending-asset.admin.transaksi-pengajuan');    
+        Route::view('/transaksi-peminjaman', 'lending-asset.admin.transaksi-peminjaman');    
+        Route::view('/transaksi-pengembalian', 'lending-asset.admin.transaksi-pengembalian');    
+        Route::view('/report-week', 'lending-asset.admin.report-week');    
+        Route::view('/report-month', 'lending-asset.admin.report-month');    
+        Route::view('/report-year', 'lending-asset.admin.report-year');    
+        Route::view('/items', 'lending-asset.admin.items');    
+        Route::view('/kategori', 'lending-asset.admin.kategori');    
+        Route::view('/lokasi', 'lending-asset.admin.lokasi');    
+        Route::view('/user', 'lending-asset.admin.user');    
+        Route::view('/unitkerja', 'lending-asset.admin.unitkerja');    
+        Route::view('/settings', 'lending-asset.admin.settings');   
+        Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');  
+        Route::get('/edit-faq/create', [PertanyaanController::class, 'create'])->name('faq.create');  
+        Route::post('/edit-faq/store', [PertanyaanController::class, 'store'])->name('faq.store');  
+        Route::get('/edit-faq/edit/{id}', [PertanyaanController::class, 'edit'])->name('faq.edit');  
+        Route::post('/edit-faq/update/{id}', [PertanyaanController::class, 'update'])->name('faq.update');  
+
+          
+    });    
+});    
+    
+// User Routes    
+Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {    
+    Route::view('/dashboard', 'lending-asset.user.user-dashboard');   
+    Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);  
+    Route::view('/profile', 'lending-asset.user.user-profile');   
+    Route::view('/kategori', 'lending-asset.user.user-kategori');   
+    Route::view('/items', 'lending-asset.user.user-items');   
+    Route::view('/pengajuan', 'lending-asset.user.user-pengajuan');   
+    Route::view('/peminjaman', 'lending-asset.user.user-peminjaman');   
+    Route::view('/pengembalian', 'lending-asset.user.user-pengembalian');  
+
+});    
   
-Route::controller(UserController::class)->group(function () {  
-    Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class);  
-    Route::post('/login', 'doLogin')->middleware(OnlyGuestMiddleware::class);  
-    Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(middleware: LogoutMiddleware::class);
-});  
-  
-// Admin Routes  
-Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function () {  
-    Route::view('/qcdashboard', 'home');  
-    Route::view('/home', 'home');  
-  
-    Route::prefix('itasset')->group(function () {  
-        Route::view('/dashboard', 'itAsset.dashboard');  
-        Route::view('/device', 'itAsset.device');  
-        Route::view('/rack', 'itAsset.rack');  
-        Route::view('/power', 'itAsset.power');  
-        Route::view('/report', 'itAsset.report');  
-        Route::view('/maintenance', 'itAsset.maintenance');  
-        Route::view('/log', 'itAsset.log');  
-        Route::prefix('device')->group(function(){
-            Route::view('/kvm', 'itAsset.device.device-kvm');  
-            Route::view('/server', 'itAsset.device.device-server');  
-            Route::view('/ups', 'itAsset.device.device-ups');  
-            Route::view('/fan', 'itAsset.device.device-fan');  
-        });
-    });  
-  
-    Route::prefix('lendasset')->group(function () {  
-        Route::view('/lendingitems', 'lending-asset.dashboard-lending');  
-        Route::view('/transaksi-pengajuan', 'lending-asset.transaksi-pengajuan');  
-        Route::view('/transaksi-peminjaman', 'lending-asset.transaksi-peminjaman');  
-        Route::view('/transaksi-pengembalian', 'lending-asset.transaksi-pengembalian');  
-        Route::view('/report-week', 'lending-asset.report-week');  
-        Route::view('/report-month', 'lending-asset.report-month');  
-        Route::view('/report-year', 'lending-asset.report-year');  
-        Route::view('/items', 'lending-asset.items');  
-        Route::view('/kategori', 'lending-asset.kategori');  
-        Route::view('/lokasi', 'lending-asset.lokasi');  
-        Route::view('/user', 'lending-asset.user');  
-        Route::view('/unitkerja', 'lending-asset.unitkerja');  
-        Route::view('/settings', 'lending-asset.settings');  
-        Route::view('/edit-faq', 'lending-asset.edit-faq');  
-    });  
-});  
-  
-// User Routes  
-Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {  
-    Route::view('/dashboard', 'lending-asset.user-dashboard'); // Placeholder - Replace with your actual user routes  
-    // Add more user routes here...  
-});  
-  
-Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');  
-  
+Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware(OnlyGuestMiddleware::class)->name('register.form');  
+Route::post('/register', [UserController::class, 'register'])->name('register');  
+
+    
+Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    

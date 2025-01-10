@@ -10,7 +10,7 @@
          
    <body class="h-full">      
    <div class="min-h-full">      
-       <x-navbar-all/>    
+       <x-navbar-admin/>    
          
        <div class="flex flex-nowrap">      
            <!-- Sidebar -->      

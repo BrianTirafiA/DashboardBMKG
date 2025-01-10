@@ -20,7 +20,7 @@ class OnlyAdminMiddleware
         if($request->session()->exists("user") && $request->session()->get("role") === 'admin'){
             return $next($request);
         } else {
-            return redirect("/login")->with('error', 'Unauthorized access');
+            return redirect("/register")->with('error', 'Unauthorized access');
         }
     }
 }

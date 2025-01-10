@@ -1,6 +1,6 @@
 <div class="flex  ">
     <!-- Sidebar 1 -->
-    <div id="sidebarContent" class="relative flex h-screen w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9] bg-clip-border p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse md:block hidden">
+    <div id="sidebarContent" class="relative flex h-screen w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9]  p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse bg-clip-border md:block hidden">
         <nav id="navMenu" class="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
             @foreach($menuItems as $item)
                 @if($item['type'] === 'dropdown')
@@ -43,6 +43,7 @@
                             </div>
                         </div>
                     </div>
+
                 @elseif($item['type'] === 'static')
                     <a href="{{ $item['link'] }}" role="button" class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:text-blue-500 hover:bg-gray-100 hover:shadow-md {{ $item['active'] ? 'bg-gray-200' : '' }}">
                         <div class="grid mr-2 place-items-center">
@@ -50,7 +51,20 @@
                         </div>
                         <span class="block">{{ $item['title'] }}</span>
                     </a>
-                @endif
+                
+                    @elseif($item['type'] === 'logout')  
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:text-blue-500 hover:bg-gray-100 hover:shadow-md {{ $item['active'] ? 'bg-gray-200' : '' }}">  
+                        <div class="grid mr-2 place-items-center">  
+                            {!! $item['icon'] !!}  
+                        </div>  
+                        <span class="block">{{ $item['title'] }}</span>  
+                    </a>  
+                @endif  
+                
+                <form id="logout-form" method="post" action="/logout" style="display: none;">  
+                    @csrf  
+                </form>  
+
             @endforeach
         </nav>
     </div>

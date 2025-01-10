@@ -6,7 +6,7 @@
     <title>Login Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-cover bg-center bg-cover items-center justify-center" style="background-image: url('{{ asset('assets/cloudanime.webp') }}');">
+<body class="bg-cover bg-center items-center justify-center" style="background-image: url('{{ asset('assets/cloudanime.webp') }}');">
     @if(isset($error))
         <div id="error-alert"    
             class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-4 py-3 mt-6 rounded-lg shadow-lg transition-opacity duration-300 opacity-100">    

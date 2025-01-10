@@ -11,7 +11,7 @@
                 </div>  
                 <div class="w-full lg:w-1/2">  
                     <div class="lg:max-w-xl">  
-                        <div class="mb-6 lg:mb-6 lg:ms-0 lg:me-0 me-5 ms-5">  
+                        <div class="mb-6 lg:mb-6 lg:ms-0 lg:me-0 me-5 ms-5 mt-6">  
                             <h2 class="text-4xl text-center font-bold text-gray-900 leading-[3.25rem] lg:text-left">Pertanyaan Umum Seputar Layanan</h2>  
                         </div>  
                         <div class="accordion-group lg:ms-0 lg:me-0 me-5 ms-5" data-accordion="default-accordion">  

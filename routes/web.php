@@ -10,13 +10,12 @@ use App\Http\Middleware\OnlyAdminMiddleware;
 use App\Http\Middleware\OnlyUserMiddleware;    
 use App\Http\Middleware\LogoutMiddleware;    
   
-Route::get('/', [HomeController::class, 'home']);    
+Route::get('/', [HomeController::class, 'home']);  
     
 Route::controller(UserController::class)->group(function () {    
     Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class);    
     Route::post('/login', 'doLogin')->middleware(OnlyGuestMiddleware::class);    
     Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(LogoutMiddleware::class);  
-    Route::get('/register', 'register')->middleware(OnlyGuestMiddleware::class);   
 });    
     
 // Admin Routes    
@@ -70,5 +69,9 @@ Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () 
     Route::view('/pengembalian', 'lending-asset.user.user-pengembalian');  
 
 });    
+  
+Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware(OnlyGuestMiddleware::class)->name('register.form');  
+Route::post('/register', [UserController::class, 'register'])->name('register');  
+
     
 Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    

@@ -1,6 +1,6 @@
 <div>
 <div class="relative flex items-center justify-center min-h-screen">
-    <div class="w-[85rem] h-[55rem] lg:h-[37rem] ms-4 me-4 p-7 bg-[#F1F5F9] rounded-xl shadow-md border border-blue-gray-100 border-collapse bg-clip-border">
+    <div class="w-[85rem] h-[59rem] lg:h-[37rem] ms-4 me-4 p-7 bg-[#F1F5F9] rounded-xl shadow-md border border-blue-gray-100 border-collapse bg-clip-border">
         <div class="font-[sans-serif]">
             <div class="grid lg:grid-cols-2 rounded-xl gap-4 max-lg:gap-12 bg-gradient-to-r from-blue-500 to-blue-700 sm:px-8 px-4 py-12 h-[380px] lg:h-[360px]">
                 <div class="">
@@ -24,7 +24,7 @@
                         <div class="mb-8">
                             <h3 class="text-3xl font-extrabold text-gray-800">Login to Dashboard</h3>
                         </div>
-                        <div class="sm:flex sm:items-start space-x-4 max-sm:space-y-4 mb-8">
+                        <div class="sm:flex sm:items-start space-x-4 max-sm:space-y-4 ">
 
                         </div>
 
@@ -58,7 +58,9 @@
                                 Log in
                             </button>
                         </div>
-                        <p class="text-sm mt-6 text-center text-gray-800">Belum punya akun? <a href="javascript:void(0);" class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a></p>
+                        <p class="text-sm mt-6 text-center text-gray-800">Belum punya akun? 
+                            <a href="/register" class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a>
+                        </p>
                     </form>
                 </div>
             </div>

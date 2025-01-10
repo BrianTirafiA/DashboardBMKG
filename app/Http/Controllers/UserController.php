@@ -2,16 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User; // Pastikan untuk mengimpor model User
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;  
+use Illuminate\Support\Facades\Hash;  
+
 
 class UserController extends Controller
 {
     private UserService $userService;
 
+    public function showRegisterForm()  
+    {  
+        return view('register');  
+    }  
+  
+    public function register(Request $request)  
+    {  
+        // Validasi input  
+        $validator = Validator::make($request->all(), [  
+            'user' => 'required|string|unique:users,name',  
+            'email' => 'required|email|unique:users,email',  
+            'password' => 'required|string|min:8|confirmed', // Menggunakan 'confirmed' untuk validasi konfirmasi password  
+        ]);  
+  
+        // Jika validasi gagal, kembalikan ke halaman sebelumnya dengan error  
+        if ($validator->fails()) {  
+            return redirect()->back()->withErrors($validator)->withInput();  
+        }  
+  
+        // Buat pengguna baru  
+        User::create([  
+            'name' => $request->user,  
+            'email' => $request->email,  
+            'password' => Hash::make($request->password), // Hash password sebelum menyimpannya  
+            'role' => 'pending', // Set role menjadi "pending"  
+        ]);  
+  
+        // Kembalikan respons ke halaman login dengan pesan sukses  
+        return redirect('/login')->with('success', 'Akun berhasil dibuat, silakan tunggu konfirmasi.');  
+    }  
+  
     public function __construct(UserService $userService){
         $this->userService = $userService;
     }
@@ -20,13 +54,6 @@ class UserController extends Controller
         return response()
             ->view("login", [
                 "title" => "Login"
-            ]);
-    }
-
-    public function register(): Response{
-        return response()
-            ->view("register", [
-                "title" => "Register Account"
             ]);
     }
 
@@ -76,4 +103,7 @@ class UserController extends Controller
     {
         return redirect('/login')->with('success', 'Logout berhasil!');
     }
+
+    
+
 }

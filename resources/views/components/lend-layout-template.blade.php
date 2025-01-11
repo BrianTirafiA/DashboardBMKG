@@ -34,7 +34,7 @@
            </div>
 
            <!-- Main Content -->
-           <div id="main-content" class="mt-7 mb-8 flex-grow p-1 transition-transform duration-300">
+           <div id="main-content" class="mt-7 flex-grow p-1 transition-transform duration-300">
                {{ $slot }} <!-- Slot for main content -->
            </div>
        </div>

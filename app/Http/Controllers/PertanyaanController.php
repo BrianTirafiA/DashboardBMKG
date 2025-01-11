@@ -10,7 +10,8 @@ class PertanyaanController extends Controller
 
     public function adminindex()  
     {  
-        $pertanyaans = Pertanyaan::all();  
+        $pertanyaans = Pertanyaan::paginate(8);  
+
         return view('lending-asset.admin.edit-faq', compact('pertanyaans'));  
     }  
     

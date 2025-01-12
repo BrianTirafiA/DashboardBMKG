@@ -13,25 +13,40 @@ class UnitKerjaController extends Controller
         $unitkerjas = UnitKerja::paginate(10); // Ambil semua unit kerja dengan pagination  
         return view('lending-asset.admin.unitkerja', compact('unitkerjas'));  
     }  
+    
+    public function adminindex(Request $request)    
+    {    
+        $query = $request->input('search'); // Ambil input pencarian  
   
-    // Fungsi pencarian  
-public function search(Request $request)  
-{  
-    $query = $request->input('search'); // Ambil input pencarian  
+        // Jika query kosong, kembalikan semua UnitKerja  
+        if (empty($query)) {  
+            $unitkerjas = UnitKerja::paginate(8);  
+        } else {  
+            $unitkerjas = UnitKerja::where('question', 'ILIKE', "%{$query}%")  
+                ->orWhere('answer', 'ILIKE', "%{$query}%")  
+                ->paginate(8);  
+        }  
   
-    // Jika query kosong, kembalikan semua unit kerja  
-    if (empty($query)) {  
-        $unitkerjas = UnitKerja::paginate(10);  
-    } else {  
-        $unitkerjas = UnitKerja::where('nama_unit_kerja', 'ILIKE', "%{$query}%") // Gunakan ILIKE untuk PostgreSQL  
-            ->orWhere('alamat', 'ILIKE', "%{$query}%") // Gunakan ILIKE untuk PostgreSQL  
-            ->paginate(10);  
+        return view('lending-asset.admin.unitkerja', compact('unitkerjas', 'query'));    
     }  
-  
-    return view('lending-asset.admin.unitkerja', compact('unitkerjas', 'query')); // Kembalikan view dengan data yang difilter  
-}  
 
-  
+    // Fungsi pencarian  
+    public function search(Request $request)  
+    {  
+        $query = $request->input('search'); // Ambil input pencarian  
+    
+        // Jika query kosong, kembalikan semua unit kerja  
+        if (empty($query)) {  
+            $unitkerjas = UnitKerja::paginate(10);  
+        } else {  
+            $unitkerjas = UnitKerja::where('nama_unit_kerja', 'ILIKE', "%{$query}%")  
+                ->orWhere('alamat', 'ILIKE', "%{$query}%")  
+                ->paginate(10);  
+        }  
+    
+        return view('lending-asset.admin.unitkerja', compact('unitkerjas', 'query')); // Pastikan 'query' ada di sini  
+    }  
+ 
     // Menyimpan unit kerja baru  
     public function store(Request $request)  
     {  
@@ -69,7 +84,7 @@ public function search(Request $request)
             'alamat' => $request->alamat,  
         ]);  
   
-        return redirect()->route('unitkerja.index')->with('success', 'Unit kerja berhasil diperbarui.');  
+        return redirect()->back()->with('success', 'Unit kerja berhasil diperbarui.');  
     }  
   
     // Menghapus unit kerja  
@@ -77,7 +92,7 @@ public function search(Request $request)
     {  
         $unitkerja = UnitKerja::findOrFail($id);  
         $unitkerja->delete();  
-        return redirect()->route('unitkerja.index')->with('success', 'Data Berhasil Dihapus!');  
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus!');  
     }  
 
       // Menampilkan detail unit kerja (jika diperlukan)  

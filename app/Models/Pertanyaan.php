@@ -9,5 +9,5 @@ class Pertanyaan extends Model
 {  
     use HasFactory;  
   
-    protected $fillable = ['question', 'answer']; // Kolom yang dapat diisi  
+    protected $fillable = ['question', 'answer']; 
 }  

@@ -1,6 +1,7 @@
 <?php    
     
 use App\Http\Controllers\HomeController;    
+use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
 use Illuminate\Support\Facades\Route;    
@@ -45,7 +46,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/kategori', 'lending-asset.admin.kategori');    
         Route::view('/lokasi', 'lending-asset.admin.lokasi');    
         Route::view('/user', 'lending-asset.admin.user');    
-        Route::view('/unitkerja', 'lending-asset.admin.unitkerja');    
+        Route::get('/unitkerja', [UnitKerjaController::class, 'index'])->name('unitkerja.adminIndex');    
         Route::view('/settings', 'lending-asset.admin.settings');   
         Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');      
     });    
@@ -71,5 +72,7 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    
 
 // Rute resource untuk FAQ  
-Route::resource('/edit-faq', \App\Http\Controllers\PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
-
+Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
+// Route untuk resource unit kerja
+Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminMiddleware::class);
+Route::get('/unitkerja', [UnitKerjaController::class, 'search'])->middleware(OnlyAdminMiddleware::class)->name('unitkerja.search');

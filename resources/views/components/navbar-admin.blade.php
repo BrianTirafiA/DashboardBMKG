@@ -5,8 +5,8 @@
   
     <x-navbar :menu-items="[  
         ['label' => 'AWS QC', 'link' => '/admin/qcdashboard', 'active' => $currentUrl === url('/qcdashboard')],  
-        ['label' => 'Server Room', 'link' => '/admin/itasset/dashboard', 'active' => str_starts_with($currentUrl, url('/itasset/'))],  
-        ['label' => 'Lending Items', 'link' => '/admin/lendasset/lendingitems', 'active' => str_starts_with($currentUrl, url('/lendasset/'))],  
+        ['label' => 'Server Room', 'link' => '/admin/itasset/dashboard', 'active' => str_starts_with($currentUrl, url('/admin/itasset/'))],  
+        ['label' => 'Lending Items', 'link' => '/admin/lendasset/lendingitems', 'active' => str_starts_with($currentUrl, url('/admin/lendasset/'))],  
         ['label' => 'Calendar', 'link' => '#', 'active' => $currentUrl === url('/calendar')],  
         ['label' => 'Reports', 'link' => '#', 'active' => $currentUrl === url('/reports')],  
     ]" />  

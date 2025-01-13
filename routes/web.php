@@ -1,6 +1,7 @@
 <?php    
     
 use App\Http\Controllers\HomeController;    
+use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
 use Illuminate\Support\Facades\Route;    
@@ -45,15 +46,10 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/kategori', 'lending-asset.admin.kategori');    
         Route::view('/lokasi', 'lending-asset.admin.lokasi');    
         Route::view('/user', 'lending-asset.admin.user');    
-        Route::view('/unitkerja', 'lending-asset.admin.unitkerja');    
+        Route::get('/unitkerja', [UnitKerjaController::class, 'adminindex'])->name('unitkerja.index');    
         Route::view('/settings', 'lending-asset.admin.settings');   
         Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');  
-        Route::get('/edit-faq/create', [PertanyaanController::class, 'create'])->name('faq.create');  
-        Route::post('/edit-faq/store', [PertanyaanController::class, 'store'])->name('faq.store');  
-        Route::get('/edit-faq/edit/{id}', [PertanyaanController::class, 'edit'])->name('faq.edit');  
-        Route::post('/edit-faq/update/{id}', [PertanyaanController::class, 'update'])->name('faq.update');  
-
-          
+        Route::get('/unitkerja', [UnitKerjaController::class, 'search'])->name('unitkerja.search');
     });    
 });    
     
@@ -75,3 +71,8 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 
     
 Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    
+
+// Rute resource untuk FAQ  
+Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
+// Route untuk resource unit kerja
+Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminMiddleware::class);

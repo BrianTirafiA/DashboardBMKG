@@ -1,6 +1,6 @@
 <x-user-layout-template>
     <section class="py-1 me-6">  
-        <div class="relative flex flex-col w-full h-full text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">  
+        <div class="relative flex flex-col w-full h-content text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">  
             <div class="flex flex-col justify-center items-center gap-x-16 gap-y-5 xl:gap-28 lg:flex-row lg:justify-between max-lg:max-w-2xl mx-auto max-w-full">  
                 <div class="w-full lg:w-1/2">  
                     <img  

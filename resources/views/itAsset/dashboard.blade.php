@@ -4,7 +4,7 @@
   <p>Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p>
   <!-- Tambahkan konten lainnya di sini -->
 
-  <div class="grid grid-cols-3 gap-6 mt-8 px-6">
+  <div class="grid grid-cols-3 gap-6 mt-8 px-6 bg-gray-200 py-6 rounded-lg">
     <x-progress-bar title="Rak A" :percentage="80" />
     <x-progress-bar title="Rak B" :percentage="80" />
     <x-progress-bar title="Rak C" :percentage="34" />

@@ -26,4 +26,3 @@ class LogoutMiddleware
         return redirect('/login');
     }
 }
-

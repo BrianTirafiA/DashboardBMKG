@@ -15,7 +15,7 @@
        <div class="flex flex-nowrap -mt-3  ">
            <!-- Sidebar -->
 
-           <div id="sidebar" class=" p-3 mt-1 transition-transform duration-300">
+           <div id="sidebar" class="h-full p-3 mt-1 transition-transform duration-300">
                <x-sidebar-lending />
            </div>
 

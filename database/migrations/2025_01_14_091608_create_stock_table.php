@@ -13,7 +13,7 @@ class CreateStockTable extends Migration
      */  
     public function up()  
     {  
-        Schema::create('stock', function (Blueprint $table) {  
+        Schema::create('item_stocks', function (Blueprint $table) {  
             $table->id();  
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');  
             $table->integer('available_stock');  
@@ -29,6 +29,6 @@ class CreateStockTable extends Migration
      */  
     public function down()  
     {  
-        Schema::dropIfExists('stock');  
+        Schema::dropIfExists('item_stocks');  
     }  
 }  

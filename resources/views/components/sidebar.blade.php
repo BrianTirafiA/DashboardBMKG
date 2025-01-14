@@ -8,7 +8,7 @@
                         $isDropdownActive = collect($item['items'])->contains(fn($subItem) => $subItem['active']);  
                     @endphp  
                     <div class="relative block w-full">  
-                        <button onclick="toggleSubMenu('{{ $item['title'] }}SubMenu', this)" class="flex items-center justify-between w-full p-3 font-sans text-xl font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-blue-gray-100 text-blue-gray-700 hover:bg-blue-gray-50 hover:text-blue-500 hover:bg-opacity-80 hover:bg-gray-100 hover:shadow-md {{ $isDropdownActive ? 'bg-gray-200' : '' }}">  
+                        <button onclick="toggleSubMenu('{{ $item['title'] }}SubMenu', this)" class="flex items-center rounded-lg justify-between w-full p-3 font-sans text-xl font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-blue-gray-100 text-blue-gray-700 hover:bg-blue-gray-50 hover:text-blue-500 hover:bg-opacity-80 hover:bg-gray-100 hover:shadow-md {{ $isDropdownActive ? 'bg-gray-200' : '' }}">  
                             <div class="flex items-center">  
                                 <div class="grid mr-2 place-items-center">{!! $item['icon'] !!}</div>  
                                 <p class="block font-sans text-base font-normal leading-relaxed text-blue-gray-900 transition-colors duration-200 hover:text-blue-primary">{{ $item['title'] }}</p>  
@@ -35,7 +35,7 @@
                         </div>  
                     </div>  
                 @elseif($item['type'] === 'static')  
-                    <a href="{{ $item['link'] }}" class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:text-blue-500 hover:bg-gray-100 hover:shadow-md {{ $item['active'] ? 'bg-gray-200' : '' }}">  
+                    <a href="{{ $item['link'] }}" class="flex items-center w-full p-3 leading-tight transition-all rounded-xl outline-none text-start hover:text-blue-500 hover:bg-gray-100 hover:shadow-md {{ $item['active'] ? 'bg-gray-200' : '' }}">  
                         <div class="grid mr-2 place-items-center">{!! $item['icon'] !!}</div>  
                         <span class="block">{{ $item['title'] }}</span>  
                     </a>  
@@ -44,16 +44,22 @@
 
             <div id="account-card" class="m-2 mt-2 max-w-sm border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">    
                 <div class="rounded-xl border bg-gray-700 shadow-lg p-5">    
-                    <h1 id="FullName" class=" text-center text-xl font-bold text-white">{{ session('fullname') }}</h1>    
-                    <h3 id="NIP" class="text-center text-lg font-semibold text-white">{{ session('nip') }}</h3>    
-                    <p class="mt-2 text-center text-sm text-white hover:text-[#F1F5F9]">  
-                    {{ session('unit_kerja_name') ?? 'Unit Kerja Tidak Tersedia' }}  
-                    </p>  
+                <h1 id="FullName" class="text-center text-xl font-bold {{ session('fullname') ? 'text-white' : 'text-red-500' }}">  
+                    {{ session('fullname') ?? 'Nama Lengkap Belum Diisi' }}  
+                </h1>      
+                
+                <h3 id="NIP" class=" mt-2 text-center text-sm font-semibold {{ session('nip') ? 'text-white' : 'text-red-500' }}">  
+                    {{ session('nip') ?? 'NIP Belum Diisi' }}  
+                </h3>      
+                
+                <p class=" text-center text-sm {{ session('unit_kerja_name') ? 'text-white' : 'text-red-500' }} hover:text-[#F1F5F9]">    
+                    {{ session('unit_kerja_name') ?? 'Unit Kerja Belum Diisi' }}    
+                </p>    
 
-                    <ul class="mt-3 divide-y rounded-xl bg-gray-100 p-3 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">      
+                    <ul class="mt-3 rounded-xl bg-gray-100 p-3 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">      
                         <li class="flex flex-col items-center text-sm">      
                             <span>Data Account</span>       
-                            <span class="mt-1">    
+                            <span class="mt-1 mb-1">    
                                 @if(session('fullname') && session('nip') && session('no_telepon') && session('unit_kerja_id'))    
                                     <span class="rounded-full bg-green-200 px-2 py-1 text-xs font-medium text-green-700">Lengkap</span>    
                                 @else    

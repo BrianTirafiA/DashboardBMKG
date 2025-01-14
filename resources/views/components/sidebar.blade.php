@@ -1,6 +1,6 @@
 <div class="flex">  
     <!-- Sidebar 1 -->  
-    <div id="sidebarContent" class="relative flex h-full w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9] p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse bg-clip-border md:block hidden">  
+    <div id="sidebarContent" class="relative flex h-full min-h-[54rem] w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9] p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse bg-clip-border md:block hidden">  
         <nav id="navMenu" class="flex flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">  
             @foreach($menuItems as $item)  
                 @if($item['type'] === 'dropdown')  
@@ -43,44 +43,45 @@
             @endforeach  
 
             <div id="account-card" class="m-2 mt-2 max-w-sm border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">    
-    <div class="rounded-xl border bg-gray-700 shadow-lg p-5">    
-        <h1 id="FullName" class="mt-4 text-center text-xl font-bold text-white">{{ session('fullname') }}</h1>    
-        <h3 id="NIP" class="text-center text-lg font-semibold text-white">{{ session('nip') }}</h3>    
-        <p class="mt-2 text-center text-sm text-white hover:text-[#F1F5F9]">  
-        {{ session('unit_kerja_name') ?? 'Unit Kerja Tidak Tersedia' }}  
-        </p>  
+                <div class="rounded-xl border bg-gray-700 shadow-lg p-5">    
+                    <h1 id="FullName" class=" text-center text-xl font-bold text-white">{{ session('fullname') }}</h1>    
+                    <h3 id="NIP" class="text-center text-lg font-semibold text-white">{{ session('nip') }}</h3>    
+                    <p class="mt-2 text-center text-sm text-white hover:text-[#F1F5F9]">  
+                    {{ session('unit_kerja_name') ?? 'Unit Kerja Tidak Tersedia' }}  
+                    </p>  
 
+                    <ul class="mt-3 divide-y rounded-xl bg-gray-100 p-3 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">      
+                        <li class="flex flex-col items-center text-sm">      
+                            <span>Data Account</span>       
+                            <span class="mt-1">    
+                                @if(session('fullname') && session('nip') && session('no_telepon') && session('unit_kerja_id'))    
+                                    <span class="rounded-full bg-green-200 px-2 py-1 text-xs font-medium text-green-700">Lengkap</span>    
+                                @else    
+                                    <span class="rounded-full bg-red-200 px-2 py-1 text-xs font-medium text-red-700">Tidak Lengkap</span>    
+                                @endif    
+                            </span>   
+                        </li>    
+                    </ul>  
   
-        <ul class="mt-3 divide-y rounded-xl bg-gray-100 p-3 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">    
-            <li class="flex items-center py-2 text-sm">    
-                <span>Data Account</span>    
-                <span class="ml-auto">  
-                    @if(session('fullname') && session('nip') && session('unit_kerja_id'))  
-                        <span class="rounded-full bg-green-200 px-2 py-1 text-xs font-medium text-green-700">Lengkap</span>  
-                    @else  
-                        <span class="rounded-full bg-red-200 px-2 py-1 text-xs font-medium text-red-700">Tidak Lengkap</span>  
-                    @endif  
-                </span>    
-            </li>    
-              
-        </ul>    
-  
-        <button type="button" class="flex justify-center mt-5 w-full bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-white">    
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square me-2" viewBox="0 0 16 16">    
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>    
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>    
-            </svg>    
-            Edit Data Account    
-        </button>    
-  
-        <form id="logout-form" action="/logout" method="POST" style="display: none;">    
-            @csrf    
-        </form>    
-        <button type="button" onclick="document.getElementById('logout-form').submit();" class="mt-2 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">    
-            Logout    
-        </button>    
-    </div>    
-</div>  
+                    <a id="toProfile" href="">
+                    <button type="button" class="flex justify-center mt-5 w-full bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-white">    
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square me-2" viewBox="0 0 16 16">    
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>    
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>    
+                        </svg>    
+                        Edit Data Account    
+                    </button> 
+                    </a>
+                       
+            
+                    <form id="logout-form" action="/logout" method="POST" style="display: none;">    
+                        @csrf    
+                    </form>    
+                    <button type="button" onclick="document.getElementById('logout-form').submit();" class="mt-2 mb-2 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">    
+                        Logout    
+                    </button>    
+                </div>    
+            </div>  
   
         </nav>  
     </div>  

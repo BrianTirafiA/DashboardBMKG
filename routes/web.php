@@ -58,7 +58,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {    
     Route::view('/dashboard', 'lending-asset.user.user-dashboard');   
     Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);  
-    Route::view('/profile', 'lending-asset.user.user-profile');   
+    Route::view('/profile', 'lending-asset.user.user-profile')->name('user.profile');   
     Route::view('/kategori', 'lending-asset.user.user-kategori');   
     Route::view('/items', 'lending-asset.user.user-items');   
     Route::view('/pengajuan', 'lending-asset.user.user-pengajuan');   

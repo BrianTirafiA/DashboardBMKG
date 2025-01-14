@@ -20,10 +20,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [  
-        'name',  
+        'name',
         'email',  
+        'fullname',
         'password',  
         'password_confirmation',
+        'nip',  
+        'no_telepon',  
+        'unit_kerja_id',
         'role',
     ];  
  
@@ -50,4 +54,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function unit_kerja()  
+       {  
+           return $this->belongsTo(UnitKerja::class, 'unit_kerja_id');  
+       } 
 }

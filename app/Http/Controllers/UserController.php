@@ -57,41 +57,58 @@ class UserController extends Controller
             ]);
     }
 
-    public function doLogin(Request $request): Response|RedirectResponse
-    {
-        $user = $request->input('user');
-        $password = $request->input('password');
+    public function doLogin(Request $request): Response|RedirectResponse  
+    {  
+        $user = $request->input('user');  
+        $password = $request->input('password');  
+    
+        if (empty($user) || empty($password)) {  
+            return response()->view("login", [  
+                "title" => "Login",  
+                "error" => "Both username and password are required"  
+            ]);  
+        }  
+    
+        $userRecord = User::where('name', $user)->first();  
+    
+        if (!$userRecord) {  
+            return response()->view("login", [  
+                "title" => "Login",  
+                "error" => "Username or password is incorrect"  
+            ]);  
+        }  
+    
+        // Cek apakah password benar  
+        if (!$this->userService->login($user, $password)) {  
+            return response()->view("login", [  
+                "title" => "Login",  
+                "error" => "Username or password is incorrect"  
+            ]);  
+        }  
+    
+        // Cek apakah role pengguna adalah 'pending'  
+        if ($userRecord->role === 'pending') {  
+            return response()->view("login", [  
+                "title" => "Login",  
+                "error" => "Akun Anda masih dalam proses verifikasi. Silakan tunggu hingga akun Anda diaktifkan. Hubungi pusatdatabase@bmkg.go.id"  
+            ]);  
+        }  
+    
+        // Simpan informasi user dan role dalam sesi  
+        $request->session()->put("user", $userRecord->name);  
+        $request->session()->put("role", $userRecord->role);  
+    
+        // Redirect berdasarkan role  
+        if ($userRecord->role === 'admin') {  
+            return redirect("/admin/qcdashboard");  
+        } elseif ($userRecord->role === 'user') {  
+            return redirect("/user/dashboard");  
+        } else {  
+            // Optional: Handle role lain atau tampilkan error  
+            return redirect("/login")->with('error', 'Invalid user role');  
+        }  
+    }  
 
-        if(empty($user) || empty($password)){
-            return response()->view("login", [
-                "title" => "Login",
-                "error" => "Both username and password are required"
-            ]);
-        }
-
-        $userRecord = User::where('name', $user)->first();
-
-        if(!$userRecord || !$this->userService->login($user, $password)){
-            return response()->view("login", [
-                "title" => "Login",
-                "error" => "Username or password is incorrect"
-            ]);
-        }
-
-        // Simpan informasi user dan role dalam sesi
-        $request->session()->put("user", $userRecord->name);
-        $request->session()->put("role", $userRecord->role);
-
-        // Redirect berdasarkan role
-        if($userRecord->role === 'admin'){
-            return redirect("/admin/qcdashboard");
-        } elseif($userRecord->role === 'user'){
-            return redirect("/user/dashboard");
-        } else {
-            // Optional: Handle role lain atau tampilkan error
-            return redirect("/login")->with('error', 'Invalid user role');
-        }
-    }
 
     /**
      * Proses Logout.
@@ -103,7 +120,5 @@ class UserController extends Controller
     {
         return redirect('/login')->with('success', 'Logout berhasil!');
     }
-
-    
 
 }

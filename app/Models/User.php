@@ -59,4 +59,4 @@ class User extends Authenticatable
        {  
            return $this->belongsTo(UnitKerja::class, 'unit_kerja_id');  
        } 
-}
+    }

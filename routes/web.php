@@ -11,6 +11,8 @@ use App\Http\Middleware\OnlyGuestMiddleware;
 use App\Http\Middleware\OnlyAdminMiddleware;    
 use App\Http\Middleware\OnlyUserMiddleware;    
 use App\Http\Middleware\LogoutMiddleware;    
+use App\Http\Controllers\DeviceController;
+
   
 Route::get('/', [HomeController::class, 'home']);  
     
@@ -32,7 +34,11 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/power', 'itAsset.power');    
         Route::view('/report', 'itAsset.report');    
         Route::view('/maintenance', 'itAsset.maintenance');    
-        Route::view('/log', 'itAsset.log');    
+        Route::view('/log', 'itAsset.log');
+        
+        Route::apiResource('/device', DeviceController::class);
+        Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
+
     });    
     
     Route::prefix('lendasset')->group(function () {    

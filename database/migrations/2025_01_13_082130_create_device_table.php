@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();  
             $table->string('name_device')->nullable();  
             $table->string('brand_device')->nullable();
+            $table->string('type_device')->nullable();
             $table->year('year_device')->nullable();
             $table->string('os_device')->nullable(); 
             $table->string('processor_device')->nullable();   
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('devices'); // Perbaikan: 'devices' bukan 'device'
+        Schema::dropIfExists('devices'); 
     }
 };

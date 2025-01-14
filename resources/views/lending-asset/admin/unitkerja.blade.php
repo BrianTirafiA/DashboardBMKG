@@ -105,7 +105,7 @@
                     </div>              
                 </div>              
         
-                <<div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">                
+                <div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">                
                     <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">                
                         Total Data: {{ $unitkerjas->total() }} | Page {{ $unitkerjas->currentPage() }} of {{ $unitkerjas->lastPage() }}                
                     </p>                

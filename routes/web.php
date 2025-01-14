@@ -4,7 +4,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
-use App\Http\Controllers\UserControllerForAdmin;
 use Illuminate\Support\Facades\Route;    
 use App\Http\Controllers\PinController;    
 use App\Http\Middleware\OnlyGuestMiddleware;    
@@ -12,6 +11,7 @@ use App\Http\Middleware\OnlyAdminMiddleware;
 use App\Http\Middleware\OnlyUserMiddleware;    
 use App\Http\Middleware\LogoutMiddleware;    
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\UserControllerForAdmin;
 
   
 Route::get('/', [HomeController::class, 'home']);  
@@ -36,11 +36,11 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/maintenance', 'itAsset.maintenance');    
         Route::view('/log', 'itAsset.log');
         
-        Route::apiResource('/device', DeviceController::class);
+        Route::Resource('/device', DeviceController::class);
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
 
     });    
-    
+
     Route::prefix('lendasset')->group(function () {    
         Route::view('/lendingitems', 'lending-asset.admin.dashboard-lending');    
         Route::view('/transaksi-pengajuan', 'lending-asset.admin.transaksi-pengajuan');    
@@ -57,7 +57,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('/unitkerja', [UnitKerjaController::class, 'adminindex'])->name('unitkerja.index');      
         Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');  
         Route::get('/unitkerja', [UnitKerjaController::class, 'search'])->name('unitkerja.search');
-    });    
+    });
 });    
     
 // User Routes    
@@ -83,6 +83,3 @@ Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stati
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
 // Route untuk resource unit kerja
 Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminMiddleware::class);
-// Route untuk resource unit kerja
-// Route::resource('/users', UserControllerForAdmin::class)->middleware(OnlyAdminMiddleware::class);
-

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('os_device')->nullable(); 
             $table->string('processor_device')->nullable();   
             $table->unsignedInteger('ram_device')->nullable(); 
-            $table->unsignedInteger('disk_device')->nullable();
+            $table->string('disk_device')->nullable();
             $table->timestamps();  
         });  
     }

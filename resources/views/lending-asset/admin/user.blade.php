@@ -61,8 +61,7 @@
                                 <p>{{ $add }}</p>              
                             </button>              
                         </div>              
-                    </div>              
-        
+                    </div>               
                     <div class="ms-5 me-5 flex p-6 px-0 -mt-5 overflow-hidden">              
                         <div class="w-full rounded-xl overflow-hidden border border-blue-gray-100">                              
                             <table id="usertable" class="w-full mt-4 text-left table-auto">              

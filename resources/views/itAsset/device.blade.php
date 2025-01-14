@@ -1,14 +1,14 @@
 <x-layout-server>
-    <div class="flex flex-wrap items-center gap-4 sm:justify-between justify-center">
+    <!-- <div class="flex flex-wrap items-center gap-4 sm:justify-between justify-center">
         <h2 class="text-2xl font-semibold text-center sm:text-left">
             Daftar Perangkat Ruang Server
         </h2>
         <button class="bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600">
             Tambah
         </button>
-    </div>
+    </div> -->
 
-    <p>Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p>
+    <!-- <p>Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p> -->
     <!-- Tabel Device -->
     <div class="me-7 mt-1">
         @php
@@ -46,7 +46,7 @@
                             class="relative h-10 w-full min-w-[200px] bg-white">
                             <input id="searchInput" name="search"
                                 class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 focus:border-2 focus:border-gray-900"
-                                placeholder="Cari perangkat" value="{{ request('search') }}" />
+                                placeholder="Cari perangkat" value="{{ request(key: 'search') }}" />
                             <button type="submit" class="absolute right-3 top-2.5 text-blue-gray-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -101,15 +101,25 @@
                                             <div class="flex items-center gap-3 justify-center">
                                                 <button type="button" class="text-blue-500 flex items-center gap-2"
                                                     onclick="openEditModal('{{ $device->id }}')">
-                                                    Edit
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                        <path fill-rule="evenodd"
+                                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                    </svg>
                                                 </button>
-                                                <form action="{{ route('devices.destroy', $device->id) }}" method="POST">
+                                                <form action="{{ route('device.destroy', $device->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="button"
                                                         class="text-red-500 flex items-center gap-1 delete-button"
                                                         onclick="confirmDelete('{{ $device->id }}')">
-                                                        Hapus
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                                                        </svg>
                                                     </button>
                                                 </form>
                                             </div>
@@ -129,15 +139,73 @@
                 </div>
 
                 {{-- div id="pagination" class="flex items-center justify-between p-4 border-t border-blue-gray-50">
-                    <p class="block font-sans text-sm font-normal leading-normal text-blue-gray-900">
-                        Total Data: {{ $devices->total() }} | Halaman {{ $devices->currentPage() }} dari
-                        {{ $devices->lastPage() }}
-                    </p>
-                    <div class="flex gap-2">
-                        {{ $devices->links() }}
-                    </div>
-                </div> --}}
-            </div>
+                <p class="block font-sans text-sm font-normal leading-normal text-blue-gray-900">
+                    Total Data: {{ $devices->total() }} | Halaman {{ $devices->currentPage() }} dari
+                    {{ $devices->lastPage() }}
+                </p>
+                <div class="flex gap-2">
+                    {{ $devices->links() }}
+                </div>
+            </div> --}}
         </div>
     </div>
+    </div>
+
+    <x-form-add-device />
+
+    <script>
+        function openAddModal() {
+            document.getElementById('addForm').reset(); // Reset form                
+            document.getElementById('addModal').classList.remove('hidden'); // Tampilkan modal                
+        }
+
+        document.getElementById('closeAddModal').addEventListener('click', () => {
+            document.getElementById('addModal').classList.add('hidden');
+        });
+
+        document.getElementById('addForm').addEventListener('submit', function (event) {
+            let isValid = true;
+
+            // Validasi input RAM
+            let ramInput = document.getElementById('addRAM');
+            let ramError = document.getElementById('ramError');
+            if (isNaN(ramInput.value) || ramInput.value.trim() === '') {
+                isValid = false;
+                if (!ramError) {
+                    let errorMsg = document.createElement('p');
+                    errorMsg.id = 'ramError';
+                    errorMsg.classList.add('text-red-500', 'text-sm');
+                    errorMsg.textContent = 'RAM harus berupa angka.';
+                    ramInput.after(errorMsg);
+                }
+            } else {
+                if (ramError) {
+                    ramError.remove();
+                }
+            }
+
+            // Validasi input Tahun
+            let tahunInput = document.getElementById('addTahun');
+            let tahunError = document.getElementById('tahunError');
+            if (isNaN(tahunInput.value) || tahunInput.value.trim() === '') {
+                isValid = false;
+                if (!tahunError) {
+                    let errorMsg = document.createElement('p');
+                    errorMsg.id = 'tahunError';
+                    errorMsg.classList.add('text-red-500', 'text-sm');
+                    errorMsg.textContent = 'Tahun harus berupa angka.';
+                    tahunInput.after(errorMsg);
+                }
+            } else {
+                if (tahunError) {
+                    tahunError.remove();
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+    </script>
 </x-layout-server>

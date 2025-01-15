@@ -73,7 +73,7 @@ Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware
 Route::post('/register', [UserController::class, 'register'])->name('register');  
 
     
-Route::get('/admin/qcdashboard', [StationFlagController::class, 'showMap'])->name('stations.filter');    
+Route::get('/admin/qcdashboard', [StationFlagController::class, 'index'])->name('stations.filter');
 
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);

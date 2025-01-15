@@ -34,7 +34,7 @@
                 ];              
             @endphp              
         
-            <div id="table" class="relative flex flex-col w-full h-full text-gray-700 bg-white border border-blue-gray-100 shadow-md rounded-xl mb-2">              
+            <div id="table" class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-blue-gray-100 shadow-md rounded-xl mb-2">              
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">              
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">              
                         <div>              
@@ -133,7 +133,7 @@
                         <p class="block font-sans text-sm font-normal leading-normal text-blue-gray-900">                
                             Total Data: {{ $users->total() }} | Page {{ $users->currentPage() }} of {{ $users->lastPage() }}                
                         </p>                
-                        <div class="flex gap-2">                
+                        <div class="flex gap-2 me-2">                
                             @if($users->onFirstPage())            
                                 <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">                
                                     Previous                

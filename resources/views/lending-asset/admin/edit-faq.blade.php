@@ -11,7 +11,7 @@
             ];            
         @endphp            
       
-        <div id="table" class="relative flex flex-col w-full h-full text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">            
+        <div id="table" class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">            
             <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-[#FFFFFF] rounded-none bg-clip-border">            
                 <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">            
                     <div>            
@@ -109,7 +109,7 @@
                     <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">              
                         Total Data: {{ $pertanyaans->total() }} | Page {{ $pertanyaans->currentPage() }} of {{ $pertanyaans->lastPage() }}              
                     </p>              
-                    <div class="flex gap-2">              
+                    <div class="flex gap-2 me-2">              
                         @if($pertanyaans->onFirstPage())          
                             <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">              
                                 Previous              

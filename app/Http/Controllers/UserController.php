@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;  
 use Illuminate\Support\Facades\Hash;  
+use App\Models\UnitKerja;
 
 
 class UserController extends Controller
@@ -22,11 +23,14 @@ class UserController extends Controller
   
     public function register(Request $request)  
     {  
+        $unitKerjas = UnitKerja::all();  
+
         // Validasi input  
         $validator = Validator::make($request->all(), [  
             'user' => 'required|string|unique:users,name',  
             'email' => 'required|email|unique:users,email',  
-            'password' => 'required|string|min:8|confirmed', // Menggunakan 'confirmed' untuk validasi konfirmasi password  
+            'password' => 'required|string|min:8|confirmed',
+            'unitkerja_id' => 'nullable|exists:unitkerjas,id',
         ]);  
   
         // Jika validasi gagal, kembalikan ke halaman sebelumnya dengan error  
@@ -38,7 +42,8 @@ class UserController extends Controller
         User::create([  
             'name' => $request->user,  
             'email' => $request->email,  
-            'password' => Hash::make($request->password), // Hash password sebelum menyimpannya  
+            'password' => Hash::make($request->password), 
+            'unit_kerja_id' => $request->unitkerja_id,  // Hash password sebelum menyimpannya  
             'role' => 'pending', // Set role menjadi "pending"  
         ]);  
   

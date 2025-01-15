@@ -38,7 +38,7 @@ class UserControllerForAdmin extends Controller
             'password' => 'required|string|min:8',  
             'nip' => 'nullable|string|max:20',  
             'no_telepon' => 'nullable|string|max:15',  
-            'unit_kerja_id' => 'nullable|exists:unitkerjas,id', 
+            'unitkerja_id' => 'nullable|exists:unitkerjas,id', 
             'role' => 'required|string|in:admin,user,pending',  
         ]);  
   

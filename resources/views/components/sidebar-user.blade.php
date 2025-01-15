@@ -55,7 +55,8 @@
             'active' => $currentRoute === '/logout', // Menandai aktif
         ],
     ];
+ 
     @endphp
 
-    <x-sidebar :menuItems="$menuItems" />
+    <x-sidebar :menuItems="$menuItems"  />
 </div>

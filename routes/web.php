@@ -22,9 +22,10 @@ Route::controller(UserController::class)->group(function () {
     
 // Admin Routes    
 Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function () {    
-    Route::view('/qcdashboard', 'home');    
-    Route::view('/home', 'home');    
-    
+        Route::view('/qcdashboard', 'home');    
+        Route::view('/home', 'home');   
+        Route::view('/dashboard', 'dashboard');     
+
     Route::prefix('itasset')->group(function () {    
         Route::view('/dashboard', 'itAsset.dashboard');    
         Route::view('/device', 'itAsset.device');    
@@ -36,7 +37,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
     });    
     
     Route::prefix('lendasset')->group(function () {    
-        Route::view('/lendingitems', 'lending-asset.admin.dashboard-lending');    
+        Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');    
         Route::view('/transaksi-pengajuan', 'lending-asset.admin.transaksi-pengajuan');    
         Route::view('/transaksi-peminjaman', 'lending-asset.admin.transaksi-peminjaman');    
         Route::view('/transaksi-pengembalian', 'lending-asset.admin.transaksi-pengembalian');    

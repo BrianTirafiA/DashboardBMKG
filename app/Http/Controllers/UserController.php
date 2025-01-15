@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;  
 use Illuminate\Support\Facades\Hash;  
+use App\Models\UnitKerja;
 
 
 class UserController extends Controller
@@ -22,11 +23,14 @@ class UserController extends Controller
   
     public function register(Request $request)  
     {  
+        $unitKerjas = UnitKerja::all();  
+
         // Validasi input  
         $validator = Validator::make($request->all(), [  
             'user' => 'required|string|unique:users,name',  
             'email' => 'required|email|unique:users,email',  
-            'password' => 'required|string|min:8|confirmed', // Menggunakan 'confirmed' untuk validasi konfirmasi password  
+            'password' => 'required|string|min:8|confirmed',
+            'unitkerja_id' => 'nullable|exists:unitkerjas,id',
         ]);  
   
         // Jika validasi gagal, kembalikan ke halaman sebelumnya dengan error  
@@ -38,7 +42,8 @@ class UserController extends Controller
         User::create([  
             'name' => $request->user,  
             'email' => $request->email,  
-            'password' => Hash::make($request->password), // Hash password sebelum menyimpannya  
+            'password' => Hash::make($request->password), 
+            'unit_kerja_id' => $request->unitkerja_id,  // Hash password sebelum menyimpannya  
             'role' => 'pending', // Set role menjadi "pending"  
         ]);  
   
@@ -57,41 +62,67 @@ class UserController extends Controller
             ]);
     }
 
-    public function doLogin(Request $request): Response|RedirectResponse
-    {
-        $user = $request->input('user');
-        $password = $request->input('password');
+    public function doLogin(Request $request): Response|RedirectResponse    
+    {    
+        $user = $request->input('user');    
+        $password = $request->input('password');    
+    
+        if (empty($user) || empty($password)) {    
+            return response()->view("login", [    
+                "title" => "Login",    
+                "error" => "Both username and password are required"    
+            ]);    
+        }    
+    
+        $userRecord = User::where('name', $user)->first();    
+    
+        if (!$userRecord) {    
+            return response()->view("login", [    
+                "title" => "Login",    
+                "error" => "Username or password is incorrect"    
+            ]);    
+        }    
+    
+        // Cek apakah password benar    
+        if (!$this->userService->login($user, $password)) {    
+            return response()->view("login", [    
+                "title" => "Login",    
+                "error" => "Username or password is incorrect"    
+            ]);    
+        }    
+    
+        // Cek apakah role pengguna adalah 'pending'    
+        if ($userRecord->role === 'pending') {    
+            return response()->view("login", [    
+                "title" => "Login",    
+                "error" => "Akun Anda masih dalam proses verifikasi. Silakan tunggu hingga akun Anda diaktifkan. Hubungi pusatdatabase@bmkg.go.id"    
+            ]);    
+        }    
+    
+        // Simpan informasi user dan role dalam sesi  
+        $request->session()->put([  
+            'user' => $userRecord->name,  
+            'role' => $userRecord->role,  
+            'email' => $userRecord->email,  
+            'fullname' => $userRecord->fullname,  
+            'nip' => $userRecord->nip,  
+            'unit_kerja_id' => $userRecord->unit_kerja_id,  
+            'no_telepon' => $userRecord->no_telepon,  
+            'unit_kerja_name' => $userRecord->unit_kerja ? $userRecord->unit_kerja->nama_unit_kerja : null, // Cek apakah unit kerja ada  
+        ]);  
+    
+        // Redirect berdasarkan role    
+        if ($userRecord->role === 'admin') {    
+            return redirect("/admin/dashboard");    
+        } elseif ($userRecord->role === 'user') {    
+            return redirect("/user/dashboard");    
+        } else {    
+            // Optional: Handle role lain atau tampilkan error    
+            return redirect("/login")->with('error', 'Invalid user role');    
+        }    
+    }  
 
-        if(empty($user) || empty($password)){
-            return response()->view("login", [
-                "title" => "Login",
-                "error" => "Both username and password are required"
-            ]);
-        }
 
-        $userRecord = User::where('name', $user)->first();
-
-        if(!$userRecord || !$this->userService->login($user, $password)){
-            return response()->view("login", [
-                "title" => "Login",
-                "error" => "Username or password is incorrect"
-            ]);
-        }
-
-        // Simpan informasi user dan role dalam sesi
-        $request->session()->put("user", $userRecord->name);
-        $request->session()->put("role", $userRecord->role);
-
-        // Redirect berdasarkan role
-        if($userRecord->role === 'admin'){
-            return redirect("/admin/qcdashboard");
-        } elseif($userRecord->role === 'user'){
-            return redirect("/user/dashboard");
-        } else {
-            // Optional: Handle role lain atau tampilkan error
-            return redirect("/login")->with('error', 'Invalid user role');
-        }
-    }
 
     /**
      * Proses Logout.
@@ -103,7 +134,5 @@ class UserController extends Controller
     {
         return redirect('/login')->with('success', 'Logout berhasil!');
     }
-
-    
 
 }

@@ -10,7 +10,7 @@
                     </span>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ms-20 ml-10 flex items-baseline space-x-4 ">
+                    <div class="px-36 ml-10 flex items-baseline space-x-4 ">
                         @foreach ($menuItems as $menu)
                             <a href="{{ $menu['link'] }}"
                                class="rounded-md px-3 py-2 text-sm font-medium text-gray-900
@@ -23,7 +23,7 @@
             </div>
 
             <div class="hidden md:block">
-                <div class="ml-4 flex items-center md:ml-6">
+                <div class="ml-10 flex items-center md:ml-6">
                     <!-- Profile dropdown -->
                     <div class="relative ml-3">
                         <div>

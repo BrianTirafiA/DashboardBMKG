@@ -27,6 +27,30 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',  
             'password' => Hash::make('password'), // Password di-hash  
             'role' => 'admin',  
-        ]);  
+        ]); 
+        
+        // Buat admin  
+        User::create([  
+            'name' => 'hanif',  
+            'email' => 'admin@example.com',  
+            'password' => Hash::make('password'), // Password di-hash  
+            'role' => 'pending',  
+        ]);
+
+        // Buat admin  
+        User::create([  
+            'name' => 'brian',  
+            'email' => 'admin@example.com',  
+            'password' => Hash::make('password'), // Password di-hash  
+            'role' => 'pending',  
+        ]);
+
+        // Buat admin  
+        User::create([  
+            'name' => 'eka',  
+            'email' => 'admin@example.com',  
+            'password' => Hash::make('password'), // Password di-hash  
+            'role' => 'pending',  
+        ]);
     }  
 }  

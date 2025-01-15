@@ -7,13 +7,13 @@
             $add = 'Tambah Unit Kerja / UPT';              
             $columns = [              
                 ['key' => 'nama_unit_kerja', 'title' => 'Unit Kerja / UPT'],              
-                ['key' => 'alamat', 'title' => 'Jawaban'],              
+                ['key' => 'alamat', 'title' => 'Alamat'],              
             ];              
         @endphp              
         
-        <div id="table" class="relative flex flex-col w-full h-content text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">              
+        <div id="table" class="relative flex flex-col w-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">              
             <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-[#FFFFFF] rounded-none bg-clip-border">              
-                <div class="flex items-center justify-between gap-8 mb-4 ms-2 mt-2">              
+                <div class="flex items-center justify-between gap-8 ms-5 mt-2">              
                     <div>              
                         <h5 class="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">              
                             {{ $title }}              
@@ -23,7 +23,7 @@
                         </p>              
                     </div>            
                             
-                    <div class="flex flex-col gap-2 shrink-0 sm:flex-row">        
+                    <div class="flex flex-col me-5 gap-2 shrink-0 sm:flex-row">        
                         <div class="w-full md:w-72">              
                             <form action="{{ route('unitkerja.search') }}" method="GET" class="relative h-10 w-full min-w-[200px] bg-white">              
                                 <input id="searchInput" name="search" class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 !pr-9 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" placeholder="Search" value="{{ request('search') }}" />              
@@ -105,11 +105,11 @@
                     </div>              
                 </div>              
         
-                <<div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">                
+                <div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">                
                     <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">                
                         Total Data: {{ $unitkerjas->total() }} | Page {{ $unitkerjas->currentPage() }} of {{ $unitkerjas->lastPage() }}                
                     </p>                
-                    <div class="flex gap-2">                
+                    <div class="flex gap-2 me-2">                
                         @if($unitkerjas->onFirstPage())            
                             <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">                
                                 Previous                

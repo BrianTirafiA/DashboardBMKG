@@ -91,99 +91,194 @@
             </div>
             </div>
 
-            <!-- Script Line -->
-             
-            <!-- Initialyzing flatpickr for date range -->
-            <script>
-                flatpickr("#start_date", {
-                    dateFormat: "Y-m-d",
-                });
-
-                flatpickr("#end_date", {
-                    dateFormat: "Y-m-d",
-                });
-            </script>
-
-        
         <script>
-// First Chart: Stacked bar for tipe_station
-const ctx1 = document.getElementById('chart1').getContext('2d');
-new Chart(ctx1, {
-    type: 'bar',
-    data: {
-        labels: {!! json_encode($tipeStationData->keys()) !!},
-        datasets: [
-            {
-                label: 'Value 0',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 0'])->values()) !!},
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'Value 1',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 1'])->values()) !!},
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            },
-            {
-                label: 'Value 2',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 2'])->values()) !!},
-                backgroundColor: 'rgba(255, 206, 86, 0.5)',
-            },
-            {
-                label: 'Value 3',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 3'])->values()) !!},
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            },
-            {
-                label: 'Value 4',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 4'])->values()) !!},
-                backgroundColor: 'rgba(153, 102, 255, 0.5)',
-            },
-            {
-                label: 'Value 5',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 5'])->values()) !!},
-                backgroundColor: 'rgba(255, 159, 64, 0.5)',
-            },
-            {
-                label: 'Value 6',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 6'])->values()) !!},
-                backgroundColor: 'rgba(200, 99, 132, 0.5)',
-            },
-            {
-                label: 'Value 7',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 7'])->values()) !!},
-                backgroundColor: 'rgba(100, 162, 235, 0.5)',
-            },
-            {
-                label: 'Value 8',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 8'])->values()) !!},
-                backgroundColor: 'rgba(150, 206, 86, 0.5)',
-            },
-            {
-                label: 'Value 9',
-                data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 9'])->values()) !!},
-                backgroundColor: 'rgba(175, 192, 192, 0.5)',
+        //date filter
+        flatpickr("#start_date", {
+                dateFormat: "Y-m-d",
+            });
+
+        flatpickr("#end_date", {
+            dateFormat: "Y-m-d",
+        });
+
+        //Basically everything map(Showing map and it boundary, pin, filtering map data)
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const markerData = @json($markerData);
+            // Map visual setting
+            const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
+
+            const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
+            const initialZoom = 5;
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Map border
+            const bounds = [
+                [-20.0, 80.0], // increase(+) to make it smaller or decrease(-) to make it larger [+DecreaseSouth -InscreaseSouth, +DecreaseWest -InscreaseWest]
+                [22.0, 151.0], // increase(+) to make it larger or decrease(-) to make it smaller [+InscreaseNorth -DecreaseNorth, +InscreaseEast -DecreaseEast]
+            ];
+            map.setMaxBounds(bounds);
+            map.setMinZoom(5);
+            map.setMaxZoom(15);
+
+            // Color of pin
+            function getColor(value) {
+                const colors = [
+                    '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+                    '#e1cf23', '#f8af3e', '#f7941f',
+                    '#ec5828', '#e91c23', '#b21a26',
+                ];
+                return colors[value];
             }
-        ]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                stacked: true,
-                max: 100 // Ensure the Y-axis maximum is set to 100
-            },
-            x: {
-                stacked: true
+
+            // Adding the pin
+            function createCircleMarker(lat, lon, value, station) {
+                L.circleMarker([lat, lon], {
+                    radius: 10,
+                    fillColor: getColor(value),
+                    color: getColor(value),
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.6,
+                })
+                    .addTo(map)
+                    // Click pin popup
+                    .bindPopup(`
+
+                    `);
             }
-        }
-    }
-});
+            
+
+            // Function to trigger pin generation and filtering
+            function addMarkers() {
+            const uniqueStations = {};
+
+            markerData.forEach((station) => {
+                const stationName = station.name_station;
+
+                if (!uniqueStations[stationName]) {
+                    uniqueStations[stationName] = true;
+
+                    // Find the largest overall percentage value
+                    const maxIndex = station.overall_values.indexOf(
+                        Math.max(...station.overall_values)
+                    );
+
+                    // Add the marker to the map
+                    createCircleMarker(
+                        station.lat,
+                        station.lon,
+                        maxIndex,
+                        station
+                    );
+                }
+            });
+            }
+
+            // Reset view button
+            const resetButton = L.control({ position: 'topright' });
+            resetButton.onAdd = () => {
+                const button = L.DomUtil.create('button', 'reset-button');
+                button.innerHTML = 'Reset View';
+                button.style.backgroundColor = '#fff';
+                button.style.border = '1px solid #ccc';
+                button.style.padding = '5px 10px';
+                button.style.cursor = 'pointer';
+
+                button.onclick = () => {
+                    map.setView(initialCenter, initialZoom);
+                };
+
+                return button;
+            };
+            resetButton.addTo(map);
+
+            addMarkers(markerData);
+        });
+
+
+
+        // First Chart: Stacked bar for tipe_station
+        const ctx1 = document.getElementById('chart1').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($tipeStationData->keys()) !!},
+                datasets: [
+                    {
+                        label: 'Value 0',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 0'])->values()) !!},
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    },
+                    {
+                        label: 'Value 1',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 1'])->values()) !!},
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    },
+                    {
+                        label: 'Value 2',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 2'])->values()) !!},
+                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                    },
+                    {
+                        label: 'Value 3',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 3'])->values()) !!},
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    },
+                    {
+                        label: 'Value 4',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 4'])->values()) !!},
+                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                    },
+                    {
+                        label: 'Value 5',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 5'])->values()) !!},
+                        backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    },
+                    {
+                        label: 'Value 6',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 6'])->values()) !!},
+                        backgroundColor: 'rgba(200, 99, 132, 0.5)',
+                    },
+                    {
+                        label: 'Value 7',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 7'])->values()) !!},
+                        backgroundColor: 'rgba(100, 162, 235, 0.5)',
+                    },
+                    {
+                        label: 'Value 8',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 8'])->values()) !!},
+                        backgroundColor: 'rgba(150, 206, 86, 0.5)',
+                    },
+                    {
+                        label: 'Value 9',
+                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 9'])->values()) !!},
+                        backgroundColor: 'rgba(175, 192, 192, 0.5)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        max: 100 // Ensure the Y-axis maximum is set to 100
+                    },
+                    x: {
+                        stacked: true
+                    }
+                }
+            }
+        });
 
 
         // Second Chart: Overall percentages

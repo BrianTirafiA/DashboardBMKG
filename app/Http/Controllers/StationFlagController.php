@@ -10,6 +10,32 @@ class StationFlagController extends Controller
     public function index()
     {
         $stations = Station::all();
+
+
+    // Prepare data for markers
+    $markerData = $stations->map(function ($station) {
+        $overallValues = [
+            $station->overall_value_0_percent,
+            $station->overall_value_1_percent,
+            $station->overall_value_2_percent,
+            $station->overall_value_3_percent,
+            $station->overall_value_4_percent,
+            $station->overall_value_5_percent,
+            $station->overall_value_6_percent,
+            $station->overall_value_7_percent,
+            $station->overall_value_8_percent,
+            $station->overall_value_9_percent,
+        ];
+
+        return [
+            'name_station' => $station->name_station,
+            'tipe_station' => $station->tipe_station,
+            'nama_propinsi' => $station->nama_propinsi,
+            'lat' => $station->latt_station, // Assuming the database has latitude
+            'lon' => $station->long_station, // Assuming the database has longitude
+            'overall_values' => $overallValues,
+        ];
+    });
     
     // Group data by `tipe_station` and normalize percentages to sum to 100% for each station
     $tipeStationData = $stations->groupBy('tipe_station')->map(function ($group) {
@@ -47,6 +73,6 @@ class StationFlagController extends Controller
             'Value 9' => $stations->average('overall_value_9_percent'),
         ];
     
-        return view('home', compact('tipeStationData', 'overallSum'));
+        return view('home', compact('markerData', 'tipeStationData', 'overallSum'));
     }
 }

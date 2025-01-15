@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Stock extends Model  
 {  
     use HasFactory;  
-  
+    protected $table = 'item_stock';
     protected $fillable = [  
         'item_id',  
         'available_stock',  
@@ -22,6 +22,6 @@ class Stock extends Model
   
     public function location()  
     {  
-        return $this->belongsTo(ItemLocations::class);  
+        return $this->belongsTo(ItemLocation::class);  
     }  
 }  

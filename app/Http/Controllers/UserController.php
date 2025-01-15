@@ -113,7 +113,7 @@ class UserController extends Controller
     
         // Redirect berdasarkan role    
         if ($userRecord->role === 'admin') {    
-            return redirect("/admin/qcdashboard");    
+            return redirect("/admin/dashboard");    
         } elseif ($userRecord->role === 'user') {    
             return redirect("/user/dashboard");    
         } else {    

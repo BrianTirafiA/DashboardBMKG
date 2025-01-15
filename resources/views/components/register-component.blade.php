@@ -77,17 +77,16 @@
                             </div>         
   
                             <div class="flex flex-row justify-start mt-3 ml-4 p-1 space-x-4">  
-  <div class="flex items-center">  
-    <div :class="{'bg-green-200 text-green-700': password == password_confirmation && password.length > 0, 'bg-red-200 text-red-700': password != password_confirmation || password.length == 0}" class="rounded-full p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path x-show="password == password_confirmation && password.length > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/><path x-show="password != password_confirmation || password.length == 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>  
-    <span :class="{'text-green-700': password == password_confirmation && password.length > 0, 'text-red-700': password != password_confirmation || password.length == 0}" class="font-medium text-sm ml-3" x-text="password == password_confirmation && password.length > 0 ? 'Passwords match' : 'Passwords do not match'"></span>  
-  </div>  
-  <div class="flex items-center">  
-    <div :class="{'bg-green-200 text-green-700': password.length > 7, 'bg-red-200 text-red-700': password.length < 7}" class="rounded-full p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path x-show="password.length > 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/><path x-show="password.length < 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>  
-    <span :class="{'text-green-700': password.length > 7, 'text-red-700': password.length < 7}" class="font-medium text-sm ml-3" x-text="password.length > 7 ? 'The minimum length is reached' : 'At least 8 characters required'"></span>  
-  </div>  
-</div>  
+                            <div class="flex items-center">  
+                                <div :class="{'bg-green-200 text-green-700': password == password_confirmation && password.length > 0, 'bg-red-200 text-red-700': password != password_confirmation || password.length == 0}" class="rounded-full p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path x-show="password == password_confirmation && password.length > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/><path x-show="password != password_confirmation || password.length == 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>  
+                                <span :class="{'text-green-700': password == password_confirmation && password.length > 0, 'text-red-700': password != password_confirmation || password.length == 0}" class="font-medium text-sm ml-3" x-text="password == password_confirmation && password.length > 0 ? 'Passwords match' : 'Passwords do not match'"></span>  
+                            </div>  
+                            <div class="flex items-center">  
+                                <div :class="{'bg-green-200 text-green-700': password.length > 7, 'bg-red-200 text-red-700': password.length < 7}" class="rounded-full p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path x-show="password.length > 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/><path x-show="password.length < 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>  
+                                <span :class="{'text-green-700': password.length > 7, 'text-red-700': password.length < 7}" class="font-medium text-sm ml-3" x-text="password.length > 7 ? 'The minimum length is reached' : 'At least 8 characters required'"></span>  
+                            </div>  
+                            </div>  
    
-                            
                             <div class="mt-3">    
                                 <button type="submit" class="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">    
                                     Register    

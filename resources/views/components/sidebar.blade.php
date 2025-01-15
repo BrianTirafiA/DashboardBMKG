@@ -1,6 +1,6 @@
 <div class="flex">  
     <!-- Sidebar 1 -->  
-    <div id="sidebarContent" class="relative flex h-full min-h-[54rem] w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9] p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse bg-clip-border md:block hidden">  
+    <div id="sidebarContent" class="relative h-full min-h-[54rem] w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9] p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse bg-clip-border md:block hidden">  
         <nav id="navMenu" class="flex flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">  
             @foreach($menuItems as $item)  
                 @if($item['type'] === 'dropdown')  

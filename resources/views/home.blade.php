@@ -218,6 +218,7 @@
                                 <strong>Average Flag Value:</strong> ${station.average_flag}
                             `);
                     }
+                    
 
                     // Function to trigger pin generation and filtering
                     function addMarkers() {
@@ -296,255 +297,204 @@
                 });
             </script>
 
-            <!-- Each station type flag chart -->
+             <!-- Each station type flag chart -->
             <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const stations = @json($stations);
+            document.addEventListener('DOMContentLoaded', () => {
+    const stations = @json($stations); // Ensure this JSON data matches your view schema
 
-                    let chartInstance = null;
+    let chartInstance = null;
 
-                    function updateChart() {
-                        const selectedFlag = document.getElementById('flagVal').value;
-                        const selectedType = document.getElementById('TypeVal').value;
-                        const selectedProvince = document.getElementById('provinceVal').value;
+    function updateChart() {
+        const selectedFlag = document.getElementById('flagVal').value; // e.g., "rr_flag"
+        const selectedType = document.getElementById('TypeVal').value;
+        const selectedProvince = document.getElementById('provinceVal').value;
 
-                        const filteredStations = stations.filter((station) => {
-                            const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
-                            const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
-                            return matchesType && matchesProvince;
-                        });
+        if (!stations || stations.length === 0) {
+            console.error("No station data available.");
+            return;
+        }
 
-                        const flagsToInclude = [
-                            "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
-                            "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
-                            "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
-                            "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
-                        ];
+        // Filter stations based on dropdown selections
+        const filteredStations = stations.filter((station) => {
+            const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+            const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+            return matchesType && matchesProvince;
+        });
 
-                        // Group data by machine type and calculate percentages
-                        const groupedData = {};
+        // Group data by machine type
+        const groupedData = {};
 
-                        filteredStations.forEach((station) => {
-                            const applicableFlags = selectedFlag === 'All' ? flagsToInclude : [selectedFlag];
-                            applicableFlags.forEach((flag) => {
-                                const flagValue = station[flag];
-                                if (!groupedData[station.tipe_station]) {
-                                    groupedData[station.tipe_station] = Array(10).fill(0);
-                                }
-                                if (flagValue >= 0 && flagValue <= 9) {
-                                    groupedData[station.tipe_station][flagValue]++;
-                                }
-                            });
-                        });
+        filteredStations.forEach((station) => {
+            if (!groupedData[station.tipe_station]) {
+                groupedData[station.tipe_station] = Array(10).fill(0);
+            }
+            for (let i = 0; i <= 9; i++) {
+                const percentKey = `${selectedFlag}_${i}_percent`; // Example: "rr_flag_0_percent"
+                if (station[percentKey] !== undefined) {
+                    groupedData[station.tipe_station][i] += parseFloat(station[percentKey]) || 0;
+                }
+            }
+        });
 
-                        // Calculate percentages for each value (0-9) per machine type
-                        const labels = Object.keys(groupedData);
-                        const datasets = [];
-                        const colors = [
-                            '#369bcf', '#28a79e', '#39b449', '#8cc63e',
-                            '#e1cf23', '#f8af3e', '#f7941f',
-                            '#ec5828', '#e91c23', '#b21a26',
-                        ];
+        const labels = Object.keys(groupedData);
+        const datasets = [];
+        const colors = [
+            '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+            '#e1cf23', '#f8af3e', '#f7941f',
+            '#ec5828', '#e91c23', '#b21a26',
+        ];
 
-                        for (let i = 0; i < 10; i++) {
-                            const data = labels.map((label) => {
-                                const totalForType = groupedData[label].reduce((sum, count) => sum + count, 0);
-                                const percentage = totalForType > 0 ? (groupedData[label][i] / totalForType) * 100 : 0;
-                                return percentage;
-                            });
-                            datasets.push({
-                                label: `Value ${i}`,
-                                data,
-                                backgroundColor: colors[i],
-                            });
-                        }
+        for (let i = 0; i <= 9; i++) {
+            const data = labels.map((label) => groupedData[label][i]);
+            datasets.push({
+                label: `Value ${i}`,
+                data,
+                backgroundColor: colors[i],
+            });
+        }
 
-                        // Destroy existing chart if it exists
-                        if (chartInstance) {
-                            chartInstance.destroy();
-                        }
+        // Destroy the existing chart instance if it exists
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
 
-                        // Create a new chart
-                        const ctx = document.getElementById('flagTypeChart').getContext('2d');
-                        chartInstance = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels,
-                                datasets,
+        const ctx = document.getElementById('flagTypeChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets,
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.dataset.label}: ${context.raw.toFixed(2)}%`;
                             },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                    },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function (context) {
-                                                return `${context.dataset.label}: ${context.raw.toFixed(2)}%`;
-                                            },
-                                        },
-                                    },
-                                },
-                                scales: {
-                                    x: {
-                                        stacked: true,
-                                    },
-                                    y: {
-                                        stacked: true,
-                                        beginAtZero: true,
-                                        max: 100,
-                                        ticks: {
-                                            callback: function (value) {
-                                                return `${value}%`;
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        });
-                    }
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: (value) => `${value}%`,
+                        },
+                    },
+                },
+            },
+        });
+    }
 
-                    // Event listeners for dropdown changes
-                    document.getElementById('flagVal').addEventListener('change', updateChart);
-                    document.getElementById('TypeVal').addEventListener('change', updateChart);
-                    document.getElementById('provinceVal').addEventListener('change', updateChart);
+    // Attach event listeners for dropdown changes
+    document.getElementById('flagVal').addEventListener('change', updateChart);
+    document.getElementById('TypeVal').addEventListener('change', updateChart);
+    document.getElementById('provinceVal').addEventListener('change', updateChart);
 
-                    // Initial chart rendering
-                    updateChart();
-                });
+    // Initial rendering
+    updateChart();
+});
+
             </script>
 
             <!-- Combined station type flag chart -->
             <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const stations = @json($stations);
+document.addEventListener('DOMContentLoaded', () => {
+    const stations = @json($stations); // Ensure this JSON data matches your view schema
 
-                    let chartInstance = null; // Variable to store chart instance
+    let chartInstance = null;
 
-                    // Function to update the chart
-                    function updateChart() {
-                        // Get filter values
-                        const selectedFlag = document.getElementById('flagVal').value;
-                        const selectedType = document.getElementById('TypeVal').value;
-                        const selectedProvince = document.getElementById('provinceVal').value;
+    function updateChart() {
+        const selectedFlag = document.getElementById('flagVal').value; // e.g., "rr_flag"
+        const selectedType = document.getElementById('TypeVal').value;
+        const selectedProvince = document.getElementById('provinceVal').value;
 
-                        // Filter stations based on selected dropdown
-                        const filteredStations = stations.filter((station) => {
-                            const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
-                            const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
-                            return matchesType && matchesProvince;
-                        });
+        if (!stations || stations.length === 0) {
+            console.error("No station data available.");
+            return;
+        }
 
-                        // Gather flag data from filtered stations
-                        const flagCounts = Array(10).fill(0);
+        // Filter stations based on dropdown selections
+        const filteredStations = stations.filter((station) => {
+            const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+            const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+            return matchesType && matchesProvince;
+        });
 
-                        if (selectedFlag === "All") {
-                            const flagsToInclude = [
-                                "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
-                                "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
-                                "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
-                                "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
-                            ];
+        // Aggregate percentages for the selected flag
+        const flagCounts = Array(10).fill(0);
 
-                            flagsToInclude.forEach(flag => {
-                                filteredStations.forEach((station) => {
-                                    const flagValue = station[flag];
-                                    if (flagValue >= 0 && flagValue <= 9) {
-                                        flagCounts[flagValue]++;
-                                    }
-                                });
-                            });
-                        } else {
-                            // Use the selected flag to update the chart
-                            filteredStations.forEach((station) => {
-                                const flagValue = station[selectedFlag];
-                                if (flagValue >= 0 && flagValue <= 9) {
-                                    flagCounts[flagValue]++;
-                                }
-                            });
-                        }
+        filteredStations.forEach((station) => {
+            for (let i = 0; i <= 9; i++) {
+                const percentKey = `${selectedFlag}_${i}_percent`; // Example: "rr_flag_0_percent"
+                if (station[percentKey] !== undefined) {
+                    flagCounts[i] += parseFloat(station[percentKey]) || 0;
+                }
+            }
+        });
 
-                        const totalFlags = flagCounts.reduce((a, b) => a + b, 0);
-                        const flagPercentages = flagCounts.map((count) =>
-                            totalFlags > 0 ? ((count / totalFlags) * 100).toFixed(2) : 0
-                        );
+        const totalPercentage = flagCounts.reduce((sum, count) => sum + count, 0);
+        const flagPercentages = flagCounts.map((count) => (totalPercentage > 0 ? count.toFixed(2) : 0));
 
-                        if (chartInstance) {
-                            chartInstance.destroy();
-                        }
+        // Destroy the existing chart instance if it exists
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
 
-                        // Create or update the chart
-                        const ctx = document.getElementById('flagChart').getContext('2d');
-                        chartInstance = new Chart(ctx, {
-                            type: 'doughnut',
-                            data: {
-                                labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-                                datasets: [{
-                                    label: `Flag Distribution (${selectedFlag})`,
-                                    data: flagPercentages, // Use the calculated percentages
-                                    backgroundColor: [
-                                '#369bcf', '#28a79e', '#39b449', '#8cc63e',
-                                '#e1cf23', '#f8af3e', '#f7941f',
-                                '#ec5828', '#e91c23', '#b21a26',
-                            ],
-                                }],
+        const ctx = document.getElementById('flagChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+                datasets: [{
+                    label: `Flag Distribution (${selectedFlag})`,
+                    data: flagPercentages,
+                    backgroundColor: [
+                        '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+                        '#e1cf23', '#f8af3e', '#f7941f',
+                        '#ec5828', '#e91c23', '#b21a26',
+                    ],
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true,
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `Value ${context.label}: ${context.raw}%`;
                             },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        position: 'right',
-                                        labels: {
-                                            usePointStyle: true,
-                                            generateLabels: (chart) => {
-                                                const data = chart.data;
-                                                return data.labels.map((label, i) => {
-                                                    const value = data.datasets[0].data[i];
-                                                    const meta = chart.getDatasetMeta(0);
-                                                    const isHidden = meta.data[i].hidden || false;
-                                                    return {
-                                                        text: `${label} (${value}%)`,
-                                                        fillStyle: data.datasets[0].backgroundColor[i],
-                                                        hidden: isHidden,
-                                                        index: i,
-                                                    };
-                                                });
-                                            },
-                                        },
-                                        onClick: (e, legendItem, legend) => {
-                                            const dataset = legend.chart.data.datasets[0];
-                                            const index = legendItem.index;
-                                            const meta = legend.chart.getDatasetMeta(0);
+                        },
+                    },
+                },
+            },
+        });
+    }
 
-                                            // Toggle visibility
-                                            meta.data[index].hidden = !meta.data[index].hidden;
+    // Attach event listeners for dropdown changes
+    document.getElementById('flagVal').addEventListener('change', updateChart);
+    document.getElementById('TypeVal').addEventListener('change', updateChart);
+    document.getElementById('provinceVal').addEventListener('change', updateChart);
 
-                                            // Recalculate and update the chart
-                                            legend.chart.update();
-                                        },
-                                    },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                const percentage = context.raw;
-                                                return `Value ${context.label}: ${percentage}%`;
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        });
-                    }
-
-                    // Event listeners for dropdown changes
-                    document.getElementById('flagVal').addEventListener('change', updateChart);
-                    document.getElementById('TypeVal').addEventListener('change', updateChart);
-                    document.getElementById('provinceVal').addEventListener('change', updateChart);
-
-                    // Initial chart load
-                    updateChart();
-                });
+    // Initial rendering
+    updateChart();
+});
 
             </script>
 
@@ -639,3 +589,404 @@
     </div>
 </body>
 </html>
+
+// <!-- <script>
+//                 const stations = @json($stations);
+
+//                 document.addEventListener('DOMContentLoaded', () => {
+//                     // Map visual setting
+//                     const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
+
+//                     const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
+//                     const initialZoom = 5;
+
+//                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//                         maxZoom: 19,
+//                     }).addTo(map);
+
+//                     // Map border
+//                     const bounds = [
+//                         [-20.0, 80.0], // increase(+) to make it smaller or decrease(-) to make it larger [+DecreaseSouth -InscreaseSouth, +DecreaseWest -InscreaseWest]
+//                         [22.0, 151.0], // increase(+) to make it larger or decrease(-) to make it smaller [+InscreaseNorth -DecreaseNorth, +InscreaseEast -DecreaseEast]
+//                     ];
+//                     map.setMaxBounds(bounds);
+
+//                     map.setMinZoom(5);
+//                     map.setMaxZoom(15);
+
+//                     // Color of pin
+//                     function getColor(value) {
+//                         const colors = [
+//                             '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+//                             '#e1cf23', '#f8af3e', '#f7941f',
+//                             '#ec5828', '#e91c23', '#b21a26',
+//                         ];
+//                         return colors[value];
+//                     }
+
+//                     // Adding the pin
+//                     function createCircleMarker(lat, lon, value, station) {
+//                         L.circleMarker([lat, lon], {
+//                             radius: 10,
+//                             fillColor: getColor(value),
+//                             color: getColor(value),
+//                             weight: 1,
+//                             opacity: 1,
+//                             fillOpacity: 0.6,
+//                         })
+//                             .addTo(map)
+//                             // Click pin popup
+//                             .bindPopup(`
+//                                 <strong>Station Name:</strong> ${station.name_station} <br>
+//                                 <strong>Station Type:</strong> ${station.tipe_station} <br>
+//                                 <strong>Province :</strong> ${station.nama_propinsi} <br>
+//                                 <strong>rr_flag:</strong> ${station.rr_flag} <br>
+//                                 <strong>pp_air_flag:</strong> ${station.pp_air_flag} <br>
+//                                 <strong>rh_avg_flag:</strong> ${station.rh_avg_flag} <br>
+//                                 <strong>sr_avg_flag:</strong> ${station.sr_avg_flag} <br>
+//                                 <strong>sr_max_flag:</strong> ${station.sr_max_flag} <br>
+//                                 <strong>nr_flag:</strong> ${station.nr_flag} <br>
+//                                 <strong>wd_avg_flag:</strong> ${station.wd_avg_flag} <br>
+//                                 <strong>ws_avg_flag:</strong> ${station.ws_avg_flag} <br>
+//                                 <strong>ws_max_flag:</strong> ${station.ws_max_flag} <br>
+//                                 <strong>wl_flag:</strong> ${station.wl_flag} <br>
+//                                 <strong>tt_air_avg_flag:</strong> ${station.tt_air_avg_flag} <br>
+//                                 <strong>tt_air_min_flag:</strong> ${station.tt_air_min_flag} <br>
+//                                 <strong>tt_air_max_flag:</strong> ${station.tt_air_max_flag} <br>
+//                                 <strong>tt_sea_flag:</strong> ${station.tt_sea_flag} <br>
+//                                 <strong>ws_50cm_flag:</strong> ${station.ws_50cm_flag} <br>
+//                                 <strong>wl_pan_flag:</strong> ${station.wl_pan_flag} <br>
+//                                 <strong>ev_pan_flag:</strong> ${station.ev_pan_flag} <br>
+//                                 <strong>tt_pan_flag:</strong> ${station.tt_pan_flag} <br>
+//                                 <strong>Average Flag Value:</strong> ${station.average_flag}
+//                             `);
+//                     }
+
+//                     // Function to trigger pin generation and filtering
+//                     function addMarkers() {
+//                         const selectedFlag = document.getElementById('flagVal').value;
+//                         const selectedType = document.getElementById('TypeVal').value;
+//                         const selectedProvince = document.getElementById('provinceVal').value;
+
+//                         map.eachLayer((layer) => {
+//                             if (layer instanceof L.CircleMarker) {
+//                                 map.removeLayer(layer);
+//                             }
+//                         });
+
+//                         const filteredStations = stations.filter(station => {
+//                             const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+//                             const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+//                             return matchesType && matchesProvince;
+//                         });
+
+//                     //     if (selectedFlag === "All") {
+//                     //     const flagsToInclude = [
+//                     //         "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
+//                     //         "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
+//                     //         "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
+//                     //         "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
+//                     //     ];
+
+//                     //     filteredStations.forEach(station => {
+//                     //         flagsToInclude.forEach(flag => {
+//                     //             createCircleMarker(station.latt_station, station.long_station, station[flag], station);
+//                     //         });
+//                     //     });
+//                     // } else {
+//                         // When a specific flag is selected, display only that flag
+//                         // filteredStations.forEach(station => {
+//                         //     createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
+//                         // });
+//                     // }
+
+//                         if (selectedFlag === "All") {
+//                             // When "All" is selected, show only the average flag value
+//                             filteredStations.forEach(station => {
+//                                 createCircleMarker(station.latt_station, station.long_station, station.average_flag, station);
+//                             });
+//                         } else {
+//                             // When a specific flag is selected, show the values for that flag
+//                             filteredStations.forEach(station => {
+//                                 createCircleMarker(station.latt_station, station.long_station, station[selectedFlag], station);
+//                             });
+//                         }
+//                     }
+
+//                     // Reset view button
+//                     const resetButton = L.control({ position: 'topright' });
+//                     resetButton.onAdd = () => {
+//                         const button = L.DomUtil.create('button', 'reset-button');
+//                         button.innerHTML = 'Reset View';
+//                         button.style.backgroundColor = '#fff';
+//                         button.style.border = '1px solid #ccc';
+//                         button.style.padding = '5px 10px';
+//                         button.style.cursor = 'pointer';
+
+//                         button.onclick = () => {
+//                             map.setView(initialCenter, initialZoom);
+//                         };
+
+//                         return button;
+//                     };
+//                     resetButton.addTo(map);
+
+//                     addMarkers();
+
+//                     document.getElementById('flagVal').addEventListener('change', addMarkers);
+//                     document.getElementById('TypeVal').addEventListener('change', addMarkers);
+//                     document.getElementById('provinceVal').addEventListener('change', addMarkers);
+//                 });
+//             </script>
+
+//             <!-- Each station type flag chart -->
+//             <script>
+//                 document.addEventListener('DOMContentLoaded', () => {
+//                     const stations = @json($stations);
+
+//                     let chartInstance = null;
+
+//                     function updateChart() {
+//                         const selectedFlag = document.getElementById('flagVal').value;
+//                         const selectedType = document.getElementById('TypeVal').value;
+//                         const selectedProvince = document.getElementById('provinceVal').value;
+
+//                         const filteredStations = stations.filter((station) => {
+//                             const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+//                             const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+//                             return matchesType && matchesProvince;
+//                         });
+
+//                         const flagsToInclude = [
+//                             "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
+//                             "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
+//                             "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
+//                             "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
+//                         ];
+
+//                         // Group data by machine type and calculate percentages
+//                         const groupedData = {};
+
+//                         filteredStations.forEach((station) => {
+//                             const applicableFlags = selectedFlag === 'All' ? flagsToInclude : [selectedFlag];
+//                             applicableFlags.forEach((flag) => {
+//                                 const flagValue = station[flag];
+//                                 if (!groupedData[station.tipe_station]) {
+//                                     groupedData[station.tipe_station] = Array(10).fill(0);
+//                                 }
+//                                 if (flagValue >= 0 && flagValue <= 9) {
+//                                     groupedData[station.tipe_station][flagValue]++;
+//                                 }
+//                             });
+//                         });
+
+//                         // Calculate percentages for each value (0-9) per machine type
+//                         const labels = Object.keys(groupedData);
+//                         const datasets = [];
+//                         const colors = [
+//                             '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+//                             '#e1cf23', '#f8af3e', '#f7941f',
+//                             '#ec5828', '#e91c23', '#b21a26',
+//                         ];
+
+//                         for (let i = 0; i < 10; i++) {
+//                             const data = labels.map((label) => {
+//                                 const totalForType = groupedData[label].reduce((sum, count) => sum + count, 0);
+//                                 const percentage = totalForType > 0 ? (groupedData[label][i] / totalForType) * 100 : 0;
+//                                 return percentage;
+//                             });
+//                             datasets.push({
+//                                 label: `Value ${i}`,
+//                                 data,
+//                                 backgroundColor: colors[i],
+//                             });
+//                         }
+
+//                         // Destroy existing chart if it exists
+//                         if (chartInstance) {
+//                             chartInstance.destroy();
+//                         }
+
+//                         // Create a new chart
+//                         const ctx = document.getElementById('flagTypeChart').getContext('2d');
+//                         chartInstance = new Chart(ctx, {
+//                             type: 'bar',
+//                             data: {
+//                                 labels,
+//                                 datasets,
+//                             },
+//                             options: {
+//                                 responsive: true,
+//                                 plugins: {
+//                                     legend: {
+//                                         position: 'top',
+//                                     },
+//                                     tooltip: {
+//                                         callbacks: {
+//                                             label: function (context) {
+//                                                 return `${context.dataset.label}: ${context.raw.toFixed(2)}%`;
+//                                             },
+//                                         },
+//                                     },
+//                                 },
+//                                 scales: {
+//                                     x: {
+//                                         stacked: true,
+//                                     },
+//                                     y: {
+//                                         stacked: true,
+//                                         beginAtZero: true,
+//                                         max: 100,
+//                                         ticks: {
+//                                             callback: function (value) {
+//                                                 return `${value}%`;
+//                                             },
+//                                         },
+//                                     },
+//                                 },
+//                             },
+//                         });
+//                     }
+
+//                     // Event listeners for dropdown changes
+//                     document.getElementById('flagVal').addEventListener('change', updateChart);
+//                     document.getElementById('TypeVal').addEventListener('change', updateChart);
+//                     document.getElementById('provinceVal').addEventListener('change', updateChart);
+
+//                     // Initial chart rendering
+//                     updateChart();
+//                 });
+//             </script>
+
+//             <!-- Combined station type flag chart -->
+//             <script>
+//                 document.addEventListener('DOMContentLoaded', () => {
+//                     const stations = @json($stations);
+
+//                     let chartInstance = null; // Variable to store chart instance
+
+//                     // Function to update the chart
+//                     function updateChart() {
+//                         // Get filter values
+//                         const selectedFlag = document.getElementById('flagVal').value;
+//                         const selectedType = document.getElementById('TypeVal').value;
+//                         const selectedProvince = document.getElementById('provinceVal').value;
+
+//                         // Filter stations based on selected dropdown
+//                         const filteredStations = stations.filter((station) => {
+//                             const matchesType = selectedType === 'All' || station.tipe_station === selectedType;
+//                             const matchesProvince = selectedProvince === 'All' || station.nama_propinsi === selectedProvince;
+//                             return matchesType && matchesProvince;
+//                         });
+
+//                         // Gather flag data from filtered stations
+//                         const flagCounts = Array(10).fill(0);
+
+//                         if (selectedFlag === "All") {
+//                             const flagsToInclude = [
+//                                 "rr_flag", "pp_air_flag", "rh_avg_flag", "sr_avg_flag", "sr_max_flag",
+//                                 "nr_flag", "wd_avg_flag", "ws_avg_flag", "ws_max_flag", "wl_flag",
+//                                 "tt_air_avg_flag", "tt_air_min_flag", "tt_air_max_flag", "tt_sea_flag",
+//                                 "ws_50cm_flag", "wl_pan_flag", "ev_pan_flag", "tt_pan_flag"
+//                             ];
+
+//                             flagsToInclude.forEach(flag => {
+//                                 filteredStations.forEach((station) => {
+//                                     const flagValue = station[flag];
+//                                     if (flagValue >= 0 && flagValue <= 9) {
+//                                         flagCounts[flagValue]++;
+//                                     }
+//                                 });
+//                             });
+//                         } else {
+//                             // Use the selected flag to update the chart
+//                             filteredStations.forEach((station) => {
+//                                 const flagValue = station[selectedFlag];
+//                                 if (flagValue >= 0 && flagValue <= 9) {
+//                                     flagCounts[flagValue]++;
+//                                 }
+//                             });
+//                         }
+
+//                         const totalFlags = flagCounts.reduce((a, b) => a + b, 0);
+//                         const flagPercentages = flagCounts.map((count) =>
+//                             totalFlags > 0 ? ((count / totalFlags) * 100).toFixed(2) : 0
+//                         );
+
+//                         if (chartInstance) {
+//                             chartInstance.destroy();
+//                         }
+
+//                         // Create or update the chart
+//                         const ctx = document.getElementById('flagChart').getContext('2d');
+//                         chartInstance = new Chart(ctx, {
+//                             type: 'doughnut',
+//                             data: {
+//                                 labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+//                                 datasets: [{
+//                                     label: `Flag Distribution (${selectedFlag})`,
+//                                     data: flagPercentages, // Use the calculated percentages
+//                                     backgroundColor: [
+//                                 '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+//                                 '#e1cf23', '#f8af3e', '#f7941f',
+//                                 '#ec5828', '#e91c23', '#b21a26',
+//                             ],
+//                                 }],
+//                             },
+//                             options: {
+//                                 responsive: true,
+//                                 plugins: {
+//                                     legend: {
+//                                         position: 'right',
+//                                         labels: {
+//                                             usePointStyle: true,
+//                                             generateLabels: (chart) => {
+//                                                 const data = chart.data;
+//                                                 return data.labels.map((label, i) => {
+//                                                     const value = data.datasets[0].data[i];
+//                                                     const meta = chart.getDatasetMeta(0);
+//                                                     const isHidden = meta.data[i].hidden || false;
+//                                                     return {
+//                                                         text: `${label} (${value}%)`,
+//                                                         fillStyle: data.datasets[0].backgroundColor[i],
+//                                                         hidden: isHidden,
+//                                                         index: i,
+//                                                     };
+//                                                 });
+//                                             },
+//                                         },
+//                                         onClick: (e, legendItem, legend) => {
+//                                             const dataset = legend.chart.data.datasets[0];
+//                                             const index = legendItem.index;
+//                                             const meta = legend.chart.getDatasetMeta(0);
+
+//                                             // Toggle visibility
+//                                             meta.data[index].hidden = !meta.data[index].hidden;
+
+//                                             // Recalculate and update the chart
+//                                             legend.chart.update();
+//                                         },
+//                                     },
+//                                     tooltip: {
+//                                         callbacks: {
+//                                             label: function(context) {
+//                                                 const percentage = context.raw;
+//                                                 return `Value ${context.label}: ${percentage}%`;
+//                                             },
+//                                         },
+//                                     },
+//                                 },
+//                             },
+//                         });
+//                     }
+
+//                     // Event listeners for dropdown changes
+//                     document.getElementById('flagVal').addEventListener('change', updateChart);
+//                     document.getElementById('TypeVal').addEventListener('change', updateChart);
+//                     document.getElementById('provinceVal').addEventListener('change', updateChart);
+
+//                     // Initial chart load
+//                     updateChart();
+//                 });
+
+//             </script> -->

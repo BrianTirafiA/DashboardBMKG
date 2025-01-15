@@ -15,31 +15,40 @@ class StationsSeeder extends Seeder
      */
     public function run(): void
     {
-        $file = Storage::path('data.csv');
+        $file = Storage::path('flag7days.csv');
         $handle = fopen($file, 'r');
         $header = true;
-        $startRow = 666222; // kalo di data.csv disini 666226 di csv mulai dari 666227
-        $endRow = 332427;
+        $startRow = 0; // Adjust as needed
+        $endRow = 332427; // Adjust as needed
         $currentRow = 0;
-
+    
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             $currentRow++;
-
-            if ($currentRow < $startRow) {
-                continue;
-            }
-
+    
+            // // Skip rows before the start row
+            // if ($currentRow < $startRow) {
+            //     continue;
+            // }
+    
+            // // Stop after the end row
             // if ($currentRow > $endRow) {
             //     break;
             // }
-            
+    
             if ($header) {
                 $header = false; // Skip the header row
                 continue;
             }
-
-            $tanggal = Carbon::createFromFormat('m/d/Y H:i:s', $row[0])->format('Y-m-d H:i:s');
-
+    
+            // Adjust date parsing for timezone-aware format
+            try {
+                $tanggal = Carbon::createFromFormat('m/d/Y H:i:sP', $row[0])->format('Y-m-d H:i:s');
+            } catch (\Carbon\Exceptions\InvalidFormatException $e) {
+                // Handle invalid date format
+                echo "Invalid date format: " . $row[0];
+                continue;
+            }
+    
             DB::table('stations')->insert([
                 'tanggal' => $tanggal,
                 'long_station' => $row[1],
@@ -68,7 +77,8 @@ class StationsSeeder extends Seeder
                 'tt_pan_flag' => $row[24],
             ]);
         }
-
+    
         fclose($handle);
     }
+    
 }

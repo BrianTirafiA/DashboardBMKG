@@ -5,7 +5,8 @@ use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
 use Illuminate\Support\Facades\Route;    
-use App\Http\Controllers\PinController;    
+use App\Http\Controllers\PinController; 
+use App\Http\Controllers\StationFlagController;     
 use App\Http\Middleware\OnlyGuestMiddleware;    
 use App\Http\Middleware\OnlyAdminMiddleware;    
 use App\Http\Middleware\OnlyUserMiddleware;    
@@ -81,7 +82,7 @@ Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware
 Route::post('/register', [UserController::class, 'register'])->name('register');  
 
     
-Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    
+Route::get('/admin/qcdashboard', [StationFlagController::class, 'index'])->name('stations.filter');
 
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);

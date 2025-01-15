@@ -11,6 +11,7 @@ use App\Http\Middleware\OnlyAdminMiddleware;
 use App\Http\Middleware\OnlyUserMiddleware;    
 use App\Http\Middleware\LogoutMiddleware;    
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\TypeDeviceController;
 use App\Http\Controllers\UserControllerForAdmin;
 
   
@@ -37,8 +38,10 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/maintenance', 'itAsset.maintenance');    
         Route::view('/log', 'itAsset.log');
         
-        Route::Resource('/device', DeviceController::class);
+        Route::Resource('/device', controller: DeviceController::class);
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
+        Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
+
 
     });    
 

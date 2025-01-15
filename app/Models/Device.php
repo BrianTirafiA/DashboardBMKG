@@ -40,6 +40,5 @@ class Device extends Model
     protected $casts = [
         'year_device' => 'integer',
         'ram_device' => 'integer',
-        'disk_device' => 'integer',
     ];
 }

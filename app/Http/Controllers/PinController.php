@@ -16,6 +16,7 @@ class PinController extends Controller
     //      return view('home', compact('stations', 'allFlagsData'));
     // }
 
+
     public function showMap(Request $request)
 {
     $startDate = $request->input('start_date');
@@ -91,7 +92,7 @@ class PinController extends Controller
 }
 
 
-    // Controller to send data to view
+    // //Controller to send data to view
     // public function showMap(Request $request)
     // {
     //     $startDate = $request->input('start_date');

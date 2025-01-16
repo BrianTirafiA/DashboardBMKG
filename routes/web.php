@@ -9,13 +9,17 @@ use App\Http\Controllers\ItemBrandController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
-use App\Http\Controllers\UserControllerForAdmin;
 use Illuminate\Support\Facades\Route;    
-use App\Http\Controllers\PinController;    
+use App\Http\Controllers\PinController; 
+use App\Http\Controllers\StationFlagController;     
 use App\Http\Middleware\OnlyGuestMiddleware;    
 use App\Http\Middleware\OnlyAdminMiddleware;    
 use App\Http\Middleware\OnlyUserMiddleware;    
 use App\Http\Middleware\LogoutMiddleware;    
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\TypeDeviceController;
+use App\Http\Controllers\UserControllerForAdmin;
+
   
 Route::get('/', [HomeController::class, 'home']);  
     
@@ -38,9 +42,15 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/power', 'itAsset.power');    
         Route::view('/report', 'itAsset.report');    
         Route::view('/maintenance', 'itAsset.maintenance');    
-        Route::view('/log', 'itAsset.log');    
+        Route::view('/log', 'itAsset.log');
+        
+        Route::Resource('/device', controller: DeviceController::class);
+        Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
+        Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
+
+
     });    
-    
+
     Route::prefix('lendasset')->group(function () {    
         Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');    
         Route::view('/transaksi-pengajuan', 'lending-asset.admin.transaksi-pengajuan');    
@@ -64,7 +74,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('/unitkerja', [UnitKerjaController::class, 'adminindex'])->name('unitkerja.index');      
         Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');  
         Route::get('/unitkerja', [UnitKerjaController::class, 'search'])->name('unitkerja.search');
-    });    
+    });
 });    
     
 // User Routes    
@@ -84,7 +94,7 @@ Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware
 Route::post('/register', [UserController::class, 'register'])->name('register');  
 
     
-Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stations.filter');    
+Route::get('/admin/qcdashboard', [StationFlagController::class, 'index'])->name('stations.filter');
 
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);

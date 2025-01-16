@@ -2,8 +2,8 @@
   
 namespace Database\Seeders;  
   
+use App\Models\ItemCategory;
 use Illuminate\Database\Seeder;  
-use App\Models\Category;  
   
 class CategoriesTableSeeder extends Seeder  
 {  
@@ -14,14 +14,14 @@ class CategoriesTableSeeder extends Seeder
      */  
     public function run()  
     {  
-        Category::create([  
-            'nama' => 'Software Lisence',  
-            'description' => 'Deskripsi Kategori A',  
+        ItemCategory::create([  
+            'name_category' => 'Software Lisence',  
+            'description_category' => 'Deskripsi Kategori A',  
         ]);  
   
-        Category::create([  
-            'nama' => 'Computer Hardware',  
-            'description' => 'Deskripsi Kategori B',  
+        ItemCategory::create([  
+            'name_category' => 'Computer Hardware',  
+            'description_category' => 'Deskripsi Kategori B',  
         ]);  
   
         // Tambahkan lebih banyak data sesuai kebutuhan  

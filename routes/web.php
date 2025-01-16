@@ -1,6 +1,11 @@
 <?php    
     
 use App\Http\Controllers\HomeController;    
+use App\Http\Controllers\ItemDetailController;
+use App\Http\Controllers\ItemLocationController;
+use App\Http\Controllers\ItemCategoryController;
+use App\Http\Controllers\ItemStatusController;
+use App\Http\Controllers\ItemBrandController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
@@ -44,9 +49,16 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/report-week', 'lending-asset.admin.report-week');    
         Route::view('/report-month', 'lending-asset.admin.report-month');    
         Route::view('/report-year', 'lending-asset.admin.report-year');    
-        Route::view('/items', 'lending-asset.admin.items');    
-        Route::view('/kategori', 'lending-asset.admin.kategori');    
-        Route::view('/lokasi', 'lending-asset.admin.lokasi');    
+        Route::resource('/items', ItemDetailController::class);
+        Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index'); 
+        Route::resource('/brand', ItemBrandController::class);
+        Route::get('/brand', [ItemBrandController::class, 'index'])->name('brand.index'); 
+        Route::resource('/status', ItemStatusController::class);
+        Route::get('/status', [ItemStatusController::class, 'index'])->name('status.index'); 
+        Route::resource('/kategori', ItemCategoryController::class);
+        Route::get('/kategori', [ItemCategoryController::class, 'index'])->name('kategori.index');     
+        Route::resource('/lokasi', ItemLocationController::class);
+        Route::get('/lokasi', [ItemLocationController::class, 'locationindex'])->name('location.index');    
         Route::resource('/users', UserControllerForAdmin::class);
         Route::get('/users', [UserControllerForAdmin::class, 'index'])->name('users.index');    
         Route::get('/unitkerja', [UnitKerjaController::class, 'adminindex'])->name('unitkerja.index');      
@@ -78,6 +90,3 @@ Route::get('/admin/qcdashboard', [PinController::class, 'showMap'])->name('stati
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
 // Route untuk resource unit kerja
 Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminMiddleware::class);
-// Route untuk resource unit kerja
-// Route::resource('/users', UserControllerForAdmin::class)->middleware(OnlyAdminMiddleware::class);
-

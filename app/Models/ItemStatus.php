@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;  
 use Illuminate\Database\Eloquent\Model;  
   
-class Status extends Model  
+class ItemStatus extends Model  
 {  
     use HasFactory;  
   
-    protected $table = 'item_statuses'; // Nama tabel jika berbeda dari konvensi  
+    protected $table = 'item_statuses';
   
     protected $fillable = [  
-        'nama',  
-        'description',  
+        'name_status',  
+        'description_status',  
     ];  
 }  

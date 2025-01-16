@@ -1,3 +1,12 @@
+@php 
+
+use App\Models\UnitKerja;  
+use App\Models\User;  
+// Ambil semua unit kerja dari database  
+$unitKerjas = UnitKerja::all();  
+$users = User::findOrFail(session('id') );
+@endphp
+
 <div class="flex">  
     <!-- Sidebar 1 -->  
     <div id="sidebarContent" class="relative h-full min-h-[54rem] w-full max-w-[20rem] flex-col rounded-xl bg-[#F1F5F9] p-4 text-gray-700 mt-5 ms-3 mb-5 shadow-xl shadow-blue-gray-900/5 border border-blue-gray-100 border-collapse bg-clip-border md:block hidden">  
@@ -42,21 +51,19 @@
                 @endif  
             @endforeach  
 
-            <div id="account-card" class="m-2 mt-2 max-w-sm border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">    
-                <div class="rounded-xl border bg-gray-700 shadow-lg p-5">    
-                <h1 id="FullName" class="text-center text-xl font-bold {{ session('fullname') ? 'text-white' : 'text-red-500' }}">  
-                    {{ session('fullname') ?? 'Nama Lengkap Belum Diisi' }}  
-                </h1>      
-                
-                <h3 id="NIP" class=" mt-2 text-center text-sm font-semibold {{ session('nip') ? 'text-white' : 'text-red-500' }}">  
-                    {{ session('nip') ?? 'NIP Belum Diisi' }}  
-                </h3>      
-                
-                <p class=" text-center text-sm {{ session('unit_kerja_name') ? 'text-white' : 'text-red-500' }} hover:text-[#F1F5F9]">    
-                    {{ session('unit_kerja_name') ?? 'Unit Kerja Belum Diisi' }}    
-                </p>    
-
-                    <ul class="mt-3 rounded-xl bg-gray-100 p-3 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">      
+            <div id="account-card" class="m-2 mt-2 max-w-sm border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">      
+                <div class="rounded-xl border bg-gray-700 shadow-lg p-5">      
+                    <h1 id="FullName" class="text-center text-xl font-bold {{ session('fullname') ? 'text-white' : 'text-red-500' }}">    
+                        {{ session('fullname') ?? 'Nama Lengkap Belum Diisi' }}    
+                    </h1>        
+                    <h3 id="NIP" class="mt-2 text-center text-sm font-semibold {{ session('nip') ? 'text-white' : 'text-red-500' }}">    
+                        {{ session('nip') ?? 'NIP Belum Diisi' }}    
+                    </h3>        
+                    <p class="text-center text-sm {{ session('unit_kerja_name') ? 'text-white' : 'text-red-500' }} hover:text-[#F1F5F9]">      
+                        {{ session('unit_kerja_name') ?? 'Unit Kerja Belum Diisi' }}      
+                    </p> 
+                    
+                    <ul class="mt-3 rounded-lg bg-gray-100 p-3 text-gray-600  hover:text-gray-700 hover:shadow">      
                         <li class="flex flex-col items-center text-sm">      
                             <span>Data Account</span>       
                             <span class="mt-1 mb-1">    
@@ -67,32 +74,25 @@
                                 @endif    
                             </span>   
                         </li>    
-                    </ul>  
-  
-                    <a id="toProfile" href="">
-                    <button type="button" class="flex justify-center mt-5 w-full bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-white">    
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square me-2" viewBox="0 0 16 16">    
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>    
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>    
-                        </svg>    
-                        Edit Data Account    
-                    </button> 
-                    </a>
-                       
-            
+                    </ul> 
+
+                    <a id="toProfile" href="javascript:void(0);" onclick="openEditUserModal()">  
+                        <button type="button" class="flex justify-center mt-3 w-full bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-white">      
+                            Edit Data Account      
+                        </button>   
+                    </a>  
                     <form id="logout-form" action="/logout" method="POST" style="display: none;">    
                         @csrf    
                     </form>    
                     <button type="button" onclick="document.getElementById('logout-form').submit();" class="mt-2 mb-2 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">    
                         Logout    
-                    </button>    
-                </div>    
-            </div>  
-  
+                    </button>  
+                </div>      
+            </div>   
         </nav>  
     </div>  
 </div>  
-  
+ 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Function to toggle the sidebar visibility

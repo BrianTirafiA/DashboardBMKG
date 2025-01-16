@@ -4,32 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Lokasi - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
-    
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        #map {
-            height: 500px;
-            z-index: 1;
-            /* Pastikan z-index lebih rendah dari modal */
-            position: relative;
-            /* Pastikan posisi relatif untuk z-index berfungsi */
-        }
-
-        .reset-button {  
-            background-color: #fff;  
-            border: 1px solid #ccc;  
-            padding: 5px 10px;  
-            cursor: pointer;  
-        }
-    </style>
+    <title>Edit Kategori - Admin</title>
 </head>
 
 @if(isset($error))
@@ -53,21 +28,18 @@
     <div>
         <div class="me-7 mt-1">
             @php              
-                $title = 'Daftar Lokasi Terdaftar';
-                $description = 'Halaman ini berisi daftar lokasi yang terdaftar yang dapat Anda kelola.';
-                $add = 'Tambah Lokasi Baru';
+                $title = 'Daftar Status Barang Terdaftar';
+                $description = 'Halaman ini berisi daftar status yang terdaftar yang dapat Anda kelola.';
+                $add = 'Tambah Status Baru';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],
-                    ['key' => 'nama_lokasi', 'title' => 'Nama'],
-                    ['key' => 'alamat_lokasi', 'title' => 'Alamat'],
-                    ['key' => 'penanggung_jawab', 'title' => 'Penanggung Jawab'],
-                    ['key' => 'latitude', 'title' => 'Latitude'],
-                    ['key' => 'longitude', 'title' => 'Longitude']
+                    ['key' => 'name_status', 'title' => 'Nama Status'],
+                    ['key' => 'description_status', 'title' => 'Deskripsi']
                 ];              
             @endphp              
 
             <div id="table"
-                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-blue-gray-100 shadow-md rounded-xl mb-2">
+                class="relative flex flex-col w-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                         <div>
@@ -82,7 +54,7 @@
 
                         <div class="flex flex-col gap-2 shrink-0 me-5 sm:flex-row">
                             <div class="w-full md:w-72">
-                                <form action="{{ route('location.index') }}" method="GET"
+                                <form action="{{ route('status.index') }}" method="GET"
                                     class="relative h-10 w-full min-w-[200px] bg-white">
                                     <input id="searchInput" name="search"
                                         class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 focus:border-2 focus:border-gray-900"
@@ -125,21 +97,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($item_locations as $itemlocation)                               <tr>
+                                    @forelse ($item_statuses as $itemStatus)                               <tr>
                                             <td
                                                 class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
-                                                {{ $item_locations->firstItem() + $loop->index }}
+                                                {{ $item_statuses->firstItem() + $loop->index }}
                                             </td>
                                             @foreach ($columns as $column)                              <td
                                                     class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
-                                                    {{ $itemlocation->{$column['key']} }}
+                                                    {{ $itemStatus->{$column['key']} }}
                                                 </td>
                                             @endforeach
                                             <td class="border-b border-blue-gray-100">
                                                 <div class="flex items-center gap-3 justify-center">
                                                     {{-- Tombol Edit --}}
                                                     <button type="button" class="text-blue-500 flex items-center gap-2"
-                                                        onclick="openEditModal('{{ $itemlocation->id }}', '{{ $itemlocation->nama_lokasi }}', '{{ $itemlocation->alamat_lokasi }}', '{{ $itemlocation->penanggung_jawab }}', '{{ $itemlocation->latitude }}', '{{ $itemlocation->longitude }}')">
+                                                        onclick="openEditModal('{{ $itemStatus->id }}', '{{ $itemStatus->name_status}}', '{{ $itemStatus->description_status }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                             fill="currentColor" class="bi bi-pencil-square"
                                                             viewBox="0 0 16 16">
@@ -152,10 +124,10 @@
                                                     </button>
 
                                                     {{-- Tombol Hapus --}}
-                                                    <form action="{{ route('lokasi.destroy', $itemlocation->id) }}" method="POST" class="inline">  
+                                                    <form action="{{ route('status.destroy', $itemStatus->id) }}" method="POST" class="inline">  
                                                         @csrf  
                                                         @method('DELETE')  
-                                                        <button type="button" class="text-red-500 flex items-center gap-1 delete-button" data-id="{{ $itemlocation->id }}" data-nama_lokasi="{{ $itemlocation->nama_lokasi }}" onclick="showDeleteConfirmation(this)">  
+                                                        <button type="button" class="text-red-500 flex items-center gap-1 delete-button" data-id="{{ $itemStatus->id }}" data-name_status="{{ $itemStatus->name_status }}" onclick="showDeleteConfirmation(this)">  
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">  
                                                                 <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />  
                                                             </svg>  
@@ -169,7 +141,7 @@
                                     @empty
                                         <tr>
                                             <td colspan="{{ count($columns) + 2 }}"
-                                                class="p-4 text-center text-sm text-blue-gray-900">Data pengguna belum tersedia.</td>
+                                                class="p-4 text-center text-sm text-blue-gray-900">Data lokasi belum tersedia.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -179,23 +151,23 @@
 
                     <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50">
                         <p class="block font-sans text-sm font-normal leading-normal text-blue-gray-900">
-                            Total Data: {{ $item_locations->total() }} | Page {{ $item_locations->currentPage() }} of
-                            {{ $item_locations->lastPage() }}
+                            Total Data: {{ $item_statuses->total() }} | Page {{ $item_statuses->currentPage() }} of
+                            {{ $item_statuses->lastPage() }}
                         </p>
                         <div class="flex gap-2 me-2">
-                            @if($item_locations->onFirstPage())
+                            @if($item_statuses->onFirstPage())
                                 <span
                                     class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
                                     Previous
                                 </span>
                             @else
-                                <a href="{{ $item_locations->previousPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
+                                <a href="{{ $item_statuses->previousPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
                                     class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
                                     Previous
                                 </a>
                             @endif
-                            @if($item_locations->hasMorePages())
-                                <a href="{{ $item_locations->nextPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
+                            @if($item_statuses->hasMorePages())
+                                <a href="{{ $item_statuses->nextPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
                                     class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
                                     Next
                                 </a>
@@ -206,60 +178,33 @@
                                 </span>
                             @endif
                         </div>
+                        
                     </div>
 
-                    <div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">
-
-                        <div id="map"
-                            class="w-full flex items-center rounded-xl mb-10 mt-0 m-3 justify-between p-10 border-t border-blue-gray-50">
-                        </div>
+                    <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50">
 
                     </div>
+
                 </div>
 
                 <!-- Modal untuk Tambah Pengguna -->
                 <div id="addModal"
                     class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center">
                     <div class="bg-white rounded-lg p-6 w-1/3">
-                        <h3 class="text-lg font-bold mb-4">Tambah Pengguna Baru</h3>
-                        <form id="addForm" action="{{ route('lokasi.store') }}" method="POST">
+                        <h3 class="text-lg font-bold mb-4">Tambah Status Baru</h3>
+                        <form id="addForm" action="{{ route('status.store') }}" method="POST">
                             @csrf
                             <div class="mb-4">
-                                <label for="addNamaLokasi" class="block text-sm font-medium text-gray-700 mb-2">Nama
-                                    Lokasi</label>
-                                <input type="text" name="nama_lokasi" id="addNamaLokasi"
+                                <label for="addNamaStatus" class="block text-sm font-medium text-gray-700 mb-2">Nama Status</label>
+                                <input type="text" name="name_status" id="addNamaStatus"
                                     class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Nama Lokasi Baru" required>
+                                    placeholder="Tambahkan Nama Status Baru" required>
                             </div>
                             <div class="mb-4">
-                                <label for="addAlamatLokasi" class="block text-sm font-medium text-gray-700 mb-2">Alamat
-                                    Lokasi</label>
-                                <input type="text" name="alamat_lokasi" id="addAlamatLokasi"
+                                <label for="addAlamatLokasi" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Status</label>
+                                <input type="text" name="description_status" id="addAlamatLokasi"
                                     class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Alamat Lokasi Baru" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="addPenanggungJawab"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Penanggung Jawab</label>
-                                <input type="text" name="penanggung_jawab" id="addPenanggungJawab"
-                                    class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Penanggung Jawab Lokasi Baru" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="addLatitude"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
-                                <input type="number" name="latitude" id="addLatitude"
-                                    class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Latitude Lokasi Baru" required step="0.000001" min="-90"
-                                    max="90">
-                            </div>
-                            <div class="mb-4">
-                                <label for="addLongitude"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
-                                <input type="number" name="longitude" id="addLongitude"
-                                    class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Longitude Lokasi Baru" required step="0.000001" min="-180"
-                                    max="180">
+                                    placeholder="Tambahkan Deskripsi Tentang Status Baru Tersebut" required>
                             </div>
 
                             <div class="flex justify-end">
@@ -281,48 +226,24 @@
                     class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center">
                     <div class="bg-white rounded-lg p-6 w-1/3">
                         <h3 class="text-lg font-bold mb-4">Edit Pengguna</h3>
-                        <form id="editForm" action="{{ route('lokasi.update', '') }}" method="POST" enctype="multipart/form-data">
+                        <form id="editForm" action="{{ route('status.update', '') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')                             
                             
-                            <input type="hidden" name="id" id="editLokasiId"> <!-- Input tersembunyi untuk ID -->
+                            <input type="hidden" name="id" id="editStatusId"> <!-- Input tersembunyi untuk ID -->
 
                             <div class="mb-4">
-                                <label for="editNamaLokasi" class="block text-sm font-medium text-gray-700 mb-2">Nama
-                                    Lokasi</label>
-                                <input type="text" name="nama_lokasi" id="editNamaLokasi"
+                                <label for="editNamaStatus" class="block text-sm font-medium text-gray-700 mb-2">Nama Status</label>
+                                <input type="text" name="name_status" id="editNamaStatus"
                                     class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                     placeholder="Tambahkan Nama Lokasi Baru" required>
                             </div>
                             <div class="mb-4">
-                                <label for="editAlamatLokasi"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Alamat Lokasi</label>
-                                <input type="text" name="alamat_lokasi" id="editAlamatLokasi"
+                                <label for="editDescription"
+                                    class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                <input type="text" name="description_status" id="editDescription"
                                     class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Alamat Lokasi Baru" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="editPenanggungJawab"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Penanggung Jawab</label>
-                                <input type="text" name="penanggung_jawab" id="editPenanggungJawab"
-                                    class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Penanggung Jawab Lokasi Baru" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="editLatitude"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
-                                <input type="number" name="latitude" id="editLatitude"
-                                    class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Latitude Lokasi Baru" required step="0.000001" min="-90"
-                                    max="90">
-                            </div>
-                            <div class="mb-4">
-                                <label for="editLongitude"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
-                                <input type="number" name="longitude" id="editLongitude"
-                                    class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                    placeholder="Tambahkan Longitude Lokasi Baru" required step="0.000001" min="-180"
-                                    max="180">
+                                    placeholder="Tambahkan Deskripsi" required>
                             </div>
 
                             <div class="flex justify-end">
@@ -360,41 +281,6 @@
     </div>
 
     <script>
-        // Koordinat dan zoom awal  
-        const initialCenter = [-6.200000, 106.816666];
-        const initialZoom = 11;
-
-
-        // Inisialisasi peta  
-        var map = L.map('map' , { attributionControl: false }).setView(initialCenter, initialZoom, ); // Set view awal    
-
-        // Tambahkan layer peta  
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-        }).addTo(map);
-
-        // Menambahkan marker dari item_locations  
-        @foreach ($item_locations as $itemlocation)
-            L.marker([{{ $itemlocation->latitude }}, {{ $itemlocation->longitude }}])
-                .addTo(map)
-                .bindPopup("{{ $itemlocation->nama_lokasi }}");
-        @endforeach
-
-        // Reset view button  
-        const resetButton = L.control({ position: 'topright' });
-        resetButton.onAdd = () => {
-            const button = L.DomUtil.create('button', 'reset-button');
-            button.innerHTML = 'Reset View';
-            button.onclick = () => {
-                map.setView(initialCenter, initialZoom); // Reset ke view awal  
-            };
-            return button;
-        };
-        resetButton.addTo(map);  
-    </script>
-
-
-    <script>
         // Menampilkan modal untuk menambah pengguna                
         function openAddModal() {
             document.getElementById('addForm').reset(); // Reset form                
@@ -407,16 +293,13 @@
         });
 
         // Menampilkan modal untuk mengedit pertanyaan              
-        function openEditModal(id, nama_lokasi, alamat_lokasi, penanggung_jawab, latitude, longitude) {
-            document.getElementById('editLokasiId').value = id; // Set ID pengguna  
-            document.getElementById('editNamaLokasi').value = nama_lokasi; // Set value Username  
-            document.getElementById('editAlamatLokasi').value = alamat_lokasi; // Set value Email  
-            document.getElementById('editPenanggungJawab').value = penanggung_jawab; // Set value Nama Lengkap 
-            document.getElementById('editLatitude').value = latitude; // Set value password   
-            document.getElementById('editLongitude').value = longitude; // Set value NIP  
+        function openEditModal(id, name_status, description_status) {
+            document.getElementById('editStatusId').value = id; // Set ID pengguna  
+            document.getElementById('editNamaStatus').value = name_status; // Set value Username  
+            document.getElementById('editDescription').value = description_status; // Set value Email  
 
             // Set action form edit  
-            document.getElementById('editForm').action = "{{ route('lokasi.update', '') }}/" + id; // Set action form edit  
+            document.getElementById('editForm').action = "{{ route('status.update', '') }}/" + id; // Set action form edit  
 
             // Tampilkan modal  
             document.getElementById('editModal').classList.remove('hidden');
@@ -433,8 +316,8 @@
         // Function to show the delete confirmation modal      
         function showDeleteConfirmation(button) {  
             const userId = button.dataset.id; // Get user ID      
-            const namaLokasi = button.dataset.nama_lokasi; // Get user name      
-            document.getElementById('deleteItemName').textContent = namaLokasi; // Set user name in modal      
+            const nameStatus = button.dataset.name_status; // Get user name      
+            document.getElementById('deleteItemName').textContent = nameStatus; // Set user name in modal      
             currentDeleteForm = button.closest('form'); // Get the closest form      
             document.getElementById('delete-confirmation-modal').classList.remove('hidden'); // Show modal      
         }  

@@ -22,8 +22,8 @@ class UserControllerForAdmin extends Controller
             })    
             ->paginate(10);    
     
-        // Ambil semua unit kerja dari database  
-        $unitKerjas = UnitKerja::all();    
+            // Ambil semua unit kerja dari database  
+            $unitKerjas = UnitKerja::all();    
     
         return view('lending-asset.admin.user', compact('users', 'unitKerjas'));    
     }  
@@ -106,6 +106,40 @@ class UserControllerForAdmin extends Controller
         $user = User::findOrFail($id);  
         return response()->json($user);  
     }  
-    
 
+    public function updateuserlogin(Request $request, $id)  
+    {  
+        // Validasi input  
+        $request->validate([  
+            'name' => 'required|string|max:255',  
+            'email' => 'required|email|max:255',  
+            'fullname' => 'required|string|max:255',  
+            'nip' => 'required|string|max:20',  
+            'no_telepon' => 'required|string|max:255',
+            'unit_kerja' => 'required|string|max:255',  
+        ]);  
+    
+        $user = User::findOrFail($id);    
+        $user->update([  
+            'name' => $request->name,  
+            'email' => $request->email,  
+            'fullname' => $request->fullname,    
+            'nip' => $request->nip,  
+            'no_telepon' => $request->no_telepon, 
+            'unit_kerja_id' => $request->unit_kerja,   
+        ]);  
+    
+        // Update session  
+        session([  
+            'name' => $request->name,  
+            'email' => $request->email,  
+            'fullname' => $request->fullname,    
+            'nip' => $request->nip,  
+            'no_telepon' => $request->no_telepon, 
+            'unit_kerja_id' => $request->unit_kerja,   
+        ]);  
+    
+        return redirect()->back()->with('success', 'Data akun berhasil diperbarui.');  
+    }  
+ 
 }  

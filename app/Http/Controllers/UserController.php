@@ -28,7 +28,8 @@ class UserController extends Controller
         // Validasi input  
         $validator = Validator::make($request->all(), [  
             'user' => 'required|string|unique:users,name',  
-            'email' => 'required|email|unique:users,email',  
+            'fullname' => 'required|string',  
+            'email' => 'required|email',  
             'password' => 'required|string|min:8|confirmed',
             'unitkerja_id' => 'nullable|exists:unitkerjas,id',
         ]);  
@@ -41,6 +42,7 @@ class UserController extends Controller
         // Buat pengguna baru  
         User::create([  
             'name' => $request->user,  
+            'fullname' => $request->fullname,
             'email' => $request->email,  
             'password' => Hash::make($request->password), 
             'unit_kerja_id' => $request->unitkerja_id,  // Hash password sebelum menyimpannya  
@@ -101,6 +103,7 @@ class UserController extends Controller
     
         // Simpan informasi user dan role dalam sesi  
         $request->session()->put([  
+            'id'=> $userRecord->id,
             'user' => $userRecord->name,  
             'role' => $userRecord->role,  
             'email' => $userRecord->email,  
@@ -122,8 +125,6 @@ class UserController extends Controller
         }    
     }  
 
-
-
     /**
      * Proses Logout.
      *
@@ -135,4 +136,51 @@ class UserController extends Controller
         return redirect('/login')->with('success', 'Logout berhasil!');
     }
 
+      // Menampilkan form edit pengguna  
+    public function edit($id)  
+    {  
+        $user = User::findOrFail($id);  
+        $unitKerjas = UnitKerja::all(); // Ambil semua unit kerja  
+        return view('user.edit', compact('user', 'unitKerjas'));  
+    }  
+
+    public function updateuserlogin(Request $request, $id)    
+    {    
+        $unitKerjas = UnitKerja::all(); // Ambil semua unit kerja  
+
+        // Validasi input    
+        $request->validate([    
+            'name' => 'required|string|max:255|unique:users,name,' . $id,  // Pastikan name unik  
+            'email' => 'required|email|max:255',  // Email tidak perlu unik jika tidak diinginkan  
+            'fullname' => 'required|string|max:255',    
+            'nip' => 'required|string|max:20',    
+            'no_telepon' => 'required|string|max:255',  
+            'unit_kerja' => 'required|exists:unitkerjas,id', // Pastikan unit kerja valid  
+        ]);    
+        
+        $user = User::findOrFail($id);      
+        $user->update([    
+            'name' => $request->name,    
+            'email' => $request->email,    
+            'fullname' => $request->fullname,      
+            'nip' => $request->nip,    
+            'no_telepon' => $request->no_telepon,   
+            'unit_kerja_id' => $request->unit_kerja,     
+        ]);    
+        
+        // Ambil nama unit kerja dari database  
+        $unitKerja = UnitKerja::find($request->unit_kerja);  
+        
+        // Update session    
+        session([    
+            'name' => $request->name,    
+            'email' => $request->email,    
+            'fullname' => $request->fullname,      
+            'nip' => $request->nip,    
+            'no_telepon' => $request->no_telepon,   
+            'unit_kerja_name' => $unitKerja ? $unitKerja->nama_unit_kerja : null, // Ambil nama unit kerja  
+        ]);    
+        
+        return redirect()->back()->with('success', 'Data akun berhasil diperbarui.');    
+    }  
 }

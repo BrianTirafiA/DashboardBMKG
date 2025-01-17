@@ -3,35 +3,35 @@
 namespace Database\Seeders;  
   
 use Illuminate\Database\Seeder;  
-use App\Models\Status;  
+use App\Models\ItemStatus;  
   
 class StatusesTableSeeder extends Seeder  
 {    
     public function run()  
     {  
-        Status::create([  
-            'nama' => 'Available',  
-            'description' => 'Deskripsi Status A',  
+        ItemStatus::create([  
+            'name_status' => 'Available',  
+            'description_status' => 'Deskripsi Status A',  
         ]);  
   
-        Status::create([  
-            'nama' => 'On Going',  
-            'description' => 'Deskripsi Status B',  
+        ItemStatus::create([  
+            'name_status' => 'On Going',  
+            'description_status' => 'Deskripsi Status B',  
         ]);  
 
-        Status::create([  
-            'nama' => 'Maintetance',  
-            'description' => 'Deskripsi Status B',  
+        ItemStatus::create([  
+            'name_status' => 'Maintetance',  
+            'description_status' => 'Deskripsi Status B',  
         ]);  
 
-        Status::create([  
-            'nama' => 'Out of Stock',  
-            'description' => 'Deskripsi Status B',  
+        ItemStatus::create([  
+            'name_status' => 'Out of Stock',  
+            'description_status' => 'Deskripsi Status B',  
         ]);  
 
-        Status::create([  
-            'nama' => 'Not Available',  
-            'description' => 'Deskripsi Status B',  
+        ItemStatus::create([  
+            'name_status' => 'Not Available',  
+            'description_status' => 'Deskripsi Status B',  
         ]);  
   
     }  

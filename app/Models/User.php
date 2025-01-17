@@ -29,6 +29,7 @@ class User extends Authenticatable
         'no_telepon',  
         'unit_kerja_id',
         'role',
+        'profile-photo',
     ];  
  
 
@@ -54,6 +55,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isAdmin()  
+    {  
+        return $this->role === 'admin'; // Adjust according to your role logic  
+    }  
+    
+    public function isUser()  
+    {  
+        return $this->role === 'user'; // Adjust according to your role logic  
+    } 
 
     public function unit_kerja()  
        {  

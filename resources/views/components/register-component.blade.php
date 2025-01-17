@@ -10,7 +10,7 @@
     @endphp
 
     <div class="relative flex items-center justify-center min-h-screen">  
-        <div class="w-[85rem] h-[67rem] lg:h-[48rem] ms-4 me-4 p-7 bg-[#F1F5F9] rounded-xl shadow-md border border-blue-gray-100 border-collapse bg-clip-border">  
+        <div class="w-[85rem] h-[67rem] lg:h-[47rem] ms-4 me-4 p-7 bg-[#F1F5F9] rounded-xl shadow-md border border-blue-gray-100 border-collapse bg-clip-border">  
             <div class="font-[sans-serif] ">  
                 <div class="grid lg:grid-cols-2 rounded-xl gap-4 max-lg:gap-12 bg-gradient-to-r from-blue-500 to-blue-700 sm:px-8 px-4 py-12 h-[380px] lg:h-[360px]">  
   
@@ -30,30 +30,37 @@
                         </div>  
                     </div>  
   
-                    <div class="bg-white rounded-xl 2xl:mt-0 -mt-7 sm:px-6 px-8 py-6 max-w-md w-full border border-blue-gray-100 border-collapse h-max">  
+                    <div class="bg-white rounded-xl lg:-mt-4 -mt-7 sm:px-6 px-8 py-6 max-w-md w-full border border-blue-gray-100 border-collapse h-max">  
                         <form method="post" action="/register" x-data="{password: '', password_confirmation: '', showModal: false}">  
                             @csrf  
                             <div class="mb-4">    
                                 <h3 class="text-3xl font-extrabold text-center text-gray-800">Register Account</h3>    
                             </div>    
                             <div>    
-                                <label class="text-gray-800 text-sm mb-2 block">Username</label>    
+                                <label class="text-gray-800 text-sm mb-1 block">Username</label>    
                                 <div class="relative flex items-center">    
-                                    <input name="user" id="user" type="text" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Masukkan username" />    
+                                    <input name="user" id="user" type="text" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-md outline-blue-600" placeholder="Masukkan Username" />    
                                 </div>    
-                            </div>    
+                            </div>   
+                            
+                            <div class="mt-2">    
+                                <label class="text-gray-800 text-sm mb-1 block">Nama Lengkap</label>    
+                                <div class="relative flex items-center">    
+                                    <input name="fullname" id="fullname" type="text" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-md outline-blue-600" placeholder="Masukkan Nama Lengkap" />    
+                                </div>    
+                            </div> 
                           
                             <div class="mt-2">    
-                                <label class="text-gray-800 text-sm mb-2 block">Email</label>    
+                                <label class="text-gray-800 text-sm mb-1 block">Email</label>    
                                 <div class="relative flex items-center">    
-                                    <input name="email" id="email" type="text" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Masukkan email" />    
+                                    <input name="email" id="email" type="text" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-md outline-blue-600" placeholder="Masukkan Email" />    
                                 </div>    
                             </div>    
 
                             <div class="mt-2">    
-                                <label class="text-gray-800 text-sm mb-2 block">Unit Kerja</label>    
+                                <label class="text-gray-800 text-sm mb-1 block">Unit Kerja</label>    
                                 <div class="relative flex items-center">    
-                                <select name="unitkerja_id" id="addUnitKerja" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Masukkan email">      
+                                <select name="unitkerja_id" id="addUnitKerja" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-md outline-blue-600" placeholder="Masukkan Unit Kerja">      
                                     <option value="">Pilih Unit Kerja / UPT</option>      
                                     @foreach($unitKerjas as $unitKerja)      
                                         <option value="{{ $unitKerja->id }}">{{ $unitKerja->nama_unit_kerja }}</option>      
@@ -63,27 +70,27 @@
                             </div>
                           
                             <div class="mt-2">    
-                                <label class="text-gray-800 text-sm mb-2 block">Password</label>    
+                                <label class="text-gray-800 text-sm mb-1 block">Password</label>    
                                 <div class="relative flex items-center">    
-                                    <input type="password" name="password" id="password" x-model="password" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Masukkan password" />    
+                                    <input type="password" name="password" id="password" x-model="password" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-md outline-blue-600" placeholder="Masukkan password" />    
                                 </div>    
                             </div>    
                           
                             <div class="mt-4">    
-                                <label class="text-gray-800 text-sm mb-2 block">Confirm Password</label>    
+                                <label class="text-gray-800 text-sm mb-1 block">Confirm Password</label>    
                                 <div class="relative flex items-center">    
-                                    <input type="password" name="password_confirmation" id="password_confirmation" x-model="password_confirmation" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600" placeholder="Masukkan ulang password" />    
+                                    <input type="password" name="password_confirmation" id="password_confirmation" x-model="password_confirmation" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-2 rounded-md outline-blue-600" placeholder="Masukkan ulang password" />    
                                 </div>    
                             </div>         
   
-                            <div class="flex flex-row justify-start mt-3 ml-4 p-1 space-x-4">  
+                            <div class="flex flex-row justify-center mt-2 ml-1 p-1 space-x-4">  
                             <div class="flex items-center">  
                                 <div :class="{'bg-green-200 text-green-700': password == password_confirmation && password.length > 0, 'bg-red-200 text-red-700': password != password_confirmation || password.length == 0}" class="rounded-full p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path x-show="password == password_confirmation && password.length > 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/><path x-show="password != password_confirmation || password.length == 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>  
-                                <span :class="{'text-green-700': password == password_confirmation && password.length > 0, 'text-red-700': password != password_confirmation || password.length == 0}" class="font-medium text-sm ml-3" x-text="password == password_confirmation && password.length > 0 ? 'Passwords match' : 'Passwords do not match'"></span>  
+                                <span :class="{'text-green-700': password == password_confirmation && password.length > 0, 'text-red-700': password != password_confirmation || password.length == 0}" class="font-medium text-xs ml-3" x-text="password == password_confirmation && password.length > 0 ? 'Passwords match' : 'Passwords do not match'"></span>  
                             </div>  
                             <div class="flex items-center">  
                                 <div :class="{'bg-green-200 text-green-700': password.length > 7, 'bg-red-200 text-red-700': password.length < 7}" class="rounded-full p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path x-show="password.length > 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/><path x-show="password.length < 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>  
-                                <span :class="{'text-green-700': password.length > 7, 'text-red-700': password.length < 7}" class="font-medium text-sm ml-3" x-text="password.length > 7 ? 'The minimum length is reached' : 'At least 8 characters required'"></span>  
+                                <span :class="{'text-green-700': password.length > 7, 'text-red-700': password.length < 7}" class="font-medium text-xs ml-3" x-text="password.length > 7 ? 'The minimum length reached' : 'At least 8 characters required'"></span>  
                             </div>  
                             </div>  
    

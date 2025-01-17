@@ -10,7 +10,7 @@ class UnitKerjaController extends Controller
     // Menampilkan daftar unit kerja untuk admin  
     public function index(Request $request)  
     {  
-        $unitkerjas = UnitKerja::paginate(10); // Ambil semua unit kerja dengan pagination  
+        $unitkerjas = UnitKerja::paginate(8); // Ambil semua unit kerja dengan pagination  
         return view('lending-asset.admin.unitkerja', compact('unitkerjas'));  
     }  
     

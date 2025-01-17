@@ -15,8 +15,8 @@ class CreateStatusesTable extends Migration
     {  
         Schema::create('item_statuses', function (Blueprint $table) {  
             $table->id(); // Menambahkan kolom id secara otomatis  
-            $table->string('nama'); // Kolom untuk nama  
-            $table->string('description'); // Kolom untuk deskripsi  
+            $table->string('name_status'); // Kolom untuk nama  
+            $table->string('description_status'); // Kolom untuk deskripsi  
             $table->timestamps(); // Menambahkan kolom created_at dan updated_at  
         });  
     }  

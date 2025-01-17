@@ -18,12 +18,13 @@ class UserControllerForAdmin extends Controller
                 return $query->where('name', 'like', "%{$search}%")    
                     ->orWhere('email', 'like', "%{$search}%")    
                     ->orWhere('nip', 'like', "%{$search}%")    
-                    ->orWhere('no_telepon', 'like', "%{$search}%");    
+                    ->orWhere('no_telepon', 'like', "%{$search}%")
+                    ->orWhereHas('unit_kerja', function($q) use ($search) {$q->where('nama_unit_kerja', 'like', "%{$search}%");}) ;    
             })    
             ->paginate(10);    
     
-        // Ambil semua unit kerja dari database  
-        $unitKerjas = UnitKerja::all();    
+            // Ambil semua unit kerja dari database  
+            $unitKerjas = UnitKerja::all();    
     
         return view('lending-asset.admin.user', compact('users', 'unitKerjas'));    
     }  
@@ -106,6 +107,4 @@ class UserControllerForAdmin extends Controller
         $user = User::findOrFail($id);  
         return response()->json($user);  
     }  
-    
-
 }  

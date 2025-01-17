@@ -15,8 +15,8 @@ class CreateCategoriesTable extends Migration
     {  
         Schema::create('item_categories', function (Blueprint $table) {  
             $table->id(); // Menambahkan kolom id secara otomatis  
-            $table->string('nama'); // Kolom untuk nama  
-            $table->string('description'); // Kolom untuk deskripsi  
+            $table->string('name_category'); // Kolom untuk nama  
+            $table->string('description_category'); // Kolom untuk deskripsi  
             $table->timestamps(); // Menambahkan kolom created_at dan updated_at  
         });  
     }  
@@ -28,6 +28,6 @@ class CreateCategoriesTable extends Migration
      */  
     public function down()  
     {  
-        Schema::dropIfExists('categories');  
+        Schema::dropIfExists('item_categories');  
     }  
 }  

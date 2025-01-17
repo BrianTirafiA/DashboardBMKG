@@ -46,6 +46,8 @@
             'items' => [
                 ['title' => 'Barang / Lisensi', 'link' => '/admin/lendasset/items', 'active' => $currentRoute === 'admin/lendasset/items'],
                 ['title' => 'Kategori', 'link' => '/admin/lendasset/kategori', 'active' => $currentRoute === 'admin/lendasset/kategori'],
+                ['title' => 'Status', 'link' => '/admin/lendasset/status', 'active' => $currentRoute === 'admin/lendasset/status'],
+                ['title' => 'Brand / Merek', 'link' => '/admin/lendasset/brand', 'active' => $currentRoute === 'admin/lendasset/brand'],
                 ['title' => 'Lokasi', 'link' => '/admin/lendasset/lokasi', 'active' => $currentRoute === 'admin/lendasset/lokasi'],
             ],
         ],

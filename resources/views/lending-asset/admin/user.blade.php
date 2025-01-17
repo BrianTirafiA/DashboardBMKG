@@ -97,7 +97,8 @@
                                             <td
                                                 class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
                                                 {{ $users->firstItem() + $loop->index }}</td>
-                                            @foreach ($columns as $column)      <td
+                                            @foreach ($columns as $column)      
+                                                <td
                                                     class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
                                                     {{ $column['key'] === 'unit_kerja.nama_unit_kerja' ? ($user->unit_kerja ? $user->unit_kerja->nama_unit_kerja : '-') : $user->{$column['key']} }}
                                                 </td>

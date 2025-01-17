@@ -37,8 +37,7 @@
                             @csrf
                         </form>
                         <div id="profile-dropdown-menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 hidden">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
+                            <a href="/Profile" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
                         </div>
                     </div>

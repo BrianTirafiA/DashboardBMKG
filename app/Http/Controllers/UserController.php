@@ -183,5 +183,4 @@ class UserController extends Controller
         
         return redirect()->back()->with('success', 'Data akun berhasil diperbarui.');    
     }  
-
 }

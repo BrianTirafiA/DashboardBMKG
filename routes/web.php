@@ -9,6 +9,8 @@ use App\Http\Controllers\ItemBrandController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
+use App\Http\Controllers\UserControllerForUpdateData;
+use App\Http\Middleware\CheckUserOrAdmin;
 use Illuminate\Support\Facades\Route;    
 use App\Http\Controllers\PinController; 
 use App\Http\Controllers\StationFlagController;     
@@ -33,7 +35,9 @@ Route::controller(UserController::class)->group(function () {
 Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function () {    
         Route::view('/qcdashboard', 'home');    
         Route::view('/home', 'home');   
-        Route::view('/dashboard', 'dashboard');     
+        Route::view('/dashboard', 'dashboard');  
+      
+        // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profileadmin.index');   
 
     Route::prefix('itasset')->group(function () {    
         Route::view('/dashboard', 'itAsset.dashboard');    
@@ -43,7 +47,6 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/report', 'itAsset.report');    
         Route::view('/maintenance', 'itAsset.maintenance');    
         Route::view('/log', 'itAsset.log');
-        
         Route::Resource('/device', controller: DeviceController::class);
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
         Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
@@ -58,7 +61,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/transaksi-pengembalian', 'lending-asset.admin.transaksi-pengembalian');    
         Route::view('/report-week', 'lending-asset.admin.report-week');    
         Route::view('/report-month', 'lending-asset.admin.report-month');    
-        Route::view('/report-year', 'lending-asset.admin.report-year');    
+        Route::view('/report-year', 'lending-asset.admin.report-year');  
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index'); 
         Route::resource('/brand', ItemBrandController::class);
@@ -80,9 +83,10 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 // User Routes    
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {    
     Route::view('/dashboard', 'lending-asset.user.user-dashboard');   
-    Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);  
-    Route::view('/profile', 'lending-asset.user.user-profile')->name('user.profile');   
+    Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);    
     Route::view('/kategori', 'lending-asset.user.user-kategori');   
+    // Route::resource('/profile', UserControllerForUpdateData::class);
+    // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profile.index'); 
     Route::view('/items', 'lending-asset.user.user-items');   
     Route::view('/pengajuan', 'lending-asset.user.user-pengajuan');   
     Route::view('/peminjaman', 'lending-asset.user.user-peminjaman');   
@@ -99,4 +103,7 @@ Route::get('/admin/qcdashboard', [StationFlagController::class, 'index'])->name(
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
 // Route untuk resource unit kerja
-Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminMiddleware::class);
+Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminMiddleware::class); 
+
+Route::resource('/profile', UserControllerForUpdateData::class)->middleware(CheckUserOrAdmin::class);
+Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->middleware(CheckUserOrAdmin::class)->name('profile.index'); 

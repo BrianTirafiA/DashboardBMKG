@@ -15,17 +15,29 @@ class ItemDetailController extends Controller
 {  
     public function index(Request $request)  
     {  
-        // Mengambil input pencarian dari request    
-        $search = $request->input('search');  
+        // Mengambil input pencarian dari request      
+$search = $request->input('search');    
   
-        // Memulai query untuk ItemDetail    
-        $item_details = ItemDetail::with('brand','category','status','location')     
-            ->when($search, function ($query, $search) {  
-                return $query->where('nama_item', 'like', "%{$search}%")  
-                    ->orWhere('type_item', 'like', "%{$search}%")  
-                    ->orWhere('nama_vendor', 'like', "%{$search}%");  
+// Memulai query untuk ItemDetail      
+$item_details = ItemDetail::with('brand', 'category', 'status', 'location')       
+    ->when($search, function ($query, $search) {    
+        return $query->where('nama_item', 'like', "%{$search}%")    
+            ->orWhere('type_item', 'like', "%{$search}%")    
+            ->orWhere('nama_vendor', 'like', "%{$search}%")    
+            ->orWhereHas('brand', function($q) use ($search) {  
+                $q->where('name_brand', 'like', "%{$search}%");  
             })  
-            ->paginate(10);  
+            ->orWhereHas('category', function($q) use ($search) {  
+                $q->where('name_category', 'like', "%{$search}%");  
+            })  
+            ->orWhereHas('status', function($q) use ($search) {  
+                $q->where('name_status', 'like', "%{$search}%");  
+            })  
+            ->orWhereHas('location', function($q) use ($search) {  
+                $q->where('nama_lokasi', 'like', "%{$search}%");  
+            });  
+    })    
+    ->paginate(10);  
 
             $item_brands = ItemBrand::all();
             $item_categories = ItemCategory::all();

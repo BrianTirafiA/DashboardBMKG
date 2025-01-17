@@ -43,7 +43,6 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
         Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
 
-
     });    
 
     Route::prefix('lendasset')->group(function () {    

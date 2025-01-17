@@ -14,7 +14,7 @@ class CreateLoanRequestsTable extends Migration
     {  
         Schema::create('loan_requests', function (Blueprint $table) {  
             $table->id();  
-            $table->foreignId('stock_id')->constrained('item_stocks')->onDelete('cascade'); // Mengaitkan dengan tabel item_stocks  
+            $table->foreignId('item_details_id')->constrained('item_details')->onDelete('cascade'); // Mengaitkan dengan tabel item_stocks  
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Mengaitkan dengan tabel users  
             $table->integer('durasi_peminjaman'); // Durasi dalam hari  
             $table->text('alasan_peminjaman');  

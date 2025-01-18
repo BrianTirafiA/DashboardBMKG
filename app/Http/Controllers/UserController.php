@@ -111,6 +111,7 @@ class UserController extends Controller
             'nip' => $userRecord->nip,  
             'unit_kerja_id' => $userRecord->unit_kerja_id,  
             'no_telepon' => $userRecord->no_telepon,  
+            'profile_photo' => $userRecord->profile_photo,
             'unit_kerja_name' => $userRecord->unit_kerja ? $userRecord->unit_kerja->nama_unit_kerja : null, // Cek apakah unit kerja ada  
         ]);  
     

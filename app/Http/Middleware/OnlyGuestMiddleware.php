@@ -29,7 +29,7 @@ class OnlyGuestMiddleware
         // Redirect berdasarkan role  
         $role = $request->session()->get('role');  
         if ($role === 'admin') {  
-            return redirect("/admin/qcdashboard");  
+            return redirect("/admin/dashboard");  
         } elseif ($role === 'user') {  
             return redirect("/user/dashboard");  
         } else {  

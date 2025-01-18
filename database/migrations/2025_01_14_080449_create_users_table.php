@@ -52,7 +52,7 @@ return new class extends Migration
     {    
         Schema::table('users', function (Blueprint $table) {    
             $table->dropForeign(['unit_kerja_id']);    
-            $table->dropColumn(['nip', 'fullname', 'unit_kerja_id', 'no_telepon',]); // Hapus kolom profile_photo  
+            $table->dropColumn(['nip', 'fullname', 'unit_kerja_id', 'no_telepon','profile_photo']); // Hapus kolom profile_photo  
         });    
         Schema::dropIfExists('users');    
         Schema::dropIfExists('password_reset_tokens');    

@@ -10,6 +10,7 @@ use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\UserControllerForUpdateData;
+use App\Http\Controllers\ProfilePhotoController;
 use App\Http\Middleware\CheckUserOrAdmin;
 use Illuminate\Support\Facades\Route;    
 use App\Http\Controllers\PinController; 
@@ -26,7 +27,7 @@ use App\Http\Controllers\UserControllerForAdmin;
 Route::get('/', [HomeController::class, 'home']);  
     
 Route::controller(UserController::class)->group(function () {    
-    Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class);    
+    Route::get('/login', 'login')->middleware(OnlyGuestMiddleware::class)->name('login');    
     Route::post('/login', 'doLogin')->middleware(OnlyGuestMiddleware::class);    
     Route::post('/logout', [UserController::class, 'doLogOut'])->middleware(LogoutMiddleware::class);  
 });    
@@ -107,3 +108,9 @@ Route::resource('/unitkerja', UnitKerjaController::class)->middleware(OnlyAdminM
 
 Route::resource('/profile', UserControllerForUpdateData::class)->middleware(CheckUserOrAdmin::class);
 Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->middleware(CheckUserOrAdmin::class)->name('profile.index'); 
+
+// Route untuk upload dan delete gambar profil    
+Route::post('/profile/{id}/upload-image', [UserControllerForUpdateData::class, 'uploadImage'])->name('profile.upload.image');    
+Route::delete('/profile/{id}/delete-image', [UserControllerForUpdateData::class, 'deleteImage'])->name('profile.delete.image');    
+Route::get('/profile-photo/{filename}', [ProfilePhotoController::class, 'show'])->name('profile.photo');  
+

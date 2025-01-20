@@ -39,7 +39,7 @@
     <div>
         <div class="me-7 mt-1">
             @php                
-                $title = 'Daftar Item Terdaftar';
+                                                                                $title = 'Daftar Item Terdaftar';
                 $description = 'Halaman ini berisi daftar item yang terdaftar yang dapat Anda kelola.';
                 $add = 'Tambah Item Baru';
                 $columns = [
@@ -119,33 +119,34 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($item_details as $itemDetail)                                
-                                    <tr>   
+                                        <tr>
                                             <td
                                                 class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
                                                 {{ $item_details->firstItem() + $loop->index }}
                                             </td>
                                             @foreach ($columns as $column)  
-                                                <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">  
+                                                <td
+                                                    class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
 
-                                                    @if ($column['key'] === 'brand.name_brand')  
-                                                        {{ $itemDetail->brand ? $itemDetail->brand->name_brand : '-' }}  
+                                                    @if ($column['key'] === 'brand.name_brand')
+                                                        {{ $itemDetail->brand ? $itemDetail->brand->name_brand : '-' }}
                                                     @elseif ($column['key'] === 'category.name_category')  
-                                                        {{ $itemDetail->category ? $itemDetail->category->name_category : '-' }}  
+                                                        {{ $itemDetail->category ? $itemDetail->category->name_category : '-' }}
                                                     @elseif ($column['key'] === 'status.name_status')  
-                                                        {{ $itemDetail->status ? $itemDetail->status->name_status : '-' }}  
+                                                        {{ $itemDetail->status ? $itemDetail->status->name_status : '-' }}
                                                     @elseif ($column['key'] === 'location.nama_lokasi')  
-                                                        {{ $itemDetail->location ? $itemDetail->location->nama_lokasi : '-' }}  
+                                                        {{ $itemDetail->location ? $itemDetail->location->nama_lokasi : '-' }}
                                                     @elseif ($column['key'] === 'image1')  
-                                                        <button type="button" class="text-blue-500"  
-                                                            onclick="openImageModal('{{ asset('storage/' . $itemDetail->image1) }}', '{{ asset('storage/' . $itemDetail->image2) }}', '{{ asset('storage/' . $itemDetail->image3) }}', '{{ asset('storage/' . $itemDetail->image4) }}')">  
-                                                            Lihat Gambar  
-                                                        </button>  
-                                                    @else  
-                                                        {{ $itemDetail->{$column['key']} }}  
-                                                    @endif  
-                                                </td>  
-                                            @endforeach  
-                                            
+                                                        <button type="button" class="text-blue-500"
+                                                            onclick="openImageModal('{{ asset('storage/' . $itemDetail->image1) }}', '{{ asset('storage/' . $itemDetail->image2) }}', '{{ asset('storage/' . $itemDetail->image3) }}', '{{ asset('storage/' . $itemDetail->image4) }}')">
+                                                            Lihat Gambar
+                                                        </button>
+                                                    @else
+                                                        {{ $itemDetail->{$column['key']} }}
+                                                    @endif
+                                                </td>
+                                            @endforeach
+
                                             <td class="border-b border-blue-gray-100">
                                                 <div class="flex items-center gap-3 justify-center">
                                                     {{-- Tombol Edit --}}
@@ -228,7 +229,7 @@
                     </div>
 
                     <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50">
-                        
+
                     </div>
 
                 </div>
@@ -290,6 +291,10 @@
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                             placeholder="Tambahkan Jumlah Item Baru" required>
                                     </div>
+
+                                </div>
+
+                                <div>
                                     <div class="mb-4">
                                         <label for="addKategoriItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Kategori Item</label>
@@ -298,7 +303,8 @@
                                             required>
                                             <option value="">Pilih Kategori</option>
                                             @foreach($item_categories as $itemCategory)  
-                                                <option value="{{ $itemCategory->id }}">{{ $itemCategory->name_category }}</option>
+                                                <option value="{{ $itemCategory->id }}">{{ $itemCategory->name_category }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -310,7 +316,8 @@
                                             required>
                                             <option value="">Pilih Status</option>
                                             @foreach($item_statuses as $itemStatus)  
-                                                <option value="{{ $itemStatus->id }}">{{ $itemStatus->name_status }}</option>
+                                                <option value="{{ $itemStatus->id }}">{{ $itemStatus->name_status }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -322,108 +329,38 @@
                                             required>
                                             <option value="">Pilih Lokasi</option>
                                             @foreach($item_locations as $itemLocation)  
-                                                <option value="{{ $itemLocation->id }}">{{ $itemLocation->nama_lokasi }}</option>
+                                                <option value="{{ $itemLocation->id }}">{{ $itemLocation->nama_lokasi }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-
-                                <div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="addImage1"
                                             class="block text-sm font-medium text-gray-700 mb-2">Gambar 1</label>
-                                        <div class="flex items-center justify-center w-full">
-                                            <label for="dropzone-file"
-                                                class="flex flex-col items-center justify-center w-80 h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="dropzone-file" type="file" class="hidden" />
-                                            </label>
-                                        </div>
+                                        <input type="file" name="image1" id="addImage1"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                            required>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="addImage2"
                                             class="block text-sm font-medium text-gray-700 mb-2">Gambar 2</label>
-                                        <div class="flex items-center justify-center w-full">
-                                            <label for="dropzone-file"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="dropzone-file" type="file" class="hidden" />
-                                            </label>
-                                        </div>
+                                        <input type="file" name="image2" id="addImage2"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                            required>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="addImage3"
                                             class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
-                                        <div class="flex items-center justify-center w-full">
-                                            <label for="dropzone-file"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="dropzone-file" type="file" class="hidden" />
-                                            </label>
-                                        </div>
+                                        <input type="file" name="image3" id="addImage3"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                            required>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="addImage4"
                                             class="block text-sm font-medium text-gray-700 mb-2">Gambar 4</label>
-                                        <div class="flex items-center justify-center w-full">
-                                            <label for="dropzone-file"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="dropzone-file" type="file" class="hidden" />
-                                            </label>
-                                        </div>
+                                        <input type="file" name="image4" id="addImage1"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                            required>
                                     </div>
                                 </div>
                             </div>
@@ -445,212 +382,168 @@
                 <!-- Modal untuk Edit Item -->
                 <div id="editModal"
                     class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center">
-                    <div class="bg-white rounded-lg p-6 w-1/3">
+                    <div class="bg-white rounded-lg p-6 w-1/2">
                         <h3 class="text-lg font-bold mb-4">Edit Item</h3>
                         <form id="editForm" action="{{ route('items.update', '') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
-                            @method('PUT') 
+                            @method('PUT') <input type="hidden" name="id" id="editItemId">
 
-                            <input type="hidden" name="id" id="editItemId"> <!-- Input tersembunyi untuk ID -->
+                                <div class="flex flex-row w-full space-x-10 justify-center">
+                                    <div class="w-1/2">
+                                        <div class="mb-4">
+                                            <label for="editNamaItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Nama Item</label>
+                                            <input type="text" name="nama_item" id="editNamaItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                placeholder="Tambahkan Nama Item Terbaru" required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editTypeItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
+                                            <input type="text" name="type_item" id="editTypeItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                placeholder="Tambahkan Tipe Item Terbaru" required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editBrandItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Merek Item</label>
+                                            <select name="brand_item_id" id="editBrandItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                required>
+                                                <option value="">Pilih Merek</option>
+                                                @foreach($item_brands as $itemBrand)  
+                                                    <option value="{{ $itemBrand->id }}">{{ $itemBrand->name_brand }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editTanggalPengadaan"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Tanggal
+                                                Pengadaan</label>
+                                            <input type="date" name="tanggal_pengadaan" id="editTanggalPengadaan"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editNamaVendor"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Nama Vendor</label>
+                                            <input type="text" name="nama_vendor" id="editNamaVendor"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                placeholder="Tambahkan Nama Vendor Terbaru">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editJumlahItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Jumlah Item</label>
+                                            <input type="number" name="jumlah_item" id="editJumlahItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                placeholder="Tambahkan Jumlah Item Terbaru" required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editKategoriItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Kategori
+                                                Item</label>
+                                            <select name="kategori_item_id" id="editKategoriItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                required>
+                                                <option value="">Pilih Kategori</option>
+                                                @foreach($item_categories as $itemCategory)  
+                                                    <option value="{{ $itemCategory->id }}">
+                                                        {{ $itemCategory->name_category }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editStatusItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Status Item</label>
+                                            <select name="status_item_id" id="editStatusItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                required>
+                                                <option value="">Pilih Status</option>
+                                                @foreach($item_statuses as $itemStatus)  
+                                                    <option value="{{ $itemStatus->id }}">{{ $itemStatus->name_status }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="editLokasiItem"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Lokasi Item</label>
+                                            <select name="lokasi_item_id" id="editLokasiItem"
+                                                class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                                required>
+                                                <option value="">Pilih Lokasi</option>
+                                                @foreach($item_locations as $itemLocation)  
+                                                    <option value="{{ $itemLocation->id }}">{{ $itemLocation->nama_lokasi }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
-                            <div class="flex flex-row w-full space-x-10 justify-center">
-                                <div class="w-1/2">
-                                    <div class="mb-4">
-                                        <label for="editNamaItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Nama Item</label>
-                                        <input type="text" name="nama_item" id="editNamaItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Nama Item Terbaru" required>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editTypeItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
-                                        <input type="text" name="type_item" id="editTypeItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Tipe Item Terbaru" required>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editBrandItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Merek Item</label>
-                                        <select name="brand_item_id" id="editBrandItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
-                                            <option value="">Pilih Merek</option>
-                                            @foreach($item_brands as $itemBrand)  
-                                                <option value="{{ $itemBrand->id }}">{{ $itemBrand->name_brand }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editTanggalPengadaan"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Tanggal
-                                            Pengadaan</label>
-                                        <input type="date" name="tanggal_pengadaan" id="editTanggalPengadaan"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editNamaVendor"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Nama Vendor</label>
-                                        <input type="text" name="nama_vendor" id="editNamaVendor"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Nama Vendor Terbaru">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editJumlahItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Jumlah Item</label>
-                                        <input type="number" name="jumlah_item" id="editJumlahItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Jumlah Item Terbaru" required>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editKategoriItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Kategori Item</label>
-                                        <select name="kategori_item_id" id="editKategoriItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
-                                            <option value="">Pilih Kategori</option>
-                                            @foreach($item_categories as $itemCategory)  
-                                                <option value="{{ $itemCategory->id }}">{{ $itemCategory->name_category }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editStatusItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Status Item</label>
-                                        <select name="status_item_id" id="editStatusItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
-                                            <option value="">Pilih Status</option>
-                                            @foreach($item_statuses as $itemStatus)  
-                                                <option value="{{ $itemStatus->id }}">{{ $itemStatus->name_status }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editLokasiItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Lokasi Item</label>
-                                        <select name="lokasi_item_id" id="editLokasiItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
-                                            <option value="">Pilih Lokasi</option>
-                                            @foreach($item_locations as $itemLocation)  
-                                                <option value="{{ $itemLocation->id }}">{{ $itemLocation->nama_lokasi }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="mb-4">
-                                        <label for="editImage1"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 1</label>
-                                        <div class="flex items-center justify-center w-full">
+                                    <div>
+                                        <div class="mb-4">
                                             <label for="editImage1"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="editImage1" type="file" class="hidden" />
-                                            </label>
+                                                class="block text-sm font-medium text-gray-700 mb-2">Gambar 1</label>
+                                            <input type="file" name="image1" id="editImage1"
+                                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                            <!-- Display current image if exists -->
+                                            @if($itemDetail->image1)
+                                                <img src="{{ asset('storage/' . $itemDetail->image1) }}"
+                                                    alt="Current Image 1"
+                                                    class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
+                                            @endif
                                         </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editImage2"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 2</label>
-                                        <div class="flex items-center justify-center w-full">
+                                        <div class="mb-4">
                                             <label for="editImage2"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="editImage2" type="file" class="hidden" />
-                                            </label>
+                                                class="block text-sm font-medium text-gray-700 mb-2">Gambar 2</label>
+                                            <input type="file" name="image2" id="editImage2"
+                                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                            <!-- Display current image if exists -->
+                                            @if($itemDetail->image2)
+                                                <img src="{{ asset('storage/' . $itemDetail->image2) }}"
+                                                    alt="Current Image 1"
+                                                    class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
+                                            @endif
                                         </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editImage3"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
-                                        <div class="flex items-center justify-center w-full">
+                                        <div class="mb-4">
                                             <label for="editImage3"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="editImage13" type="file" class="hidden" />
-                                            </label>
+                                                class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
+                                            <input type="file" name="image3" id="editImage3"
+                                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                            <!-- Display current image if exists -->
+                                            @if($itemDetail->image3)
+                                                <img src="{{ asset('storage/' . $itemDetail->image3) }}"
+                                                    alt="Current Image 1"
+                                                    class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
+                                            @endif
                                         </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editImage4"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 4</label>
-                                        <div class="flex items-center justify-center w-full">
+                                        <div class="mb-4">
                                             <label for="editImage4"
-                                                class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                                            class="font-semibold">Click to upload</span> or drag and
-                                                        drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or
-                                                        GIF (MAX. 800x400px)</p>
-                                                </div>
-                                                <input id="editImage4" type="file" class="hidden" />
-                                            </label>
+                                                class="block text-sm font-medium text-gray-700 mb-2">Gambar 4</label>
+                                            <input type="file" name="image4" id="editImage4"
+                                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                            <!-- Display current image if exists -->
+                                            @if($itemDetail->image4)
+                                                <img src="{{ asset('storage/' . $itemDetail->image4) }}"
+                                                    alt="Current Image 1"
+                                                    class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="flex justify-end">
-                                <button type="submit"
-                                    class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Update Item
-                                </button>
-                                <button type="button" id="closeEditModal"
-                                    class="ml-2 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                    Batal
-                                </button>
-                            </div>
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Update Item
+                                    </button>
+                                    <button type="button" id="closeEditModal"
+                                        class="ml-2 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                        Batal
+                                    </button>
+                                </div>
                         </form>
                     </div>
                 </div>

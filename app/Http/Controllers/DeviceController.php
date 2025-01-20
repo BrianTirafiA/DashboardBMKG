@@ -22,7 +22,7 @@ class DeviceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name_device' => 'required|string|max:255' ,
+            'name_device' => 'required|string|max:255',
             'brand_device' => 'required|string|max:255',
             'type_device' => 'required|string|max:255',
             'year_device' => 'required|numeric',
@@ -31,7 +31,7 @@ class DeviceController extends Controller
             'ram_device' => 'required|numeric',
             'disk_device' => 'required|string|max:255',
         ]);
-    
+
         Device::create([
             'name_device' => $request->name_device,
             'brand_device' => $request->brand_device,
@@ -42,7 +42,7 @@ class DeviceController extends Controller
             'ram_device' => $request->ram_device,
             'disk_device' => $request->disk_device,
         ]);
-    
+
         return redirect()->back()->with('success', 'Perangkat berhasil ditambahkan!');
     }
 
@@ -83,7 +83,7 @@ class DeviceController extends Controller
             'disk_device' => 'required|string|max:255',
         ]);
 
-        $device = Device::findOrFail($id);    
+        $device = Device::findOrFail($id);
 
         $device->update([
             'name_device' => $request->name_device,
@@ -96,7 +96,7 @@ class DeviceController extends Controller
             'disk_device' => $request->disk_device,
         ]);
 
-    return redirect()->route(route: 'device.index')->with('success', 'Pengguna berhasil diperbarui.');    
+        return redirect()->route(route: 'device.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
 
     /**
@@ -113,5 +113,19 @@ class DeviceController extends Controller
         $device->delete();
 
         return redirect()->back()->with('success', 'Perangkat berhasil ditambahkan!');
-    }   
+    }
+
+    public function adminindex(Request $request)
+    {
+        $query = $request->input('search'); // Ambil input pencarian
+
+        // Jika query ada, tambahkan kondisi pencarian, jika tidak, ambil semua data
+        $device = Device::when($query, function ($queryBuilder) use ($query) {
+            $queryBuilder->where('name_device', 'ILIKE', "%{$query}%")
+                ->orWhere('type_device', 'ILIKE', "%{$query}%");
+        })->paginate(8);
+
+        return view('itasset.device', compact('device', 'query'));
+    }
+
 }

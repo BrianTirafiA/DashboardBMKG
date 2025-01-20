@@ -6,7 +6,7 @@ use App\Models\ItemDetail;
 use App\Models\ItemCategory;  
 use App\Models\ItemLocation;  
 use App\Models\ItemStatus;  
-use App\Models\ItemBrand; 
+use App\Models\ItemBrand;  
 use Illuminate\Http\Request;  
 use Illuminate\Support\Facades\Log;  
 use Illuminate\Support\Facades\Storage;  
@@ -15,42 +15,42 @@ class ItemDetailController extends Controller
 {  
     public function index(Request $request)  
     {  
-        // Mengambil input pencarian dari request      
-$search = $request->input('search');    
+        // Mengambil input pencarian dari request  
+        $search = $request->input('search');  
   
-// Memulai query untuk ItemDetail      
-$item_details = ItemDetail::with('brand', 'category', 'status', 'location')       
-    ->when($search, function ($query, $search) {    
-        return $query->where('nama_item', 'like', "%{$search}%")    
-            ->orWhere('type_item', 'like', "%{$search}%")    
-            ->orWhere('nama_vendor', 'like', "%{$search}%")    
-            ->orWhereHas('brand', function($q) use ($search) {  
-                $q->where('name_brand', 'like', "%{$search}%");  
+        // Memulai query untuk ItemDetail  
+        $item_details = ItemDetail::with('brand', 'category', 'status', 'location')  
+            ->when($search, function ($query, $search) {  
+                return $query->where('nama_item', 'like', "%{$search}%")  
+                    ->orWhere('type_item', 'like', "%{$search}%")  
+                    ->orWhere('nama_vendor', 'like', "%{$search}%")  
+                    ->orWhereHas('brand', function($q) use ($search) {  
+                        $q->where('name_brand', 'like', "%{$search}%");  
+                    })  
+                    ->orWhereHas('category', function($q) use ($search) {  
+                        $q->where('name_category', 'like', "%{$search}%");  
+                    })  
+                    ->orWhereHas('status', function($q) use ($search) {  
+                        $q->where('name_status', 'like', "%{$search}%");  
+                    })  
+                    ->orWhereHas('location', function($q) use ($search) {  
+                        $q->where('nama_lokasi', 'like', "%{$search}%");  
+                    });  
             })  
-            ->orWhereHas('category', function($q) use ($search) {  
-                $q->where('name_category', 'like', "%{$search}%");  
-            })  
-            ->orWhereHas('status', function($q) use ($search) {  
-                $q->where('name_status', 'like', "%{$search}%");  
-            })  
-            ->orWhereHas('location', function($q) use ($search) {  
-                $q->where('nama_lokasi', 'like', "%{$search}%");  
-            });  
-    })    
-    ->paginate(10);  
-
-            $item_brands = ItemBrand::all();
-            $item_categories = ItemCategory::all();
-            $item_status = ItemStatus::all();
-            $item_locations = ItemLocation::all();
+            ->paginate(10);  
   
-        // Mengembalikan view dengan data item    
-        return view('lending-asset.admin.items', compact('item_details'));  
+        $item_brands = ItemBrand::all();  
+        $item_categories = ItemCategory::all();  
+        $item_status = ItemStatus::all();  
+        $item_locations = ItemLocation::all();  
+  
+        // Mengembalikan view dengan data item  
+        return view('lending-asset.admin.items', compact('item_details', 'item_brands', 'item_categories', 'item_status', 'item_locations'));  
     }  
   
     public function store(Request $request)  
     {  
-        // Validasi input    
+        // Validasi input  
         $request->validate([  
             'nama_item' => 'required|string|max:255',  
             'type_item' => 'required|string|max:255',  
@@ -67,7 +67,7 @@ $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
             'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  
         ]);  
   
-        // Buat Item baru    
+        // Buat Item baru  
         $itemDetail = ItemDetail::create([  
             'nama_item' => $request->nama_item,  
             'type_item' => $request->type_item,  
@@ -94,7 +94,7 @@ $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
   
     public function update(Request $request, $id)  
     {  
-        // Validasi input      
+        // Validasi input  
         $request->validate([  
             'nama_item' => 'required|string|max:255',  
             'type_item' => 'required|string|max:255',  
@@ -130,30 +130,34 @@ $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
         return redirect()->back()->with('success', 'Item berhasil diperbarui.');  
     }  
   
-    public function destroy($id)    
-    {    
-        $itemDetail = ItemDetail::findOrFail($id);   
+    public function destroy($id)  
+    {  
+        $itemDetail = ItemDetail::findOrFail($id);  
         // Hapus gambar dari storage jika ada  
         $this->deleteImages($itemDetail);  
-        $itemDetail->delete();    
-        return redirect()->back()->with('success', 'Item berhasil dihapus.');    
-    }    
-  
-    private function saveImages(Request $request, ItemDetail $itemDetail)  
-    {  
-        // Menyimpan gambar jika ada  
-        foreach (['image1', 'image2', 'image3', 'image4'] as $imageField) {  
-            if ($request->hasFile($imageField)) {  
-                // Hapus gambar lama jika ada  
-                if ($itemDetail->{$imageField}) {  
-                    Storage::disk('public')->delete($itemDetail->{$imageField});  
-                }  
-                // Simpan gambar baru  
-                $itemDetail->{$imageField} = $request->file($imageField)->store('item_images', 'public');  
-            }  
-        }  
-        $itemDetail->save();  
+        $itemDetail->delete();  
+        return redirect()->back()->with('success', 'Item berhasil dihapus.');  
     }  
+  
+    private function saveImages(Request $request, ItemDetail $itemDetail)    
+    {    
+        // Menyimpan gambar jika ada    
+        foreach (['image1', 'image2', 'image3', 'image4'] as $imageField) {    
+            if ($request->hasFile($imageField)) {    
+                // Hapus gambar lama jika ada    
+                if ($itemDetail->{$imageField}) {    
+                    Storage::disk('public')->delete($itemDetail->{$imageField});    
+                }    
+                // Simpan gambar baru    
+                $itemDetail->{$imageField} = $request->file($imageField)->store('item_images', 'public');    
+            }    
+        }    
+        // Simpan perubahan hanya jika ada gambar baru yang diunggah  
+        if ($request->hasFile('image1') || $request->hasFile('image2') || $request->hasFile('image3') || $request->hasFile('image4')) {  
+            $itemDetail->save();    
+        }    
+    }  
+    
   
     private function deleteImages(ItemDetail $itemDetail)  
     {  
@@ -163,5 +167,18 @@ $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
                 Storage::disk('public')->delete($itemDetail->{$imageField});  
             }  
         }  
+    }  
+  
+    public function deleteImage(Request $request, $id, $imageField)  
+    {  
+        $itemDetail = ItemDetail::findOrFail($id);  
+  
+        if ($itemDetail->{$imageField}) {  
+            Storage::disk('public')->delete($itemDetail->{$imageField});  
+            $itemDetail->{$imageField} = null;  
+            $itemDetail->save();  
+        }  
+  
+        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');  
     }  
 }  

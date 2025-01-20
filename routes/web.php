@@ -52,7 +52,6 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
         Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
 
-
     });    
 
     Route::prefix('lendasset')->group(function () {    
@@ -99,7 +98,7 @@ Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware
 Route::post('/register', [UserController::class, 'register'])->name('register');  
 
     
-Route::get('/admin/qcdashboard', [StationFlagController::class, 'index'])->name('stations.filter');
+Route::get('/admin/qcdashboard', [StationFlagController::class, 'filter'])->name('stations.filter');
 
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);

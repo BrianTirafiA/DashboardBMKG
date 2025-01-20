@@ -1,14 +1,15 @@
-<x-layout-server>
-    <!-- <div class="flex flex-wrap items-center gap-4 sm:justify-between justify-center">
-        <h2 class="text-2xl font-semibold text-center sm:text-left">
-            Daftar Perangkat Ruang Server
-        </h2>
-        <button class="bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600">
-            Tambah
-        </button>
-    </div> -->
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- <p>Ini adalah konten utama halaman. Anda dapat menambahkan lebih banyak informasi di sini.</p> -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Room : Device</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<x-layout-server>
     <!-- Tabel Device -->
     <div class="me-7 mt-1">
         @php
@@ -65,77 +66,82 @@
 
                 <div class="ms-5 me-5 flex p-6 px-0 -mt-5 overflow-hidden">
                     <div class="w-full rounded-xl overflow-hidden border border-blue-gray-100">
-                        <table id="deviceTable" class="w-full mt-4 text-left table-auto">
-                            <thead>
-                                <tr>
-                                    <th
-                                        class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
-                                        #
-                                    </th>
-                                    @foreach ($columns as $column)
-                                        <th
-                                            class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
-                                            {{ $column['title'] }}
-                                        </th>
-                                    @endforeach
-                                    <th
-                                        class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
-                                        Aksi
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($devices as $device)
+                        <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+                            <table id="deviceTable" class=" mt-4 text-left border-collapse table-auto min-w-full">
+                                <thead>
                                     <tr>
-                                        <td
-                                            class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
-                                            {{ $loop->iteration }}
-                                        </td>
+                                        <th
+                                            class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
+                                            #
+                                        </th>
                                         @foreach ($columns as $column)
-                                            <td
-                                                class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
-                                                {{ $device->{$column['key']} ?? '-' }}
-                                            </td>
+                                            <th
+                                                class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
+                                                {{ $column['title'] }}
+                                            </th>
                                         @endforeach
-                                        <td class="border-b border-blue-gray-100">
-                                            <div class="flex items-center gap-3 justify-center">
-                                                <button type="button" class="text-blue-500 flex items-center gap-2"
-                                                    onclick="openEditModal('{{ $device->id }}', '{{ $device->name_device }}','{{ $device->type_device }}', '{{ $device->brand_device}}', '{{ $device->year_device }}','{{ $device->os_device }}', '{{ $device->processor_device }}', '{{ $device->ram_device }}', '{{ $device->disk_device }}')">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                        <path fill-rule="evenodd"
-                                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                                    </svg>
-                                                </button>
-                                                <form action="{{ route('device.destroy', $device->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button"
-                                                        class="text-red-500 flex items-center gap-1 delete-button"
-                                                        onclick="showDeleteConfirmation(this)" data-id="{{ $device->id }}"
-                                                        data-name="{{ $device->name_device }}"> <svg
-                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                        <th
+                                            class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($devices as $device)
+                                        <tr>
+                                            <td
+                                                class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            @foreach ($columns as $column)
+                                                <td
+                                                    class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
+                                                    {{ $device->{$column['key']} ?? '-' }}
+                                                </td>
+                                            @endforeach
+                                            <td class="border-b border-blue-gray-100">
+                                                <div class="flex items-center gap-3 justify-center">
+                                                    <button type="button" class="text-blue-500 flex items-center gap-2"
+                                                        onclick="openEditModal('{{ $device->id }}', '{{ $device->name_device }}','{{ $device->type_device }}', '{{ $device->brand_device}}', '{{ $device->year_device }}','{{ $device->os_device }}', '{{ $device->processor_device }}', '{{ $device->ram_device }}', '{{ $device->disk_device }}')">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-pencil-square"
+                                                            viewBox="0 0 16 16">
                                                             <path
-                                                                d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                            <path fill-rule="evenodd"
+                                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                                         </svg>
                                                     </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="{{ count($columns) + 2 }}"
-                                            class="p-4 text-center text-sm text-blue-gray-900">
-                                            Data perangkat belum tersedia.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>   
+                                                    <form action="{{ route('device.destroy', $device->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button"
+                                                            class="text-red-500 flex items-center gap-1 delete-button"
+                                                            onclick="showDeleteConfirmation(this)"
+                                                            data-id="{{ $device->id }}"
+                                                            data-name="{{ $device->name_device }}"> <svg
+                                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                fill="currentColor" class="bi bi-trash3"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="{{ count($columns) + 2 }}"
+                                                class="p-4 text-center text-sm text-blue-gray-900">
+                                                Data perangkat belum tersedia.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -154,35 +160,36 @@
                     </div>
                 </div>
 
-                {{--<div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">
+                <div id="paginasi" class="flex items-center justify-between p-4 border-t border-blue-gray-50">
                     <p class="block font-sans text-sm font-normal leading-normal text-blue-gray-900">
-                        Total Data: {{ $device->total() }} | Page {{ $device->currentPage() }} of {{ $device->lastPage() }}
+                        Total Data: {{ $device->total }} | Page {{ $device->currentPage  }} of {{ $device->lastPage
+                        }}
                     </p>
                     <div class="flex gap-2">
-                        @if($device->onFirstPage())
-                            <span
-                                class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
-                                Previous
-                            </span>
+                        @if($device->onFirstPage)
+                        <span
+                            class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
+                            Previous
+                        </span>
                         @else
-                            <a href="{{ $device->previousPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
-                                class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
-                                Previous
-                            </a>
+                        <a href="{{ $device->previousPageUrl. (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
+                            class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
+                            Previous
+                        </a>
                         @endif
-                        @if($device->hasMorePages())
-                            <a href="{{ $device->nextPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
-                                class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
-                                Next
-                            </a>
+                        @if($device->hasMorePages)
+                        <a href="{{ $device->nextPageUrl . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
+                            class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
+                            Next
+                        </a>
                         @else
-                            <span
-                                class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
-                                Next
-                            </span>
+                        <span
+                            class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
+                            Next
+                        </span>
                         @endif
                     </div>
-                </div> --}}
+                </div> 
 
             </div>
         </div>
@@ -195,8 +202,8 @@
 
         // ADD DEVICE
         function openAddModal() {
-            document.getElementById('addForm').reset();                
-            document.getElementById('addModal').classList.remove('hidden');                 
+            document.getElementById('addForm').reset();
+            document.getElementById('addModal').classList.remove('hidden');
         }
 
         document.getElementById('closeAddModal').addEventListener('click', () => {
@@ -250,7 +257,7 @@
         // DELETE DEVICE
 
         function showDeleteConfirmation(button) {
-            const deviceId = button.dataset.id; 
+            const deviceId = button.dataset.id;
             const deviceName = button.dataset.name; // Ambil data-name dari tombol
 
             document.getElementById('deleteItemName').textContent = deviceName; // Tampilkan nama perangkat di modal
@@ -272,43 +279,43 @@
 
 
         // EDIT DEVICE
-        function openEditModal(id, name_device, type_device, brand_device,year_device, os_device, processor_device, ram_device, disk_device) {  
-            document.getElementById('editDeviceId').value = id; 
-            document.getElementById('editDeviceName').value = name_device;   
+        function openEditModal(id, name_device, type_device, brand_device, year_device, os_device, processor_device, ram_device, disk_device) {
+            document.getElementById('editDeviceId').value = id;
+            document.getElementById('editDeviceName').value = name_device;
             document.getElementById('editDeviceType').value = type_device;
-            document.getElementById('editDeviceBrand').value = brand_device;  
-            document.getElementById('editDeviceYear').value =year_device; 
-            document.getElementById('editDeviceOS').value = os_device;    
-            document.getElementById('editDeviceProcessor').value = processor_device; 
-            document.getElementById('editDeviceRAM').value = ram_device;  
+            document.getElementById('editDeviceBrand').value = brand_device;
+            document.getElementById('editDeviceYear').value = year_device;
+            document.getElementById('editDeviceOS').value = os_device;
+            document.getElementById('editDeviceProcessor').value = processor_device;
+            document.getElementById('editDeviceRAM').value = ram_device;
             document.getElementById('editDeviceDisk').value = disk_device;
-            console.log({ id, name_device, type_device, brand_device,year_device, os_device, processor_device, ram_device, disk_device });
-            
-         
+            console.log({ id, name_device, type_device, brand_device, year_device, os_device, processor_device, ram_device, disk_device });
+
+
             // Set action form edit  
             document.getElementById('editForm').action = "{{ route('device.update', '') }}/" + id; // Set action form edit  
-         
+
             // Tampilkan modal  
-            document.getElementById('editModal').classList.remove('hidden');  
-         }
+            document.getElementById('editModal').classList.remove('hidden');
+        }
 
-        document.getElementById('closeEditModal').addEventListener('click', () => {  
-            document.getElementById('editModal').classList.add('hidden');  
-         }); 
+        document.getElementById('closeEditModal').addEventListener('click', () => {
+            document.getElementById('editModal').classList.add('hidden');
+        });
 
-         function filterTable() {              
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();              
-            const rows = document.querySelectorAll('#usertable tr');              
-            rows.forEach(row => {              
-                const questionCell = row.cells[1].textContent.toLowerCase();              
-                const answerCell = row.cells[2].textContent.toLowerCase();              
-                if (questionCell.includes(searchTerm) || answerCell.includes(searchTerm)) {              
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#usertable tr');
+            rows.forEach(row => {
+                const questionCell = row.cells[1].textContent.toLowerCase();
+                const answerCell = row.cells[2].textContent.toLowerCase();
+                if (questionCell.includes(searchTerm) || answerCell.includes(searchTerm)) {
                     row.style.display = ''; // Tampilkan baris jika cocok              
-                } else {              
+                } else {
                     row.style.display = 'none'; // Sembunyikan baris jika tidak cocok              
-                }              
-            });              
-        }     
+                }
+            });
+        }
 
     </script>
 </x-layout-server>

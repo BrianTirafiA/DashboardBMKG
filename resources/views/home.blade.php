@@ -45,6 +45,37 @@
                         </button>
                     </form>
                 </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
+                <div>
+                    <label for="flagVal">Select Flag Type:</label>
+                    <select id="flagVal">
+                        <option value="all">All Flags</option>
+                        @foreach($dropdownOptions['flags'] as $flag)
+                            <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="TypeVal">Select Machine Type:</label>
+                    <select id="TypeVal">
+                        <option value="all">All Machines</option>
+                        @foreach($dropdownOptions['machineTypes'] as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="provinceVal">Select Province:</label>
+                    <select id="provinceVal">
+                        <option value="all">All Provinces</option>
+                        @foreach($dropdownOptions['provinces'] as $province)
+                            <option value="{{ $province }}">{{ $province }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
             <style>
@@ -59,7 +90,7 @@
             </style>
 
             </div>
-                <div id="map" class="mt-6"></div>
+                <div id="map" class="mt-2"></div>
             </div>
 
             <style>
@@ -101,231 +132,174 @@
             dateFormat: "Y-m-d",
         });
 
-        //Basically everything map(Showing map and it boundary, pin, filtering map data)
         document.addEventListener('DOMContentLoaded', () => {
+    const defaultMarkerData = @json($markerData); // Always use this as the default map data
+    const flagDropdown = document.getElementById('flagVal');
+    const typeDropdown = document.getElementById('TypeVal');
+    const provinceDropdown = document.getElementById('provinceVal');
 
-            const markerData = @json($markerData);
-            // Map visual setting
-            const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
+    // Map Initialization
+    const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
+    const initialCenter = [-2.0, 118.0];
+    const initialZoom = 5;
 
-            const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
-            const initialZoom = 5;
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-            }).addTo(map);
+    const bounds = [
+        [-20.0, 80.0],
+        [22.0, 151.0],
+    ];
+    map.setMaxBounds(bounds);
+    map.setMinZoom(5);
+    map.setMaxZoom(15);
 
-            // Map border
-            const bounds = [
-                [-20.0, 80.0], // increase(+) to make it smaller or decrease(-) to make it larger [+DecreaseSouth -InscreaseSouth, +DecreaseWest -InscreaseWest]
-                [22.0, 151.0], // increase(+) to make it larger or decrease(-) to make it smaller [+InscreaseNorth -DecreaseNorth, +InscreaseEast -DecreaseEast]
-            ];
-            map.setMaxBounds(bounds);
-            map.setMinZoom(5);
-            map.setMaxZoom(15);
+    // Pin Colors
+    function getColor(value) {
+        const colors = [
+            '#369bcf', '#28a79e', '#39b449', '#8cc63e',
+            '#e1cf23', '#f8af3e', '#f7941f',
+            '#ec5828', '#e91c23', '#b21a26',
+        ];
+        return colors[value] || '#000';
+    }
 
-            // Color of pin
-            function getColor(value) {
-                const colors = [
-                    '#369bcf', '#28a79e', '#39b449', '#8cc63e',
-                    '#e1cf23', '#f8af3e', '#f7941f',
-                    '#ec5828', '#e91c23', '#b21a26',
-                ];
-                return colors[value];
+    // Always Show Default Markers
+    function displayDefaultMarkers() {
+        map.eachLayer(layer => {
+            if (layer instanceof L.CircleMarker) {
+                map.removeLayer(layer);
             }
+        });
 
-            // Adding the pin
-            function createCircleMarker(lat, lon, value, station) {
-                L.circleMarker([lat, lon], {
+        const uniqueStations = {};
+        defaultMarkerData.forEach(station => {
+            if (!uniqueStations[station.name_station]) {
+                uniqueStations[station.name_station] = true;
+
+                const maxIndex = station.overall_values.indexOf(Math.max(...station.overall_values));
+
+                L.circleMarker([station.lat, station.lon], {
                     radius: 10,
-                    fillColor: getColor(value),
-                    color: getColor(value),
+                    fillColor: getColor(maxIndex),
+                    color: getColor(maxIndex),
                     weight: 1,
                     opacity: 1,
                     fillOpacity: 0.6,
                 })
                     .addTo(map)
-                    // Click pin popup
                     .bindPopup(`
-
+                        <strong>Station Name:</strong> ${station.name_station}<br>
+                        <strong>Type:</strong> ${station.tipe_station}<br>
+                        <strong>Province:</strong> ${station.nama_propinsi}<br>
+                        <strong>Overall Values:</strong> ${maxIndex}
                     `);
             }
-            
-
-            // Function to trigger pin generation and filtering
-            function addMarkers() {
-            const uniqueStations = {};
-
-            markerData.forEach((station) => {
-                const stationName = station.name_station;
-
-                if (!uniqueStations[stationName]) {
-                    uniqueStations[stationName] = true;
-
-                    // Find the largest overall percentage value
-                    const maxIndex = station.overall_values.indexOf(
-                        Math.max(...station.overall_values)
-                    );
-
-                    // Add the marker to the map
-                    createCircleMarker(
-                        station.lat,
-                        station.lon,
-                        maxIndex,
-                        station
-                    );
-                }
-            });
-            }
-
-            // Reset view button
-            const resetButton = L.control({ position: 'topright' });
-            resetButton.onAdd = () => {
-                const button = L.DomUtil.create('button', 'reset-button');
-                button.innerHTML = 'Reset View';
-                button.style.backgroundColor = '#fff';
-                button.style.border = '1px solid #ccc';
-                button.style.padding = '5px 10px';
-                button.style.cursor = 'pointer';
-
-                button.onclick = () => {
-                    map.setView(initialCenter, initialZoom);
-                };
-
-                return button;
-            };
-            resetButton.addTo(map);
-
-            addMarkers(markerData);
         });
+    }
 
+    // Initialize Chart 1 (Bar)
+    const ctx1 = document.getElementById('chart1').getContext('2d');
+    const labels = @json($tipeStationData->keys());
+    const values = @json($tipeStationData->values());
 
+    const datasets = [];
+    for (let i = 0; i < 10; i++) {
+        datasets.push({
+            label: `Value ${i}`,
+            data: values.map(data => data[`Value ${i}`]),
+            backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`,
+        });
+    }
 
-        // First Chart: Stacked bar for tipe_station
-        const ctx1 = document.getElementById('chart1').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($tipeStationData->keys()) !!},
-                datasets: [
-                    {
-                        label: 'Value 0',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 0'])->values()) !!},
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    },
-                    {
-                        label: 'Value 1',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 1'])->values()) !!},
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    },
-                    {
-                        label: 'Value 2',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 2'])->values()) !!},
-                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                    },
-                    {
-                        label: 'Value 3',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 3'])->values()) !!},
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    },
-                    {
-                        label: 'Value 4',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 4'])->values()) !!},
-                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                    },
-                    {
-                        label: 'Value 5',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 5'])->values()) !!},
-                        backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                    },
-                    {
-                        label: 'Value 6',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 6'])->values()) !!},
-                        backgroundColor: 'rgba(200, 99, 132, 0.5)',
-                    },
-                    {
-                        label: 'Value 7',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 7'])->values()) !!},
-                        backgroundColor: 'rgba(100, 162, 235, 0.5)',
-                    },
-                    {
-                        label: 'Value 8',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 8'])->values()) !!},
-                        backgroundColor: 'rgba(150, 206, 86, 0.5)',
-                    },
-                    {
-                        label: 'Value 9',
-                        data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 9'])->values()) !!},
-                        backgroundColor: 'rgba(175, 192, 192, 0.5)',
-                    }
-                ]
+    let chart1 = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stacked: true,
+                    max: 100,
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        max: 100 // Ensure the Y-axis maximum is set to 100
-                    },
-                    x: {
-                        stacked: true
-                    }
-                }
-            }
-        });
-
-
-        // Second Chart: Overall percentages
-        const ctx2 = document.getElementById('chart2').getContext('2d');
-        new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                labels: {!! json_encode(array_keys($overallSum)) !!},
-                datasets: [{
-                    label: 'Overall Percentages',
-                    data: {!! json_encode(array_values($overallSum)) !!},
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(200, 99, 132, 0.2)',
-                        'rgba(100, 162, 235, 0.2)',
-                        'rgba(150, 206, 86, 0.2)',
-                        'rgba(175, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(200, 99, 132, 1)',
-                        'rgba(100, 162, 235, 1)',
-                        'rgba(150, 206, 86, 1)',
-                        'rgba(175, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                x: { stacked: true },
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                },
-            }
+        },
+    });
+
+    // Initialize Chart 2 (Pie)
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+    let chart2 = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: @json(array_keys($overallSum)),
+            datasets: [{
+                data: @json(array_values($overallSum)),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)',
+                    'rgba(200, 99, 132, 0.2)', 'rgba(100, 162, 235, 0.2)',
+                    'rgba(150, 206, 86, 0.2)', 'rgba(175, 192, 192, 0.2)',
+                ],
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+            },
+        },
+    });
+
+    // Fetch and Update Filtered Data for Charts Only
+    function fetchFilteredData() {
+        const flag = flagDropdown.value;
+        const type = typeDropdown.value;
+        const province = provinceDropdown.value;
+
+        fetch(`/admin/qcdashboard?flag=${flag}&type=${type}&province=${province}`)
+            .then(response => response.json())
+            .then(data => {
+                updateChart1(data.tipeStationData);
+                updateChart2(data.overallSum);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Update Chart 1: Stacked Bar
+    function updateChart1(data) {
+        chart1.data.labels = Object.keys(data);
+        chart1.data.datasets.forEach((dataset, index) => {
+            dataset.data = Object.values(data).map(values => values[`Value ${index}`]);
         });
+        chart1.update();
+    }
+
+    // Update Chart 2: Pie
+    function updateChart2(data) {
+        chart2.data.datasets[0].data = Object.values(data);
+        chart2.update();
+    }
+
+    // Attach Event Listeners for Dropdowns (Charts Only)
+    [flagDropdown, typeDropdown, provinceDropdown].forEach(dropdown =>
+        dropdown.addEventListener('change', fetchFilteredData)
+    );
+
+    // Initial Map and Chart Rendering
+    displayDefaultMarkers(); // Always show default data on the map
+    fetchFilteredData(); // Fetch and display filtered data for the charts
+});
+
     </script>
 
         </main>

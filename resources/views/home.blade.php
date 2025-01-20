@@ -123,63 +123,45 @@
             </div>
 
         <script>
-        //date filter
-        flatpickr("#start_date", {
-                dateFormat: "Y-m-d",
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize date pickers
+        flatpickr("#start_date", { dateFormat: "Y-m-d" });
+        flatpickr("#end_date", { dateFormat: "Y-m-d" });
+
+        // DOM elements
+        const flagDropdown = document.getElementById('flagVal');
+        const typeDropdown = document.getElementById('TypeVal');
+        const provinceDropdown = document.getElementById('provinceVal');
+
+        // Initialize Map
+        const map = L.map('map').setView([-2.0, 118.0], 5); // Center map to Indonesia
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Helper Function: Get color for map markers based on value
+        function getColor(value) {
+            const colors = [
+                '#369bcf', '#28a79e', '#39b449', '#8cc63e', '#e1cf23',
+                '#f8af3e', '#f7941f', '#ec5828', '#e91c23', '#b21a26',
+            ];
+            return colors[value] || '#000';
+        }
+
+        // Display markers on the map
+        function displayMarkers(data) {
+            if (!data || data.length === 0) {
+                console.error('No marker data available.');
+                return;
+            }
+            // Remove existing markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.CircleMarker) map.removeLayer(layer);
             });
 
-        flatpickr("#end_date", {
-            dateFormat: "Y-m-d",
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-    const defaultMarkerData = @json($markerData); // Always use this as the default map data
-    const flagDropdown = document.getElementById('flagVal');
-    const typeDropdown = document.getElementById('TypeVal');
-    const provinceDropdown = document.getElementById('provinceVal');
-
-    // Map Initialization
-    const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
-    const initialCenter = [-2.0, 118.0];
-    const initialZoom = 5;
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
-
-    const bounds = [
-        [-20.0, 80.0],
-        [22.0, 151.0],
-    ];
-    map.setMaxBounds(bounds);
-    map.setMinZoom(5);
-    map.setMaxZoom(15);
-
-    // Pin Colors
-    function getColor(value) {
-        const colors = [
-            '#369bcf', '#28a79e', '#39b449', '#8cc63e',
-            '#e1cf23', '#f8af3e', '#f7941f',
-            '#ec5828', '#e91c23', '#b21a26',
-        ];
-        return colors[value] || '#000';
-    }
-
-    // Always Show Default Markers
-    function displayDefaultMarkers() {
-        map.eachLayer(layer => {
-            if (layer instanceof L.CircleMarker) {
-                map.removeLayer(layer);
-            }
-        });
-
-        const uniqueStations = {};
-        defaultMarkerData.forEach(station => {
-            if (!uniqueStations[station.name_station]) {
-                uniqueStations[station.name_station] = true;
-
+            // Add new markers
+            data.forEach(station => {
                 const maxIndex = station.overall_values.indexOf(Math.max(...station.overall_values));
-
                 L.circleMarker([station.lat, station.lon], {
                     radius: 10,
                     fillColor: getColor(maxIndex),
@@ -193,113 +175,109 @@
                         <strong>Station Name:</strong> ${station.name_station}<br>
                         <strong>Type:</strong> ${station.tipe_station}<br>
                         <strong>Province:</strong> ${station.nama_propinsi}<br>
-                        <strong>Overall Values:</strong> ${maxIndex}
+                        <strong>Highest Percentage:</strong> Value ${maxIndex}
                     `);
-            }
-        });
-    }
+            });
+        }
 
-    // Initialize Chart 1 (Bar)
-    const ctx1 = document.getElementById('chart1').getContext('2d');
-    const labels = @json($tipeStationData->keys());
-    const values = @json($tipeStationData->values());
-
-    const datasets = [];
-    for (let i = 0; i < 10; i++) {
-        datasets.push({
-            label: `Value ${i}`,
-            data: values.map(data => data[`Value ${i}`]),
-            backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`,
-        });
-    }
-
-    let chart1 = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: datasets,
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
+        // Initialize Charts
+        const ctx1 = document.getElementById('chart1').getContext('2d');
+        const chart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: [], // Placeholder
+                datasets: Array.from({ length: 10 }, (_, i) => ({
+                    label: `Value ${i}`,
+                    data: [], // Placeholder
+                    backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`,
+                })),
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    stacked: true,
-                    max: 100,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
                 },
-                x: { stacked: true },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: true,
+                        max: 100,
+                    },
+                    x: {
+                        stacked: true,
+                    },
+                },
             },
-        },
-    });
-
-    // Initialize Chart 2 (Pie)
-    const ctx2 = document.getElementById('chart2').getContext('2d');
-    let chart2 = new Chart(ctx2, {
-        type: 'pie',
-        data: {
-            labels: @json(array_keys($overallSum)),
-            datasets: [{
-                data: @json(array_values($overallSum)),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)',
-                    'rgba(200, 99, 132, 0.2)', 'rgba(100, 162, 235, 0.2)',
-                    'rgba(150, 206, 86, 0.2)', 'rgba(175, 192, 192, 0.2)',
-                ],
-            }],
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-            },
-        },
-    });
-
-    // Fetch and Update Filtered Data for Charts Only
-    function fetchFilteredData() {
-        const flag = flagDropdown.value;
-        const type = typeDropdown.value;
-        const province = provinceDropdown.value;
-
-        fetch(`/admin/qcdashboard?flag=${flag}&type=${type}&province=${province}`)
-            .then(response => response.json())
-            .then(data => {
-                updateChart1(data.tipeStationData);
-                updateChart2(data.overallSum);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
-
-    // Update Chart 1: Stacked Bar
-    function updateChart1(data) {
-        chart1.data.labels = Object.keys(data);
-        chart1.data.datasets.forEach((dataset, index) => {
-            dataset.data = Object.values(data).map(values => values[`Value ${index}`]);
         });
-        chart1.update();
-    }
 
-    // Update Chart 2: Pie
-    function updateChart2(data) {
-        chart2.data.datasets[0].data = Object.values(data);
-        chart2.update();
-    }
+        const ctx2 = document.getElementById('chart2').getContext('2d');
+        const chart2 = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: [], // Placeholder
+                datasets: [{
+                    data: [], // Placeholder
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)',
+                        'rgba(200, 99, 132, 0.2)', 'rgba(100, 162, 235, 0.2)',
+                        'rgba(150, 206, 86, 0.2)', 'rgba(175, 192, 192, 0.2)',
+                    ],
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                },
+            },
+        });
 
-    // Attach Event Listeners for Dropdowns (Charts Only)
-    [flagDropdown, typeDropdown, provinceDropdown].forEach(dropdown =>
-        dropdown.addEventListener('change', fetchFilteredData)
-    );
+        // Helper Function: Update chart data
+        function updateChart(chart, data, type) {
+            if (!data || Object.keys(data).length === 0) {
+                console.error('No data available for the chart.');
+                return;
+            }
 
-    // Initial Map and Chart Rendering
-    displayDefaultMarkers(); // Always show default data on the map
-    fetchFilteredData(); // Fetch and display filtered data for the charts
-});
+            if (type === 'bar') {
+                chart.data.labels = Object.keys(data);
+                chart.data.datasets.forEach((dataset, index) => {
+                    dataset.data = Object.values(data).map(d => d[`Value ${index}`] || 0);
+                });
+            } else if (type === 'pie') {
+                chart.data.labels = Object.keys(data);
+                chart.data.datasets[0].data = Object.values(data);
+            }
 
+            chart.update();
+        }
+
+        // Fetch filtered data
+        function fetchFilteredData() {
+            const flag = flagDropdown.value;
+            const type = typeDropdown.value;
+            const province = provinceDropdown.value;
+
+            fetch(`/admin/qcdashboard?flag=${flag}&type=${type}&province=${province}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayMarkers(data.markerData); // Update map markers
+                    updateChart(chart1, data.tipeStationData, 'bar'); // Update Bar Chart
+                    updateChart(chart2, data.overallSum, 'pie'); // Update Pie Chart
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Attach event listeners to dropdowns
+        [flagDropdown, typeDropdown, provinceDropdown].forEach(dropdown =>
+            dropdown.addEventListener('change', fetchFilteredData)
+        );
+
+        // Initial Fetch
+        fetchFilteredData();
+    });
     </script>
 
         </main>

@@ -15,6 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -117,7 +118,7 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
-    
+
 
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
@@ -125,9 +126,8 @@ return [
     ],
 
     'aliases' => [
-   
-    'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
- 
-    ]
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
+    ],
 
 ];

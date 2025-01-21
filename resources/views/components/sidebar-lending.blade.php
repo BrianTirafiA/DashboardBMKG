@@ -25,19 +25,6 @@
         ],
         [
             'type' => 'dropdown',
-            'title' => 'Laporan',
-            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-check-fill" viewBox="0 0 16 16">
-                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m1.354 4.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
-                        </svg>',
-            'active' => false, // Kunci active untuk dropdown
-            'items' => [
-                ['title' => 'Mingguan', 'link' => '/admin/lendasset/report-week', 'active' => $currentRoute === 'admin/lendasset/report-week'],
-                ['title' => 'Bulanan', 'link' => '/admin/lendasset/report-month', 'active' => $currentRoute === 'admin/lendasset/report-month'],
-                ['title' => 'Tahunan', 'link' => '/admin/lendasset/report-year', 'active' => $currentRoute === 'admin/lendasset/report-year'],
-            ],
-        ],
-        [
-            'type' => 'dropdown',
             'title' => 'Items',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z"/>
@@ -62,6 +49,16 @@
                 ['title' => 'Pengguna', 'link' => '/admin/lendasset/users', 'active' => $currentRoute === 'admin/lendasset/users'],
                 ['title' => 'Unit Kerja', 'link' => '/admin/lendasset/unitkerja', 'active' => $currentRoute === 'admin/lendasset/unitkerja'],
             ],
+        ],
+        [
+            'type' => 'static',
+            'title' => 'Laporan',
+            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-check-fill" viewBox="0 0 16 16">
+                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m1.354 4.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
+                        </svg>',
+            'link' => '/admin/lendasset/report',
+            'active' => $currentRoute === 'admin/lendasset/report', // Menandai aktif
+
         ],
         [
             'type' => 'static',

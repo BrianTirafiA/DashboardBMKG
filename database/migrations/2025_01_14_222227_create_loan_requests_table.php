@@ -1,40 +1,40 @@
 <?php  
   
-use Illuminate\Database\Migrations\Migration;    
-use Illuminate\Database\Schema\Blueprint;    
-use Illuminate\Support\Facades\Schema;    
-    
-class CreateLoanRequestsTable extends Migration    
-{    
-    /**    
-     * Run the migrations.    
-     *    
-     * @return void    
-     */    
-    public function up()    
-    {    
-        Schema::create('loan_requests', function (Blueprint $table) {    
-            $table->id();    
-            $table->foreignId('item_details_id')->constrained('item_details')->onDelete('cascade'); // Mengaitkan dengan tabel item_details    
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Mengaitkan dengan tabel users    
-            $table->integer('durasi_peminjaman'); // Durasi dalam hari    
-            $table->text('alasan_peminjaman');    
-            $table->string('berkas_pendukung')->nullable(); // Nama file atau path untuk berkas pendukung    
-            $table->date('tanggal_pengajuan');    
-            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');    
-            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null'); // Admin yang menyetujui    
-            $table->date('approval_date')->nullable(); // Tanggal persetujuan    
-            $table->timestamps(); // created_at dan updated_at    
-        });    
-    }    
-    
-    /**    
-     * Reverse the migrations.    
-     *    
-     * @return void    
-     */    
-    public function down()    
-    {    
-        Schema::dropIfExists('loan_requests');    
-    }    
-}    
+use Illuminate\Database\Migrations\Migration;  
+use Illuminate\Database\Schema\Blueprint;  
+use Illuminate\Support\Facades\Schema;  
+  
+class CreateLoanRequestsTable extends Migration  
+{  
+    /**  
+     * Run the migrations.  
+     *  
+     * @return void  
+     */  
+    public function up()  
+    {  
+        Schema::create('loan_requests', function (Blueprint $table) {  
+            $table->id(); // unsigned big integer, primary key, auto-increment  
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // unsigned big integer, foreign key referencing users table, on delete cascade  
+            $table->integer('durasi_peminjaman'); // integer  
+            $table->text('alasan_peminjaman'); // text  
+            $table->string('berkas_pendukung')->nullable(); // string, nullable  
+            $table->date('tanggal_pengajuan'); // date  
+            $table->enum('approval_status', ['pending', 'approved', 'rejected', 'outdated', 'returned'])->default('pending'); // enum, default: 'pending'  
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null'); // unsigned big integer, foreign key referencing users table, nullable, on delete set null  
+            $table->date('approval_date')->nullable(); // date, nullable  
+            $table->date('returned_date')->nullable(); // date, nullable  
+            $table->timestamps(); // created_at, updated_at  
+        });  
+    }  
+  
+    /**  
+     * Reverse the migrations.  
+     *  
+     * @return void  
+     */  
+    public function down()  
+    {  
+        Schema::dropIfExists('loan_requests');  
+    }  
+}  

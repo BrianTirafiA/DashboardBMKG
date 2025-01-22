@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemLocationController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\ItemStatusController;
 use App\Http\Controllers\ItemBrandController;
+use App\Http\Controllers\LoanRequestController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;    
 use App\Http\Controllers\PertanyaanController;
@@ -56,12 +57,11 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     Route::prefix('lendasset')->group(function () {    
         Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');    
-        Route::view('/transaksi-pengajuan', 'lending-asset.admin.transaksi-pengajuan');    
+        Route::view('/report', 'lending-asset.admin.report');    
         Route::view('/transaksi-peminjaman', 'lending-asset.admin.transaksi-peminjaman');    
         Route::view('/transaksi-pengembalian', 'lending-asset.admin.transaksi-pengembalian');    
-        Route::view('/report-week', 'lending-asset.admin.report-week');    
-        Route::view('/report-month', 'lending-asset.admin.report-month');    
-        Route::view('/report-year', 'lending-asset.admin.report-year');  
+        Route::resource('/transaksi-pengajuan', LoanRequestController::class);
+        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');     
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index'); 
         Route::resource('/brand', ItemBrandController::class);

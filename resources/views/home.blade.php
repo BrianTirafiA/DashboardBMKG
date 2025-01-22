@@ -44,6 +44,21 @@
                         <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
                             style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
 
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button type="button" id="todayButton"
+                                style="padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
+                                Today
+                            </button>
+                            <button type="button" id="last7DaysButton"
+                                style="padding: 10px 15px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
+                                Last 7 Days
+                            </button>
+                            <button type="button" id="last30DaysButton"
+                                style="padding: 10px 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
+                                Last 30 Days
+                            </button>
+                        </div>
+
                         <button type="submit"
                             style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
                             Filter
@@ -53,9 +68,9 @@
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
                     <div>
-                        <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Flag Type:</label>
+                        <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Data Type:</label>
                         <select id="flagVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="all">All Flags</option>
+                            <option value="all">All Data Reading</option>
                             @foreach($dropdownOptions['flags'] as $flag)
                                 <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
                             @endforeach
@@ -63,8 +78,7 @@
                     </div>
 
                     <div>
-                        <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine
-                            Type:</label>
+                        <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine Type:</label>
                         <select id="TypeVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             <option value="all">All Machines</option>
                             @foreach($dropdownOptions['machineTypes'] as $type)
@@ -74,8 +88,7 @@
                     </div>
 
                     <div>
-                        <label for="provinceVal" class="block text-sm font-medium text-gray-700">Select
-                            Province:</label>
+                        <label for="provinceVal" class="block text-sm font-medium text-gray-700">Select Province:</label>
                         <select id="provinceVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             <option value="all">All Provinces</option>
                             @foreach($dropdownOptions['provinces'] as $province)
@@ -102,14 +115,59 @@
                 </div>
                 <script>
 
-                    flatpickr("#start_date", {
-                        dateFormat: "Y-m-d",
-                    });
-                    flatpickr("#end_date", {
-                        dateFormat: "Y-m-d",
-                    });
+                    // flatpickr("#start_date", {
+                    //     dateFormat: "Y-m-d",
+                    // });
+                    // flatpickr("#end_date", {
+                    //     dateFormat: "Y-m-d",
+                    // });
 
                     document.addEventListener('DOMContentLoaded', () => {
+
+                        const startDateInput = document.getElementById('start_date');
+                        const endDateInput = document.getElementById('end_date');
+
+                        // Utility function to format dates as YYYY-MM-DD
+                        function formatDate(date) {
+                            const d = new Date(date);
+                            const year = d.getFullYear();
+                            const month = String(d.getMonth() + 1).padStart(2, '0');
+                            const day = String(d.getDate()).padStart(2, '0');
+                            return `${year}-${month}-${day}`;
+                        }
+
+                        // Set today as default
+                        const today = new Date();
+
+                        // Button click handlers
+                        document.getElementById('todayButton').addEventListener('click', () => {
+                            const formattedToday = formatDate(today);
+                            startDateInput.value = formattedToday;
+                            endDateInput.value = formattedToday;
+                        });
+
+                        document.getElementById('last7DaysButton').addEventListener('click', () => {
+                            const last7Days = new Date(today);
+                            last7Days.setDate(today.getDate() - 6); // Last 7 days include today
+                            startDateInput.value = formatDate(last7Days);
+                            endDateInput.value = formatDate(today);
+                        });
+
+                        document.getElementById('last30DaysButton').addEventListener('click', () => {
+                            const last30Days = new Date(today);
+                            last30Days.setDate(today.getDate() - 29); // Last 30 days include today
+                            startDateInput.value = formatDate(last30Days);
+                            endDateInput.value = formatDate(today);
+                        });
+
+                        // Initialize flatpickr
+                        flatpickr("#start_date", {
+                            dateFormat: "Y-m-d",
+                        });
+                        flatpickr("#end_date", {
+                            dateFormat: "Y-m-d",
+                        });
+
                         const markerData = @json($markerData);
                         // Map visual setting
                         const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);

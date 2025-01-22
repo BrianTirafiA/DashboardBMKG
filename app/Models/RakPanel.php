@@ -9,21 +9,18 @@ class RakPanel extends Model
 {
     use HasFactory;
 
-    // Table associated with this model
+    // Tabel terkait
     protected $table = 'rak_panels';
 
-    // Mass assignable attributes
-    protected $fillable = [
-        'name',
-        'panel_id',
-    ];
+    // Kolom yang bisa diisi
+    protected $fillable = ['name'];
 
     /**
-     * Define the relationship with Panel.
-     * Each RakPanel belongs to a single Panel.
+     * Definisikan hubungan dengan model Panel.
+     * Setiap RakPanel dapat memiliki banyak Panel.
      */
-    public function panel()
+    public function panels()
     {
-        return $this->belongsTo(Panel::class);
+        return $this->hasMany(Panel::class, 'rak_panel_id');
     }
 }

@@ -8,17 +8,13 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-        Schema::create('panels', function (Blueprint $table) {
+        Schema::create('rak_panels', function (Blueprint $table) {
             $table->id();
-            $table->string('pdu'); // Kolom untuk PDU
-            $table->json('rak'); // Kolom JSON untuk array rak
-            $table->integer('kapasitas'); // Kolom untuk Kapasitas
-            $table->timestamps(); // Kolom created_at dan updated_at
+            $table->string('name')->unique();
+            $table->timestamps();
         });
     }
 
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('panels');
+        Schema::dropIfExists('rak_panels');
     }
 };

@@ -9,10 +9,23 @@ class PanelController extends Controller
 {
     public function index()
     {
-        // Mengambil semua data dari tabel panels
-        $panels = Panel::all();
+        $panels = Panel::with('rakPanel')->get(); // Ambil semua panel beserta rak
+        return view('itAsset.power', compact('panels'));
+    }
+    public function destroy($id)
+    {
+        try {
+            // Cari panel berdasarkan ID
+            $panel = Panel::findOrFail($id);
 
-        // Mengirimkan data panels ke view
-        return view('panel.index', compact('panels'));
+            // Hapus panel
+            $panel->delete();
+
+            // Redirect kembali dengan pesan sukses
+            return redirect()->back()->with('success', 'Panek berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Redirect kembali dengan pesan error jika terjadi kesalahan
+            return redirect()->back()->with('success', 'Panek berhasil dihapus.');
+        }
     }
 }

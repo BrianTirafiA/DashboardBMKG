@@ -78,7 +78,8 @@
                     </div>
 
                     <div>
-                        <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine Type:</label>
+                        <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine
+                            Type:</label>
                         <select id="TypeVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             <option value="all">All Machines</option>
                             @foreach($dropdownOptions['machineTypes'] as $type)
@@ -88,7 +89,8 @@
                     </div>
 
                     <div>
-                        <label for="provinceVal" class="block text-sm font-medium text-gray-700">Select Province:</label>
+                        <label for="provinceVal" class="block text-sm font-medium text-gray-700">Select
+                            Province:</label>
                         <select id="provinceVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             <option value="all">All Provinces</option>
                             @foreach($dropdownOptions['provinces'] as $province)
@@ -114,14 +116,6 @@
                     </div>
                 </div>
                 <script>
-
-                    // flatpickr("#start_date", {
-                    //     dateFormat: "Y-m-d",
-                    // });
-                    // flatpickr("#end_date", {
-                    //     dateFormat: "Y-m-d",
-                    // });
-
                     document.addEventListener('DOMContentLoaded', () => {
 
                         const startDateInput = document.getElementById('start_date');
@@ -173,9 +167,11 @@
                         const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
                         const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
                         const initialZoom = 5;
+
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             maxZoom: 19,
                         }).addTo(map);
+
                         // Map border
                         const bounds = [
                             [-20.0, 80.0], // increase(+) to make it smaller or decrease(-) to make it larger [+DecreaseSouth -InscreaseSouth, +DecreaseWest -InscreaseWest]
@@ -228,20 +224,25 @@
                         // Function to trigger pin generation and filtering
                         function addMarkers() {
                             const uniqueStations = {};
-                            markerData.forEach((station) => {
-                                const stationName = station.name_station;
-                                const tipeStation = station.tipe_station;
-                                if (!uniqueStations[stationName]) {
-                                    uniqueStations[stationName] = true;
-                                    // Find the largest overall percentage value
-                                    const maxIndex = mapTipeStationToInt(tipeStation);
-                                    // Add the marker to the map
-                                    createCircleMarker(
-                                        station.lat,
-                                        station.lon,
-                                        maxIndex,
-                                        station
-                                    );
+                            const selectedType = document.getElementById('TypeVal').value;
+                            const selectedProvince = document.getElementById('provinceVal').value;
+
+                            map.eachLayer((layer) => {
+                                if (layer instanceof L.CircleMarker) {
+                                    map.removeLayer(layer);
+                                }
+                            });
+
+                            const filteredStations = markerData.filter(station => {
+                                const matchesType = selectedType === 'all' || station.tipe_station === selectedType;
+                                const matchesProvince = selectedProvince === 'all' || station.nama_propinsi === selectedProvince;
+                                return matchesType && matchesProvince;
+                            });
+
+                            filteredStations.forEach(station => {
+                                if (!uniqueStations[station.name_station]) {
+                                    uniqueStations[station.name_station] = true;
+                                    createCircleMarker(station.lat, station.lon, mapTipeStationToInt(station.tipe_station), station);
                                 }
                             });
                         }
@@ -260,7 +261,10 @@
                             return button;
                         };
                         resetButton.addTo(map);
-                        addMarkers(markerData);
+                        addMarkers();
+
+                        document.getElementById('TypeVal').addEventListener('change', addMarkers);
+                        document.getElementById('provinceVal').addEventListener('change', addMarkers);
                     });
                     // First Chart: Stacked bar for tipe_station
                     const ctx1 = document.getElementById('chart1').getContext('2d');

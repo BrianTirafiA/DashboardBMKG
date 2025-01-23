@@ -6,9 +6,7 @@
 
   <div class="flex w-full h-screen overflow-y-auto">
     <!-- Panggil Komponen Rak -->
-    <x-rack-table class="flex-1 border rounded-lg" />
-    <x-rack-table class="flex-1 border rounded-lg" />
-    <x-rack-table class="flex-1 border rounded-lg" />
+   
   </div>
 
 

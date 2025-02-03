@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemLocationController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\ItemStatusController;
 use App\Http\Controllers\ItemBrandController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LoanRequestController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;
@@ -57,14 +58,18 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     Route::prefix('lendasset')->group(function () {
         Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');
-        Route::view('/report',  LoanRequestController::class,);
-        Route::get('/report', [LoanRequestController::class, 'reportindex'])->name('report.index');
+        Route::view('/report',  LaporanController::class,);
+        Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
+        Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
+        Route::resource('/transaksi-pengajuan', LoanRequestController::class,);
+        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-proses', LoanRequestController::class,);
+        Route::get('/transaksi-proses', [LoanRequestController::class, 'onprocessindex'])->name('proses.index');
         Route::view('/transaksi-pengembalian',  LoanRequestController::class,);
         Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
         Route::view('/transaksi-dibatalkan',  LoanRequestController::class,);
         Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
-        Route::resource('/transaksi-pengajuan', LoanRequestController::class,);
-        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
         Route::resource('/brand', ItemBrandController::class);

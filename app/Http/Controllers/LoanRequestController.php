@@ -117,6 +117,41 @@ class LoanRequestController extends Controller
     }
 
     // Menampilkan daftar permohonan peminjaman    
+    public function onprocessindex(Request $request)
+    {
+        // Mengambil data permohonan dengan relasi item        
+        $loan_requests = LoanRequest::with('items.itemDetail', 'user', 'admin')
+            ->where('approval_status', 'onprocess') // Filter berdasarkan status       
+            ->when($request->search, function ($query) use ($request) {
+                $searchTerm = $request->search;
+
+                // Mengubah search term menjadi lowercase    
+                $searchTermLower = strtolower($searchTerm);
+
+                // Mencari berdasarkan nama pengguna, alasan peminjaman, dan item      
+                $query->whereHas('user', function ($q) use ($searchTermLower) {
+                    $q->whereRaw('LOWER(fullname) LIKE ?', ['%' . $searchTermLower . '%']);
+                })
+                    ->orWhereRaw('LOWER(alasan_peminjaman) LIKE ?', ['%' . $searchTermLower . '%'])
+                    ->orWhereHas('items', function ($q) use ($searchTermLower) {
+                    $q->whereHas('itemDetail', function ($subQuery) use ($searchTermLower) {
+                        $subQuery->whereRaw('LOWER(nama_item) LIKE ?', ['%' . $searchTermLower . '%']);
+                    });
+                });
+            })
+            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+
+        // Menangani jika tidak ada data yang ditemukan  
+        if ($loan_requests->isEmpty()) {
+            return view('lending-asset.admin.transaksi-proses', [
+                'loan_requests' => $loan_requests,
+                'message' => 'Tidak ada permohonan yang ditemukan.' // Pesan untuk ditampilkan di tampilan  
+            ]);
+        }
+        return view('lending-asset.admin.transaksi-proses', compact('loan_requests'));
+    }
+
+    // Menampilkan daftar permohonan peminjaman    
     public function reportindex(Request $request)
     {
         // Mengambil data permohonan dengan relasi item        

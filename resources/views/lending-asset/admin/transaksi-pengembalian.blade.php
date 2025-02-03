@@ -18,6 +18,7 @@
                     ['key' => 'user.name', 'title' => 'Nama Pemohon'],
                     ['key' => 'durasi_peminjaman', 'title' => 'Durasi (Hari)'],
                     ['key' => 'tanggal_pengajuan', 'title' => 'Tanggal Pengajuan'],
+                    ['key' => 'approval_date', 'title' => 'Tanggal Penerimaan'],
                     ['key' => 'approval_status', 'title' => 'Status Peminjaman'],
                     ['key' => 'items', 'title' => 'Item (Jumlah)'],
                     ['key' => 'returned_date', 'title' => 'Tanggal Pengembalian'],

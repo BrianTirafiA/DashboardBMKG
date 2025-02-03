@@ -10,8 +10,6 @@ class station extends Model
 {
     use HasFactory;
     protected $table = 'station_flag_summary'; // The name of the view
-    public $incrementing = false;
-    public $timestamps = false; // Views typically don't have timestamps
     protected $fillable = [
         'date_only','name_station','tipe_station','nama_propinsi','total_records',
         'rr_flag_0_percent','rr_flag_1_percent','rr_flag_2_percent','rr_flag_3_percent','rr_flag_4_percent',

@@ -40,4 +40,6 @@ class LoanRequest extends Model
     {    
         return $this->hasMany(LoanRequestItem::class, 'loan_request_id');    
     }    
+
+    
 }  

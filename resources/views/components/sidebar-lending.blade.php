@@ -19,8 +19,9 @@
             'active' => false, // Kunci active untuk dropdown
             'items' => [
                 ['title' => 'Pengajuan', 'link' => '/admin/lendasset/transaksi-pengajuan', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengajuan'],
-                ['title' => 'Peminjaman', 'link' => '/admin/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-peminjaman'],
-                ['title' => 'Pengembalian', 'link' => '/admin/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-peminjaman'],
+                ['title' => 'Dalam Proses', 'link' => '/admin/lendasset/transaksi-proses', 'active' => $currentRoute === 'admin/lendasset/transaksi-proses'],
+                ['title' => 'Pengembalian', 'link' => '/admin/lendasset/transaksi-pengembalian', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengembalian'],
+                ['title' => 'Dibatalkan', 'link' => '/admin/lendasset/transaksi-dibatalkan', 'active' => $currentRoute === 'admin/lendasset/transaksi-dibatalkan'],
             ],
         ],
         [

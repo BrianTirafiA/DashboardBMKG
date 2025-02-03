@@ -40,7 +40,7 @@
 
                         <div class="flex flex-col gap-2 shrink-0 me-5 sm:flex-row">
                             <div class="w-full md:w-72">
-                                <form action="{{ route('pengajuan.index') }}" method="GET"
+                                <form action="{{ route('rejected.index') }}" method="GET"
                                     class="relative h-10 w-full min-w-[200px] bg-white">
                                     <input id="searchInput" name="search"
                                         class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 focus:border-2 focus:border-gray-900"
@@ -124,11 +124,6 @@
                                                                                         </svg>
                                                                                         Detail
                                                                                     </button>
-                                                                                    <button type="button" class="text-green-500"
-                                                                                        onclick="openAcceptModal('{{ $loanRequest->id }}', '{{ $loanRequest->durasi_peminjaman }}')">Terima</button>
-
-                                                                                    <button type="button" class="text-red-500"
-                                                                                        onclick="openRejectModal('{{ $loanRequest->id }}')">Tolak</button>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
@@ -166,121 +161,14 @@
                             @endif
                         </div>
                     </div>
+
+                    <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50">
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Modal untuk Menampilkan Data Pemohon -->
-    <div id="userModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 w-1/3">
-            <h2 class="text-lg font-semibold mb-4">Detail Pengguna</h2>
-            <p><strong>Nama:</strong> <span id="modalUserName"></span></p>
-            <p><strong>Email:</strong> <span id="modalUserEmail"></span></p>
-            <p><strong>Telepon:</strong> <span id="modalUserPhone"></span></p>
-            <div class="flex justify-end mt-4">
-                <button id="closeUserModal" class="bg-blue-500 text-white px-4 py-2 rounded">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openUserModal(fullname, email, no_telepon) {
-            document.getElementById('modalUserName').textContent = fullname;
-            document.getElementById('modalUserEmail').textContent = email;
-            document.getElementById('modalUserPhone').textContent = no_telepon;
-            document.getElementById('userModal').classList.remove('hidden');
-        }
-
-        // Event listener untuk menutup modal  
-        document.getElementById('closeUserModal').addEventListener('click', function () {
-            document.getElementById('userModal').classList.add('hidden');
-        });  
-    </script>
-
-    <!-- Modal untuk Menerima Permohonan -->
-    <div id="acceptModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 w-1/3">
-            <h2 class="text-lg font-semibold">Terima Permohonan</h2>
-            <p>Apakah Anda yakin ingin menerima permohonan ini?</p>
-            <form id="acceptForm" action="{{ route('transaksi-pengajuan.update', '') }}" method="POST">
-                @csrf
-                @method('PUT')                
-                <input type="hidden" name="id" id="acceptRequestId">
-                <input type="hidden" name="approval_status" id="acceptStatus" value="approved">
-                <input type="hidden" name="admin_id" value="{{ session('id') }}">
-                <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
-                <input type="hidden" name="returned_date" id="returnedDate" value="">
-
-                <div class="flex justify-end mt-4">
-                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
-                        onclick="closeAcceptModal()">Batal</button>
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Terima Permohonan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-       function openAcceptModal(id, durasi_peminjaman) {    
-    document.getElementById('acceptRequestId').value = id;    
-  
-    // Menghitung tanggal pengembalian    
-    const currentDate = new Date();    
-    console.log('Current Date:', currentDate); // Log tanggal saat ini  
-  
-    // Menambahkan durasi peminjaman  
-    const returnedDate = new Date(currentDate.getTime() + (durasi_peminjaman * 24 * 60 * 60 * 1000)); // Menghitung tanggal pengembalian  
-  
-    // Mengatur nilai tanggal pengembalian dalam format yang sesuai    
-    document.getElementById('returnedDate').value = returnedDate.toISOString().split('T')[0]; // Format YYYY-MM-DD    
-  
-    // Menampilkan modal    
-    document.getElementById('acceptModal').classList.remove('hidden');    
-    document.getElementById('acceptForm').action = "{{ route('transaksi-pengajuan.update', '') }}/" + id;    
-  
-    console.log('Returned Date:', returnedDate.toISOString().split('T')[0]); // Log tanggal pengembalian  
-}  
-
- 
-
-        function closeAcceptModal() {
-            document.getElementById('acceptModal').classList.add('hidden');
-        }  
-    </script>
-
-    <!-- Modal untuk Menolak Permohonan -->
-    <div id="rejectedModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 w-1/3">
-            <h2 class="text-lg font-semibold">Tolak Permohonan</h2>
-            <p>Apakah Anda yakin ingin menolak permohonan ini?</p>
-            <form id="rejectedForm" action="{{ route('transaksi-pengajuan.update', '') }}" method="POST">
-                @csrf
-                @method('PUT')                 <input type="hidden" name="id" id="rejectedRequestId">
-                <input type="hidden" name="approval_status" id="acceptStatus" value="rejected">
-                <input type="hidden" name="admin_id" value="{{ session('id') }}">
-                <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
-
-                <div class="flex justify-end mt-4">
-                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
-                        onclick="closeRejectModal()">Batal</button>
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Tolak Permohonan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function openRejectModal(id) {
-            document.getElementById('rejectedRequestId').value = id;
-            document.getElementById('rejectedForm').action = "{{ route('transaksi-pengajuan.update', '') }}/" + id;
-            // Menampilkan modal  
-            document.getElementById('rejectedModal').classList.remove('hidden');
-        }
-        function closeRejectModal() {
-            document.getElementById('rejectedModal').classList.add('hidden');
-        }  
-    </script>
 
     <!-- Modal untuk Menampilkan Detail Permohonan -->
     <div id="requestModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -399,7 +287,6 @@
         </div>
     </div>
 
-
     <script>
         function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, profile_photo, loanDuration, loanReason, submissionDate, supportingDocuments, items) {
             document.getElementById('modalRequestId').textContent = id;
@@ -409,7 +296,7 @@
             document.getElementById('modalTelepon').textContent = no_telepon ? no_telepon : "Nomor Telepon Pemohon Tidak Ada";
             document.getElementById('modalDepartemen').textContent = unit_kerja ? unit_kerja : "Unit Kerja Pemohon Tidak Ada";
             document.getElementById('modalProfilePhoto').src =
-                document.getElementById('modalLoanDuration').textContent = loanDuration;
+            document.getElementById('modalLoanDuration').textContent = loanDuration;
             document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
             document.getElementById('modalSubmissionDate').textContent = submissionDate;
             document.getElementById('modalSupportingDocuments').textContent = supportingDocuments ? supportingDocuments : "Dokumen Tidak Tersedia";

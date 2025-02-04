@@ -25,10 +25,12 @@
 @endif
 
 @php  
-                            use App\Models\ItemCategory;
+        use App\Models\ItemCategory;
     use App\Models\ItemLocation;
     use App\Models\ItemStatus;
     use App\Models\ItemBrand;
+    use App\Models\ItemDetail;
+
     $item_categories = ItemCategory::all();
     $item_brands = ItemBrand::all();
     $item_statuses = ItemStatus::all();
@@ -39,7 +41,7 @@
     <div>
         <div class="me-7 mt-1">
             @php                  
-                                                                                                                $title = 'Daftar Item Terdaftar';
+                                                                                                                                $title = 'Daftar Item Terdaftar';
                 $description = 'Halaman ini berisi daftar item yang terdaftar yang dapat Anda kelola.';
                 $add = 'Tambah Item Baru';
                 $columns = [
@@ -156,7 +158,21 @@
                                                 <div class="flex items-center gap-3 justify-center">
                                                     <!-- Tombol Edit -->
                                                     <button type="button" class="text-blue-500 flex items-center gap-2"
-                                                        onclick="openEditModal('{{ $itemDetail->id }}', '{{ $itemDetail->nama_item }}', '{{ $itemDetail->type_item }}', '{{ $itemDetail->brand_item_id }}', '{{ $itemDetail->tanggal_pengadaan }}', '{{ $itemDetail->nama_vendor }}', '{{ $itemDetail->jumlah_item }}', '{{ $itemDetail->kategori_item_id }}', '{{ $itemDetail->status_item_id }}', '{{ $itemDetail->lokasi_item_id }}', '{{ asset('storage/' . $itemDetail->image1) }}', '{{ asset('storage/' . $itemDetail->image2) }}', '{{ asset('storage/' . $itemDetail->image3) }}', '{{ asset('storage/' . $itemDetail->image4) }}')">
+                                                        onclick="openEditModal(
+                                                            '{{ $itemDetail->id }}', 
+                                                            '{{ $itemDetail->nama_item }}', 
+                                                            '{{ $itemDetail->type_item }}', 
+                                                            '{{ $itemDetail->brand_item_id }}', 
+                                                            '{{ $itemDetail->tanggal_pengadaan }}', 
+                                                            '{{ $itemDetail->nama_vendor }}', 
+                                                            '{{ $itemDetail->jumlah_item }}', 
+                                                            '{{ $itemDetail->kategori_item_id }}', 
+                                                            '{{ $itemDetail->status_item_id }}', 
+                                                            '{{ $itemDetail->lokasi_item_id }}', 
+                                                            '{{ asset('storage/' . $itemDetail->image1) }}', 
+                                                            '{{ asset('storage/' . $itemDetail->image2) }}', 
+                                                            '{{ asset('storage/' . $itemDetail->image3) }}', 
+                                                            '{{ asset('storage/' . $itemDetail->image4) }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                             fill="currentColor" class="bi bi-pencil-square"
                                                             viewBox="0 0 16 16">
@@ -479,9 +495,7 @@
                                         <input type="file" name="image1" id="editImage1"
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                         <!-- Display current image if exists -->
-                                        <img id="currentImage1"
-                                            src="{{ $itemDetail->image1 ? asset('storage/' . $itemDetail->image1) : asset('assets/default-profile.png') }}"
-                                            alt="Current Image 1"
+                                        <img id="currentImage1" src="" alt="Current Image 1"
                                             class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
                                     </div>
                                     <div class="mb-4">
@@ -490,9 +504,7 @@
                                         <input type="file" name="image2" id="editImage2"
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                         <!-- Display current image if exists -->
-                                        <img id="currentImage2"
-                                            src="{{ $itemDetail->image2 ? asset('storage/' . $itemDetail->image2) : asset('assets/default-profile.png') }}"
-                                            alt="Current Image 2"
+                                        <img id="currentImage2" src="" alt="Current Image 2"
                                             class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
                                     </div>
                                     <div class="mb-4">
@@ -501,9 +513,7 @@
                                         <input type="file" name="image3" id="editImage3"
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                         <!-- Display current image if exists -->
-                                        <img id="currentImage3"
-                                            src="{{ $itemDetail->image3 ? asset('storage/' . $itemDetail->image3) : asset('assets/default-profile.png') }}"
-                                            alt="Current Image 3"
+                                        <img id="currentImage3" src="" alt="Current Image 3"
                                             class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
                                     </div>
                                     <div class="mb-4">
@@ -512,9 +522,7 @@
                                         <input type="file" name="image4" id="editImage4"
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                         <!-- Display current image if exists -->
-                                        <img id="currentImage4"
-                                            src="{{ $itemDetail->image4 ? asset('storage/' . $itemDetail->image4) : asset('assets/default-profile.png') }}"
-                                            alt="Current Image 4"
+                                        <img id="currentImage4" src="" alt="Current Image 4"
                                             class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
                                     </div>
                                 </div>

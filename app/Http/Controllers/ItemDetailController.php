@@ -21,6 +21,8 @@ class ItemDetailController extends Controller
         // Mengambil input pencarian dari request  
         $search = $request->input('search');
 
+        $item_details = ItemDetail::all();
+
         // Memulai query untuk ItemDetail  
         $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
             ->when($search, function ($query, $search) {

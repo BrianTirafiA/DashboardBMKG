@@ -149,7 +149,7 @@
                     class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50 border border-blue-gray-100 shadow-md rounded-xl">
                     <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
                         <h2 class="text-lg font-semibold mb-4">Konfirmasi Penghapusan</h2>
-                        <p>Apakah Anda yakin ingin menghapus pengguna ini?</p>
+                        <p>Apakah Anda yakin ingin menghapus perangkat ini?</p>
                         <p id="deleteItemName" class="font-bold"></p>
                         <div class="mt-4 flex justify-end">
                             <button id="cancel-delete"

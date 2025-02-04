@@ -30,14 +30,17 @@ class LoanRequest extends Model
     }    
     
     // Relasi dengan model User untuk admin yang menyetujui pinjaman  
-    public function admin()    
-    {    
-        return $this->belongsTo(User::class, 'admin_id');    
-    }    
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id', 'id');
+    }
+    
   
     // Relasi dengan model LoanRequestItem untuk item yang dipinjam  
     public function items()    
     {    
         return $this->hasMany(LoanRequestItem::class, 'loan_request_id');    
     }    
+
+    
 }  

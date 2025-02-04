@@ -266,84 +266,132 @@
                         document.getElementById('TypeVal').addEventListener('change', addMarkers);
                         document.getElementById('provinceVal').addEventListener('change', addMarkers);
                     });
-                    // First Chart: Stacked bar for tipe_station
-                    const ctx1 = document.getElementById('chart1').getContext('2d');
-                    new Chart(ctx1, {
-                        type: 'bar',
-                        data: {
-                            labels: {!! json_encode($tipeStationData->keys()) !!},
-                            datasets: [
-                                {
-                                    label: 'Value 0',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 0'])->values()) !!},
-                                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                                },
-                                {
-                                    label: 'Value 1',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 1'])->values()) !!},
-                                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                                },
-                                {
-                                    label: 'Value 2',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 2'])->values()) !!},
-                                    backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                                },
-                                {
-                                    label: 'Value 3',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 3'])->values()) !!},
-                                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                                },
-                                {
-                                    label: 'Value 4',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 4'])->values()) !!},
-                                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                                },
-                                {
-                                    label: 'Value 5',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 5'])->values()) !!},
-                                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                                },
-                                {
-                                    label: 'Value 6',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 6'])->values()) !!},
-                                    backgroundColor: 'rgba(200, 99, 132, 0.5)',
-                                },
-                                {
-                                    label: 'Value 7',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 7'])->values()) !!},
-                                    backgroundColor: 'rgba(100, 162, 235, 0.5)',
-                                },
-                                {
-                                    label: 'Value 8',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 8'])->values()) !!},
-                                    backgroundColor: 'rgba(150, 206, 86, 0.5)',
-                                },
-                                {
-                                    label: 'Value 9',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 9'])->values()) !!},
-                                    backgroundColor: 'rgba(175, 192, 192, 0.5)',
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    stacked: true,
-                                    max: 100 // Ensure the Y-axis maximum is set to 100
-                                },
-                                x: {
-                                    stacked: true
-                                }
-                            }
-                        }
-                    });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const rawData = @json($markerData); // Assuming this contains raw station data passed from the controller
+    let chart1Instance;
+
+    // Group and normalize data by type and province dynamically
+    function groupAndNormalizeData(rawData) {
+        const groupedData = rawData.reduce((acc, station) => {
+            const { tipe_station: type, nama_propinsi: province } = station;
+
+            if (!acc[type]) {
+                acc[type] = { values: {}, provinces: new Set() };
+                for (let i = 0; i <= 9; i++) {
+                    acc[type].values[`Value ${i}`] = 0;
+                }
+            }
+
+            // Sum values for the current type
+            for (let i = 0; i <= 9; i++) {
+                acc[type].values[`Value ${i}`] += station.overall_values[i] || 0;
+            }
+
+            // Track provinces for this type
+            acc[type].provinces.add(province);
+
+            return acc;
+        }, {});
+
+        // Normalize percentages for each type
+        Object.keys(groupedData).forEach((type) => {
+            const total = Object.values(groupedData[type].values).reduce((sum, value) => sum + value, 0);
+            groupedData[type].values = Object.keys(groupedData[type].values).reduce((normalized, key) => {
+                normalized[key] = total > 0 ? (groupedData[type].values[key] / total) * 100 : 0;
+                return normalized;
+            }, {});
+            groupedData[type].provinces = Array.from(groupedData[type].provinces);
+        });
+
+        return groupedData;
+    }
+
+    const tipeStationData = groupAndNormalizeData(rawData);
+
+    // Filter and normalize data dynamically in the view
+    function filterData() {
+        const selectedType = document.getElementById('TypeVal').value;
+        const selectedProvince = document.getElementById('provinceVal').value;
+
+        // Filter `tipeStationData` by type and province
+        const filteredData = Object.keys(tipeStationData)
+            .filter((type) => {
+                const matchesType = selectedType === 'all' || type === selectedType;
+                const matchesProvince =
+                    selectedProvince === 'all' || tipeStationData[type].provinces.includes(selectedProvince);
+                return matchesType && matchesProvince;
+            })
+            .reduce((filtered, type) => {
+                filtered[type] = tipeStationData[type].values;
+                return filtered;
+            }, {});
+
+        return filteredData;
+    }
+
+    // Update the chart data
+    function updateChartData(filteredData) {
+        const labels = Object.keys(filteredData); // Station types
+        const datasets = Object.keys(filteredData[labels[0]] || {}).map((key, index) => ({
+            label: `Value ${key}`,
+            data: labels.map((label) => filteredData[label][key]),
+            backgroundColor: `rgba(${50 + index * 20}, ${100 + index * 10}, ${150 - index * 10}, 0.5)`,
+        }));
+
+        return { labels, datasets };
+    }
+
+    // Update the chart
+    function updateChart() {
+        const filteredData = filterData();
+        const { labels, datasets } = updateChartData(filteredData);
+
+        // Update the chart with new data
+        chart1Instance.data.labels = labels;
+        chart1Instance.data.datasets = datasets;
+        chart1Instance.update();
+    }
+
+    // Initialize the chart with the full data
+    const ctx1 = document.getElementById('chart1').getContext('2d');
+    chart1Instance = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(tipeStationData),
+            datasets: Object.keys(tipeStationData[Object.keys(tipeStationData)[0]].values).map((key, index) => ({
+                label: `Value ${key}`,
+                data: Object.keys(tipeStationData).map((type) => tipeStationData[type].values[key]),
+                backgroundColor: `rgba(${50 + index * 20}, ${100 + index * 10}, ${150 - index * 10}, 0.5)`,
+            })),
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stacked: true,
+                    max: 100,
+                },
+                x: {
+                    stacked: true,
+                },
+            },
+        },
+    });
+
+    // Add event listeners for dropdown changes
+    document.getElementById('TypeVal').addEventListener('change', updateChart);
+    document.getElementById('provinceVal').addEventListener('change', updateChart);
+});
+
+
+
                     // Second Chart: Overall percentages
                     const ctx2 = document.getElementById('chart2').getContext('2d');
                     new Chart(ctx2, {

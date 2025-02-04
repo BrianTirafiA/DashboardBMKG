@@ -57,24 +57,21 @@ class StationFlagController extends Controller
         });
         // Group data by `tipe_station` and normalize percentages to sum to 100% for each station
         $tipeStationData = $stations->groupBy('tipe_station')->map(function ($group) {
-            $sums = [
-                'Value 0' => $group->sum('overall_value_0_percent'),
-                'Value 1' => $group->sum('overall_value_1_percent'),
-                'Value 2' => $group->sum('overall_value_2_percent'),
-                'Value 3' => $group->sum('overall_value_3_percent'),
-                'Value 4' => $group->sum('overall_value_4_percent'),
-                'Value 5' => $group->sum('overall_value_5_percent'),
-                'Value 6' => $group->sum('overall_value_6_percent'),
-                'Value 7' => $group->sum('overall_value_7_percent'),
-                'Value 8' => $group->sum('overall_value_8_percent'),
-                'Value 9' => $group->sum('overall_value_9_percent'),
+            return [
+                'values' => [
+                    'Value 0' => $group->sum('overall_value_0_percent'),
+                    'Value 1' => $group->sum('overall_value_1_percent'),
+                    'Value 2' => $group->sum('overall_value_2_percent'),
+                    'Value 3' => $group->sum('overall_value_3_percent'),
+                    'Value 4' => $group->sum('overall_value_4_percent'),
+                    'Value 5' => $group->sum('overall_value_5_percent'),
+                    'Value 6' => $group->sum('overall_value_6_percent'),
+                    'Value 7' => $group->sum('overall_value_7_percent'),
+                    'Value 8' => $group->sum('overall_value_8_percent'),
+                    'Value 9' => $group->sum('overall_value_9_percent'),
+                ],
+                'provinces' => $group->pluck('nama_propinsi')->unique()->values()->all(),
             ];
-
-            $total = array_sum($sums);
-
-            return array_map(function ($value) use ($total) {
-                return $total > 0 ? ($value / $total) * 100 : 0;
-            }, $sums);
         });
 
         // Second Chart: Average overall percentages across all records
@@ -112,23 +109,4 @@ class StationFlagController extends Controller
         return view('home', compact('markerData', 'tipeStationData', 'overallSum', 'dropdownOptions'));
     }
 
-
-    // private function getDateFilter($startDate = null, $endDate = null)
-    // {
-    //     $startDateTime = \Carbon\Carbon::parse($startDate)->startOfDay();
-    //     $endDateTime = \Carbon\Carbon::parse($endDate)->endOfDay();
-
-    //     $query = "
-    //         SELECT 
-    //             *
-    //         FROM station_flag_summary
-    //         WHERE date_only >= ? AND date_only <= ?
-    //         ORDER BY name_station ASC, date_only DESC
-    //     ";
-
-    //     $stations = DB::select($query, [$startDateTime, $endDateTime]);
-
-    //     // Always return as a collection
-    //     return collect($stations);
-    // }
 }

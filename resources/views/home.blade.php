@@ -130,7 +130,6 @@
                             return `${year}-${month}-${day}`;
                         }
 
-                        // Set today as default
                         const today = new Date();
 
                         // Button click handlers

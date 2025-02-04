@@ -9,29 +9,18 @@ class Panel extends Model
 {
     use HasFactory;
 
-    // Table associated with this model
+    // Tabel terkait
     protected $table = 'panels';
 
-    // Mass assignable attributes
-    protected $fillable = [
-        'pdu',
-        'rak',
-        'kapasitas',
-    ];
+    // Kolom yang bisa diisi
+    protected $fillable = ['pdu', 'rak', 'kapasitas', 'rak_panel_id'];
 
     /**
-     * The 'rak' attribute is stored as JSON, so it needs to be cast.
+     * Definisikan hubungan dengan model RakPanel.
+     * Setiap Panel terkait dengan satu RakPanel.
      */
-    protected $casts = [
-        'rak' => 'array',
-    ];
-
-    /**
-     * Define the relationship with RakPanel.
-     * One Panel can have many RakPanels.
-     */
-    public function rakPanels()
+    public function rakPanel()
     {
-        return $this->hasMany(RakPanel::class);
+        return $this->belongsTo(RakPanel::class, 'rak_panel_id');
     }
 }

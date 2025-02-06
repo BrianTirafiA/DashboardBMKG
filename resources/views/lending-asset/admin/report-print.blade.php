@@ -12,14 +12,12 @@
             padding: 0;
         }
 
-        /* === Header Section === */
         .header {
             background-color: #f0f0f0;
             padding: 20px;
             border-bottom: 2px solid #000;
         }
 
-        /* Tabel dalam header */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -30,7 +28,6 @@
             padding: 10px;
         }
 
-        /* === Logo Styling === */
         .logo-container {
             width: 80px;
             text-align: center;
@@ -41,7 +38,6 @@
             height: auto;
         }
 
-        /* === Teks Kop Surat === */
         .kop-text {
             text-align: left;
         }
@@ -61,15 +57,14 @@
             font-size: 12px;
         }
 
-        /* === Konten Laporan === */
         .content {
             padding: 20px;
         }
 
         .content table {
             width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
+            border-collapse: collapse;
         }
 
         .content th,
@@ -81,6 +76,40 @@
 
         .content th {
             background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .detail-table td {
+            border: none;
+        }
+
+        .detail-table td:first-child {
+            text-align: left;
+            font-weight: bold;
+            width: 40%;
+        }
+
+        .content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .content li {
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
         }
     </style>
 </head>
@@ -90,17 +119,16 @@
     <div class="header">
         <table class="header-table">
             <tr>
-                <!-- Kolom Logo -->
                 <td class="logo-container">
                     <img src="/public/assets/logo-bmkg.png" alt="Logo BMKG">
                 </td>
-                <!-- Kolom Teks Kop Surat -->
                 <td class="kop-text">
                     <h1>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h1>
                     <h2>DEPUTI BIDANG INFRASTRUKTUR METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h2>
                     <h2>DIREKTORAT DATA DAN KOMPUTASI</h2>
                     <p>Jl. Angkasa I No. 2, Jakarta 10610 Telp: (021) 4246321 Fax: (021) 4246703</p>
-                    <p>P.O. BOX 3540 JKT, Website: <a href="http://www.bmkg.go.id">www.bmkg.go.id</a></p>
+                    <p>P.O. BOX 3540 JKT, Website: <a href="http://www.bmkg.go.id">www.bmkg.go.id</a> Email: <a
+                            href="pusatdatabase@bmkg.go.id">pusatdatabase@bmkg.go.id</a></p>
                 </td>
             </tr>
         </table>
@@ -108,35 +136,49 @@
 
     <div class="content">
         <p style="text-align: center; margin: 2px 0; font-size: 16px;">Laporan Transaksi Peminjaman</p>
-        <p style="text-align: center; margin: 2px 0; font-size: 16px;">Pada Layanan Website Manajemen Asset Direktorat Data dan Komputasi</p>
-        <p style="text-align: center; margin: 2px 0; font-size: 16px;">Dikutip dan dibuat otomatis pada {{ now()->format('d F Y') }}</p>
+        <p style="text-align: center; margin: 2px 0; font-size: 16px;">Pada Layanan Website Manajemen Asset Direktorat
+            Data dan Komputasi</p>
 
-
+        <p style="text-align: center; font-size: 14px; text-transform: capitalize;">Dibuat otomatis pada
+            {{ now()->format('d F Y') }} <br>
+            Data difilter berdasarkan periode: {{ request()->periode }}</p>
         <table>
             <thead>
                 <tr>
+                    <th>No</th>
                     <th>ID</th>
-                    <th>Nama Pemohon</th>
-                    <th>Durasi (Hari)</th>
-                    <th>Status</th>
+                    <th>Detail</th>
+                    <th>Barang/Lisensi </th> <!-- Kolom baru untuk Items -->
                     <th>Tanggal Pengajuan</th>
-                    <th>Tanggal Diterima</th>
-                    <th>Tanggal Pengembalian</th>
-                    <th>Admin Penerima</th>
-                    <th>Item (Jumlah)</th>
+                    <th>Tanggal Disetujui</th>
+                    <th>Tanggal Kembali</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($loan_requests as $request)
                     <tr>
+                        <td>{{$loop->iteration}}</td>
                         <td>{{ $request->id }}</td>
-                        <td>{{ $request->user->fullname }}</td>
-                        <td>{{ $request->durasi_peminjaman }}</td>
-                        <td>{{ $request->approval_status }}</td>
-                        <td>{{ $request->tanggal_pengajuan }}</td>
-                        <td>{{ $request->approval_date }}</td>
-                        <td>{{ $request->returned_date }}</td>
-                        <td>{{ $request->admin->fullname }}</td>
+                        <td>
+                            <table class="detail-table">
+                                <tr>
+                                    <td>Nama Peminjam</td>
+                                    <td>{{ $request->user->fullname }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Durasi Peminjaman</td>
+                                    <td>{{ $request->durasi_peminjaman }} Hari</td>
+                                </tr>
+                                <tr>
+                                    <td>Admin Penerima</td>
+                                    <td>{{ $request->admin->fullname }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>{{ $request->approval_status }}</td>
+                                </tr>
+                            </table>
+                        </td>
                         <td>
                             <ul>
                                 @foreach ($request->items as $item)
@@ -144,10 +186,18 @@
                                 @endforeach
                             </ul>
                         </td>
+                        <td>{{ \Carbon\Carbon::parse($request->tanggal_pengajuan)->translatedFormat('d F Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($request->approval_date)->translatedFormat('d F Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($request->returned_date)->translatedFormat('d F Y') }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Badan Meteorologi, Klimatologi, dan Geofisika. All rights reserved.</p>
     </div>
 
 </body>

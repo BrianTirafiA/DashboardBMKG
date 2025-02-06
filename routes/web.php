@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\UserControllerForUpdateData;
 use App\Http\Controllers\ProfilePhotoController;
+use App\Http\Controllers\UserDashboard;
 use App\Http\Middleware\CheckUserOrAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PinController;
@@ -90,15 +91,17 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
 // User Routes    
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {
-    Route::view('/dashboard', 'lending-asset.user.user-dashboard');
+    Route::resource('/dashboard', UserDashboard::class);
+    Route::get('/dashboard', [UserDashboard::class, 'itemindex'])->name('item.index');
     Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);
-    Route::view('/kategori', 'lending-asset.user.user-kategori');
-    // Route::resource('/profile', UserControllerForUpdateData::class);
-    // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profile.index'); 
-    Route::view('/items', 'lending-asset.user.user-items');
-    Route::view('/pengajuan', 'lending-asset.user.user-pengajuan');
-    Route::view('/peminjaman', 'lending-asset.user.user-peminjaman');
-    Route::view('/pengembalian', 'lending-asset.user.user-pengembalian');
+    Route::resource('/pengajuan', LoanRequestController::class,);
+    Route::get('/pengajuan', [LoanRequestController::class, 'user_pengajuanindex'])->name('user_pengajuanindex');
+    Route::resource('/proses', LoanRequestController::class,);
+    Route::get('/proses', [LoanRequestController::class, 'user_prosesindex'])->name('user_prosesindex');
+    Route::resource('/pengembalian', LoanRequestController::class,);
+    Route::get('/pengembalian', [LoanRequestController::class, 'user_pengembalianindex'])->name('user_pengembalianindex');
+    Route::resource('/riwayat', LoanRequestController::class,);
+    Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
 
 });
 

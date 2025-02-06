@@ -16,16 +16,19 @@ class ItemDetail extends Model
     protected $fillable = [  
         'nama_item',  
         'type_item',  
+        'description',
         'brand_item_id',  
         'tanggal_pengadaan',  
         'nama_vendor',  
         'jumlah_item',  
         'kategori_item_id',  
         'status_item_id',  
-        'lokasi_item_id',  
+        'lokasi_item_id', 
+        'borrowed_quantity', 
     ];  
   
-    // Relasi dengan model lain  
+    // Relasi dengan model lain 
+     
     // Model ItemDetail.php  
     public function brand() {  
         return $this->belongsTo(ItemBrand::class, 'brand_item_id');  

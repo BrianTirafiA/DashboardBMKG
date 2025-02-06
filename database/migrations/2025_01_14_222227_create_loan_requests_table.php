@@ -23,6 +23,7 @@ class CreateLoanRequestsTable extends Migration
             $table->enum('approval_status', ['pending', 'approved', 'onprocess', 'rejected', 'outdated', 'returned'])->default('pending'); // enum, default: 'pending'  
             $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('set null'); // unsigned big integer, foreign key referencing users table, nullable, on delete set null  
             $table->date('approval_date')->nullable(); // date, nullable  
+            $table->date('confirmation_date')->nullable(); // date, nullable  
             $table->date('returned_date')->nullable(); // date, nullable  
             $table->timestamps(); // created_at, updated_at  
             $table->text('note'); // text  

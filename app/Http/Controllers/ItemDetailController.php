@@ -59,6 +59,7 @@ class ItemDetailController extends Controller
         $request->validate([
             'nama_item' => 'nullable|string|max:255',
             'type_item' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:255',
             'brand_item_id' => 'nullable|exists:item_brands,id',
             'tanggal_pengadaan' => 'nullable|date',
             'nama_vendor' => 'nullable|string|max:255',
@@ -76,6 +77,7 @@ class ItemDetailController extends Controller
         $itemDetail = ItemDetail::create([
             'nama_item' => $request->nama_item,
             'type_item' => $request->type_item,
+            'description'=> $request->description,
             'brand_item_id' => $request->brand_item_id,
             'tanggal_pengadaan' => $request->tanggal_pengadaan,
             'nama_vendor' => $request->nama_vendor,
@@ -105,6 +107,7 @@ class ItemDetailController extends Controller
         $request->validate([
             'nama_item' => 'required|string|max:255',
             'type_item' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'brand_item_id' => 'required|exists:item_brands,id',
             'tanggal_pengadaan' => 'nullable|date',
             'nama_vendor' => 'nullable|string|max:255',
@@ -122,6 +125,7 @@ class ItemDetailController extends Controller
         $itemDetail->update([
             'nama_item' => $request->nama_item,
             'type_item' => $request->type_item,
+            'description' => $request->description,
             'brand_item_id' => $request->brand_item_id,
             'tanggal_pengadaan' => $request->tanggal_pengadaan,
             'nama_vendor' => $request->nama_vendor,

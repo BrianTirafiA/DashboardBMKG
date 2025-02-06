@@ -41,13 +41,14 @@
     <div>
         <div class="me-7 mt-1">
             @php                  
-                                                                                                                                $title = 'Daftar Item Terdaftar';
+                $title = 'Daftar Item Terdaftar';
                 $description = 'Halaman ini berisi daftar item yang terdaftar yang dapat Anda kelola.';
                 $add = 'Tambah Item Baru';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],
                     ['key' => 'nama_item', 'title' => 'Nama Item'],
                     ['key' => 'type_item', 'title' => 'Tipe Item'],
+                    ['key' => 'description', 'title' => 'Deskripsi'],
                     ['key' => 'brand.name_brand', 'title' => 'Merek'],
                     ['key' => 'tanggal_pengadaan', 'title' => 'Tanggal Pengadaan'],
                     ['key' => 'nama_vendor', 'title' => 'Nama Vendor'],
@@ -162,6 +163,7 @@
                                                             '{{ $itemDetail->id }}', 
                                                             '{{ $itemDetail->nama_item }}', 
                                                             '{{ $itemDetail->type_item }}', 
+                                                             '{{ $itemDetail->description }}', 
                                                             '{{ $itemDetail->brand_item_id }}', 
                                                             '{{ $itemDetail->tanggal_pengadaan }}', 
                                                             '{{ $itemDetail->nama_vendor }}', 
@@ -272,6 +274,13 @@
                                         <label for="addTypeItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
                                         <input type="text" name="type_item" id="addTypeItem"
+                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                            placeholder="Tambahkan Tipe Item Baru">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="addDescription"
+                                            class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                        <input type="text" name="description" id="addDescription"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                             placeholder="Tambahkan Tipe Item Baru">
                                     </div>
@@ -412,6 +421,13 @@
                                         <label for="editTypeItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
                                         <input type="text" name="type_item" id="editTypeItem"
+                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                                            placeholder="Tambahkan Tipe Item Terbaru" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="editDescription"
+                                            class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                        <input type="text" name="description" id="editDescription"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                             placeholder="Tambahkan Tipe Item Terbaru" required>
                                     </div>
@@ -595,10 +611,11 @@
             document.getElementById('addModal').classList.add('hidden');
         });
 
-        function openEditModal(id, nama_item, type_item, brand_item_id, tanggal_pengadaan, nama_vendor, jumlah_item, kategori_item_id, status_item_id, lokasi_item_id, image1, image2, image3, image4) {
+        function openEditModal(id, nama_item, type_item, description, brand_item_id, tanggal_pengadaan, nama_vendor, jumlah_item, kategori_item_id, status_item_id, lokasi_item_id, image1, image2, image3, image4) {
             document.getElementById('editItemId').value = id; // Set ID item        
             document.getElementById('editNamaItem').value = nama_item; // Set value Nama Item        
             document.getElementById('editTypeItem').value = type_item; // Set value Tipe Item        
+            document.getElementById('editDescription').value = description; // Set value Tipe Item  
             document.getElementById('editBrandItem').value = brand_item_id; // Set value Merek Item        
             document.getElementById('editTanggalPengadaan').value = tanggal_pengadaan; // Set value Tanggal Pengadaan        
             document.getElementById('editNamaVendor').value = nama_vendor; // Set value Nama Vendor        

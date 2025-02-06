@@ -17,6 +17,7 @@ class CreateItemsTable extends Migration
             $table->id(); // ID otomatis  
             $table->string('nama_item'); // Nama item  
             $table->string('type_item'); // Tipe item  
+            $table->string('description'); // Tipe item  
             $table->foreignId('brand_item_id')->constrained('item_brands')->onDelete('cascade'); // FK ke tabel item_brands  
             $table->date('tanggal_pengadaan')->nullable(); // Tanggal pengadaan  
             $table->string('nama_vendor')->nullable(); // Nama vendor  
@@ -28,6 +29,7 @@ class CreateItemsTable extends Migration
             $table->string('image2')->nullable(); // Kolom untuk gambar 2  
             $table->string('image3')->nullable(); // Kolom untuk gambar 3  
             $table->string('image4')->nullable(); // Kolom untuk gambar 4  
+            $table->integer('borrowed_quantity'); // Jumlah item  
             $table->timestamps(); // Kolom created_at dan updated_at  
         });  
     }  

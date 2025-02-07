@@ -17,13 +17,17 @@ class StationFlagController extends Controller
         $query = Station::query();
 
         if (empty($startDate) || empty($endDate)) {
-            $stations = Station::all();
-        } else {
-            $query->whereBetween('date_only', [$startDate, $endDate]);
-            $stations = $query->orderBy('name_station', 'ASC')
-                ->orderBy('date_only', 'DESC')
-                ->get();
+            $endDate = now()->format('Y-m-d'); // Today's date
+            $startDate = now()->subDays(6)->format('Y-m-d'); // 7 days ago
         }
+    
+        $query = Station::query();
+    
+        // Filter by date range
+        $query->whereBetween('date_only', [$startDate, $endDate]);
+        $stations = $query->orderBy('name_station', 'ASC')
+            ->orderBy('date_only', 'DESC')
+            ->get();
 
         // Send all rows from the database
         $markerData = $stations->map(fn ($station) => $station->toArray());

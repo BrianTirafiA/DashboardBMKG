@@ -111,6 +111,12 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 
 Route::get('/admin/qcdashboard', [StationFlagController::class, 'filter'])->name('stations.filter');
 
+// Handle downloading the station report (GET request)
+Route::get('/download-station-data/{stationName}', [StationFlagController::class, 'downloadStationFile']);
+
+// Handle uploading the chart image before download (POST request)
+Route::post('/upload-station-chart/{stationName}', [StationFlagController::class, 'uploadStationChart']);
+
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);
 // Route untuk resource unit kerja

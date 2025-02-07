@@ -4,4 +4,3 @@ import L from 'leaflet';
 import 'bootstrap';
 
 require('leaflet/dist/leaflet.js');
-

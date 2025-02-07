@@ -114,6 +114,12 @@
                             <canvas id="chart2"></canvas>
                         </div>
                     </div>
+
+                    <div class="chart-container w-full sm:w-2/3 lg:w-1/3 lg:ml-auto">
+                        <div class="relative h-[50vh] lg:h-[60vh] max-h-400px">
+                            <canvas id="chart3"></canvas>
+                        </div>
+                    </div>
                 </div>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
@@ -163,6 +169,8 @@
                         });
 
                         const markerData = @json($markerData);
+
+                        let selectedFlag = 'overall_value';
                         // Map visual setting
                         const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
                         const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
@@ -226,7 +234,7 @@
                                     groupedByDate[date] = { valid: 0, invalid: 0, missing: 0, total: 0 };
                                 }
                                 for (let i = 0; i <= 9; i++) {
-                                    const value = data[`overall_value_${i}_percent`] || 0;
+                                    const value = data[`${selectedFlag}_${i}_percent`] || 0;
                                     groupedByDate[date].total += value;
                                     if (i === 0) groupedByDate[date].valid += value;
                                     else if (i >= 1 && i <= 8) groupedByDate[date].invalid += value;
@@ -253,9 +261,9 @@
                                     data: {
                                         labels: dates, // Each label is a date
                                         datasets: [
-                                            { label: 'Valid', data: validData, backgroundColor: 'blue' },
-                                            { label: 'Invalid', data: invalidData, backgroundColor: 'yellow' },
-                                            { label: 'Missing', data: missingData, backgroundColor: 'red' },
+                                            { label: 'Valid', data: validData, backgroundColor: '#006d7e' },
+                                            { label: 'Invalid', data: invalidData, backgroundColor: '#f7c830' },
+                                            { label: 'Missing', data: missingData, backgroundColor: '#b12629' },
                                         ],
                                     },
                                     options: {
@@ -315,6 +323,12 @@
                             return button;
                         };
                         resetButton.addTo(map);
+
+                        document.getElementById('flagVal').addEventListener('change', (event) => {
+                            selectedFlag = event.target.value; // Update selected flag
+                            updateCharts(); // Refresh the charts
+                        });
+
                         addMarkers();
 
                         document.getElementById('TypeVal').addEventListener('change', addMarkers);
@@ -324,6 +338,9 @@
                         const rawData = @json($markerData);
                         let chart1Instance, chart2Instance;
 
+                        // Default selected flag
+                        let selectedFlag = 'overall_value';
+
                         function processData(data) {
                             return data.reduce((acc, station) => {
                                 const type = station.tipe_station;
@@ -332,7 +349,7 @@
                                 }
 
                                 for (let i = 0; i <= 9; i++) {
-                                    const value = station[`overall_value_${i}_percent`] || 0;
+                                    const value = station[`${selectedFlag}_${i}_percent`] || 0;
                                     acc[type].total += value;
                                     if (i === 0) acc[type].valid += value;
                                     else if (i >= 1 && i <= 8) acc[type].invalid += value;
@@ -379,9 +396,9 @@
 
                             chart1Instance.data.labels = labels;
                             chart1Instance.data.datasets = [
-                                { label: 'Valid', data: validData, backgroundColor: 'blue' },
-                                { label: 'Invalid', data: invalidData, backgroundColor: 'yellow' },
-                                { label: 'Missing', data: missingData, backgroundColor: 'red' },
+                                { label: 'Valid', data: validData, backgroundColor: '#006d7e' },
+                                { label: 'Invalid', data: invalidData, backgroundColor: '#f7c92e' },
+                                { label: 'Missing', data: missingData, backgroundColor: '#af2729' },
                             ];
                             chart1Instance.update();
                         }
@@ -421,14 +438,70 @@
                         const ctx2 = document.getElementById('chart2').getContext('2d');
                         chart2Instance = new Chart(ctx2, {
                             type: 'pie',
-                            data: { labels: [], datasets: [{ label: 'Overall Percentages', data: [], backgroundColor: ['blue', 'yellow', 'red'] }] },
+                            data: { labels: [], datasets: [{ label: 'Overall Percentages', data: [], backgroundColor: ['#006d7e', '#f7c92e', '#b12629'] }] },
                             options: { responsive: true, plugins: { legend: { position: 'top' } } },
+                        });
+
+                        document.getElementById('flagVal').addEventListener('change', (event) => {
+                            selectedFlag = event.target.value; // Update selected flag
+                            updateCharts(); // Refresh the charts
                         });
 
                         updateCharts();
                         document.getElementById('TypeVal').addEventListener('change', updateCharts);
                         document.getElementById('provinceVal').addEventListener('change', updateCharts);
                     });
+
+                    document.addEventListener('DOMContentLoaded', () => {
+    const rawData = @json($markerData);
+    let chart3Instance;
+
+    function countUniqueStationsByType(data) {
+        const selectedProvince = document.getElementById('provinceVal').value;
+        const uniqueStations = {};
+
+        data.forEach(station => {
+            if (selectedProvince === 'all' || station.nama_propinsi === selectedProvince) {
+                uniqueStations[station.name_station] = station.tipe_station;
+            }
+        });
+
+        const typeCounts = {};
+        Object.values(uniqueStations).forEach(type => {
+            typeCounts[type] = (typeCounts[type] || 0) + 1;
+        });
+
+        return typeCounts;
+    }
+
+    function updateChart3() {
+        const uniqueCounts = countUniqueStationsByType(rawData);
+        const labels = Object.keys(uniqueCounts);
+        const counts = Object.values(uniqueCounts);
+        const colors = ['#369bcf', '#28a79e', '#39b449', '#8cc63e', '#e1cf23', '#f8af3e', '#f7941f'];
+
+        chart3Instance.data.labels = labels;
+        chart3Instance.data.datasets[0].data = counts;
+        chart3Instance.data.datasets[0].backgroundColor = colors.slice(0, labels.length);
+        chart3Instance.update();
+    }
+
+    const ctx3 = document.getElementById('chart3').getContext('2d');
+    chart3Instance = new Chart(ctx3, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ label: 'Jumlah Mesin', data: [], backgroundColor: [] }] },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } },
+        },
+    });
+
+    updateChart3();
+
+    document.getElementById('provinceVal').addEventListener('change', updateChart3);
+});
+
                 </script>
 
         </main>

@@ -122,6 +122,35 @@
                     </div>
                 </div>
                 <script>
+                    function getParameterByName(name, url = window.location.href) {
+                        name = name.replace(/[\[\]]/g, '\\$&');
+                        const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+                        const results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                    }
+
+                    function downloadStationReport(stationName) {
+                        // Fetch start_date and end_date from the URL
+                        let startDate = getParameterByName('start_date');
+                        let endDate = getParameterByName('end_date');
+
+                        // Fallback to defaults if dates are not present in the URL
+                        if (!startDate || !endDate) {
+                            const today = new Date();
+                            const last7Days = new Date(today);
+                            last7Days.setDate(today.getDate() - 6);
+
+                            startDate = last7Days.toISOString().split('T')[0];
+                            endDate = today.toISOString().split('T')[0];
+                        }
+
+                        // Build the URL with proper date parameters
+                        const url = `/station/download-pdf?station_name=${encodeURIComponent(stationName)}&start_date=${startDate}&end_date=${endDate}`;
+                        window.open(url, '_blank');
+                    }
+
                     document.addEventListener('DOMContentLoaded', () => {
 
                         const startDateInput = document.getElementById('start_date');
@@ -218,12 +247,16 @@
 
                                 // Click pin popup
                                 .bindPopup(`
-                                <b>Station:</b> ${station.name_station}<br>
-                                <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
-                                `)
+            <b>Station:</b> ${station.name_station}<br>
+            <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
+            <br>
+            <button class="download-btn" 
+                onclick="downloadStationReport('${station.name_station}', '${station.date_range}','${selectedFlag}')">
+                Download Report
+            </button>
+        `)
                                 .on('popupopen', () => generatePopupChart(station));
                         }
-
                         function generatePopupChart(station) {
                             const stationData = markerData.filter(s => s.name_station === station.name_station);
 
@@ -453,54 +486,54 @@
                     });
 
                     document.addEventListener('DOMContentLoaded', () => {
-    const rawData = @json($markerData);
-    let chart3Instance;
+                        const rawData = @json($markerData);
+                        let chart3Instance;
 
-    function countUniqueStationsByType(data) {
-        const selectedProvince = document.getElementById('provinceVal').value;
-        const uniqueStations = {};
+                        function countUniqueStationsByType(data) {
+                            const selectedProvince = document.getElementById('provinceVal').value;
+                            const uniqueStations = {};
 
-        data.forEach(station => {
-            if (selectedProvince === 'all' || station.nama_propinsi === selectedProvince) {
-                uniqueStations[station.name_station] = station.tipe_station;
-            }
-        });
+                            data.forEach(station => {
+                                if (selectedProvince === 'all' || station.nama_propinsi === selectedProvince) {
+                                    uniqueStations[station.name_station] = station.tipe_station;
+                                }
+                            });
 
-        const typeCounts = {};
-        Object.values(uniqueStations).forEach(type => {
-            typeCounts[type] = (typeCounts[type] || 0) + 1;
-        });
+                            const typeCounts = {};
+                            Object.values(uniqueStations).forEach(type => {
+                                typeCounts[type] = (typeCounts[type] || 0) + 1;
+                            });
 
-        return typeCounts;
-    }
+                            return typeCounts;
+                        }
 
-    function updateChart3() {
-        const uniqueCounts = countUniqueStationsByType(rawData);
-        const labels = Object.keys(uniqueCounts);
-        const counts = Object.values(uniqueCounts);
-        const colors = ['#369bcf', '#28a79e', '#39b449', '#8cc63e', '#e1cf23', '#f8af3e', '#f7941f'];
+                        function updateChart3() {
+                            const uniqueCounts = countUniqueStationsByType(rawData);
+                            const labels = Object.keys(uniqueCounts);
+                            const counts = Object.values(uniqueCounts);
+                            const colors = ['#369bcf', '#28a79e', '#39b449', '#8cc63e', '#e1cf23', '#f8af3e', '#f7941f'];
 
-        chart3Instance.data.labels = labels;
-        chart3Instance.data.datasets[0].data = counts;
-        chart3Instance.data.datasets[0].backgroundColor = colors.slice(0, labels.length);
-        chart3Instance.update();
-    }
+                            chart3Instance.data.labels = labels;
+                            chart3Instance.data.datasets[0].data = counts;
+                            chart3Instance.data.datasets[0].backgroundColor = colors.slice(0, labels.length);
+                            chart3Instance.update();
+                        }
 
-    const ctx3 = document.getElementById('chart3').getContext('2d');
-    chart3Instance = new Chart(ctx3, {
-        type: 'doughnut',
-        data: { labels: [], datasets: [{ label: 'Jumlah Mesin', data: [], backgroundColor: [] }] },
-        options: {
-            responsive: true,
-            plugins: { legend: { position: 'top' } },
-            scales: { y: { beginAtZero: true } },
-        },
-    });
+                        const ctx3 = document.getElementById('chart3').getContext('2d');
+                        chart3Instance = new Chart(ctx3, {
+                            type: 'doughnut',
+                            data: { labels: [], datasets: [{ label: 'Jumlah Mesin', data: [], backgroundColor: [] }] },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'top' } },
+                                scales: { y: { beginAtZero: true } },
+                            },
+                        });
 
-    updateChart3();
+                        updateChart3();
 
-    document.getElementById('provinceVal').addEventListener('change', updateChart3);
-});
+                        document.getElementById('provinceVal').addEventListener('change', updateChart3);
+                    });
 
                 </script>
 

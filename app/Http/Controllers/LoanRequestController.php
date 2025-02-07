@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LoanRequest;
 use App\Models\LoanRequestItem;
+use App\Models\ItemDetail;
 use Illuminate\Http\Request;
 use SebastianBergmann\Environment\Console;
 
@@ -223,27 +224,47 @@ class LoanRequestController extends Controller
 
     // Mengupdate permohonan peminjaman  
     public function update(Request $request, $id)
-    {
-        // Validasi input    
-        $request->validate([
-            'approval_status' => 'nullable|string',
-            'admin_id' => 'nullable|exists:users,id',
-            'approval_date' => 'nullable|date',
-            'confirmation_date' => 'date',
-            'returned_date' => 'date|string',
-        ]);
-        $loan_requests = LoanRequest::findOrFail($id);
-        $loan_requests->update([
-            'approval_status' => $request->approval_status,
-            'admin_id' => $request->admin_id,
-            'approval_date' => $request->approval_date,
-            'confirmation_date' => $request->confirmation_date,
-            'returned_date' => $request->returned_date,
-        ]);
+{
+    // Validasi input    
+    $request->validate([
+        'approval_status' => 'nullable|string',
+        'admin_id' => 'nullable|exists:users,id',
+        'approval_date' => 'nullable|date',
+        'confirmation_date' => 'date',
+        'returned_date' => 'date|string',
+    ]);
 
-        // Redirect kembali dengan pesan sukses    
-        return redirect()->back()->with('success', 'Data permohonan berhasil diperbarui.');
+    // Temukan permohonan peminjaman
+    $loan_request = LoanRequest::findOrFail($id);
+
+    // Simpan status persetujuan yang baru
+    $loan_request->update([
+        'approval_status' => $request->approval_status,
+        'admin_id' => $request->admin_id,
+        'approval_date' => $request->approval_date,
+        'confirmation_date' => $request->confirmation_date,
+        'returned_date' => $request->returned_date,
+    ]);
+
+    // Jika status diubah menjadi "rejected" atau "returned"
+    if (in_array($request->approval_status, ['rejected', 'returned'])) {
+        // Ambil semua item yang terkait dengan permohonan ini
+        $loan_request_items = LoanRequestItem::where('loan_request_id', $id)->get();
+
+        foreach ($loan_request_items as $item) {
+            // Temukan detail item
+            $itemDetail = ItemDetail::find($item->item_details_id);
+            if ($itemDetail) {
+                // Kurangi borrowed_quantity
+                $itemDetail->borrowed_quantity -= $item->quantity;
+                $itemDetail->save();
+            }
+        }
     }
+
+    return response()->json(['message' => 'Status permohonan berhasil diperbarui.']);
+}
+
 
     // Menampilkan daftar permohonan peminjaman hanya untuk user yang sedang login
     public function user_pengajuanindex(Request $request)

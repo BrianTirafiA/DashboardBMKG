@@ -94,38 +94,38 @@ class UserDashboard extends Controller
             'items.*.item_details_id' => 'required|exists:item_details,id',
             'items.*.quantity' => 'required|integer|min:1',
         ]);
-    
+
         // Mulai transaksi database
         DB::beginTransaction();
-    
+
         try {
             // Cek ketersediaan item sebelum menyimpan permohonan
             foreach ($request->items as $item) {
                 $itemDetail = ItemDetail::lockForUpdate()->find($item['item_details_id']);
-    
+
                 if (!$itemDetail) {
                     return redirect()->back()->with('error', 'Item tidak ditemukan.');
                 }
-    
+
                 // Hitung total borrowed_quantity setelah ditambah peminjaman
                 $total_borrowed = $itemDetail->borrowed_quantity + $item['quantity'];
-    
+
                 // Validasi apakah item masih tersedia
                 if ($total_borrowed > $itemDetail->jumlah_item) {
                     return redirect()->back()->with('error', "Barang '{$itemDetail->nama_item}' tidak tersedia untuk dipinjam.");
                 }
             }
-    
+
             // Simpan permohonan peminjaman
             $loanRequest = LoanRequest::create([
                 'user_id' => $request->user_id,
                 'durasi_peminjaman' => $request->durasi_peminjaman,
                 'alasan_peminjaman' => $request->alasan_peminjaman,
                 'tanggal_pengajuan' => $request->tanggal_pengajuan,
-                'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('uploads') : null,
+                'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('berkas_pendukung','public') : null,
                 'approval_status' => 'pending',
             ]);
-    
+
             // Simpan item peminjaman dan update borrowed_quantity
             foreach ($request->items as $item) {
                 LoanRequestItem::create([
@@ -133,7 +133,7 @@ class UserDashboard extends Controller
                     'item_details_id' => $item['item_details_id'],
                     'quantity' => $item['quantity'],
                 ]);
-    
+
                 // Update jumlah barang yang sedang dipinjam
                 $itemDetail = ItemDetail::lockForUpdate()->find($item['item_details_id']);
                 if ($itemDetail) {
@@ -141,10 +141,10 @@ class UserDashboard extends Controller
                     $itemDetail->save();
                 }
             }
-    
+
             // Commit transaksi jika semua berhasil
             DB::commit();
-    
+
             return redirect()->back()->with('success', 'Permohonan peminjaman berhasil ditambahkan.');
         } catch (\Exception $e) {
             // Rollback jika terjadi error
@@ -152,5 +152,80 @@ class UserDashboard extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
         }
     }
-    
+
+    public function storefromcart(Request $request)
+    {
+        // Validasi data
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'durasi_peminjaman' => 'required|integer|min:1',
+            'alasan_peminjaman' => 'required|string',
+            'tanggal_pengajuan' => 'required|date',
+            'berkas_pendukung' => 'nullable|file',
+            'items' => 'required|array',
+            'items.*.item_id' => 'required|exists:items,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        // Simpan permohonan ke dalam loan_request
+        $loanRequest = LoanRequest::create([
+            'user_id' => $request->user_id,
+            'durasi_peminjaman' => $request->durasi_peminjaman,
+            'alasan_peminjaman' => $request->alasan_peminjaman,
+            'tanggal_pengajuan' => $request->tanggal_pengajuan,
+            'berkas_pendukung' => $request->file('berkas_pendukung')->store('uploads') ?? null,
+        ]);
+
+        // Simpan item yang dipinjam ke dalam loan_request_items
+        foreach ($request->items as $item) {
+            LoanRequestItem::create([
+                'loan_request_id' => $loanRequest->id,
+                'item_id' => $item['item_id'],
+                'quantity' => $item['quantity'],
+            ]);
+        }
+
+        // Hapus session 'cart' setelah permohonan berhasil dibuat
+        session()->forget('cart');
+
+        return redirect()->route('loan.request.success')->with('success', 'Permohonan berhasil dibuat.');
+    }
+
+
+    public function addToCart(Request $request)
+    {
+        $itemId = $request->input('item_id');
+        $itemName = $request->input('item_name');
+        $cart = session()->get('cart', []);
+
+        // Jika item sudah ada di keranjang, tambahkan jumlahnya
+        if (isset($cart[$itemId])) {
+            $cart[$itemId]['quantity']++;
+        } else {
+            // Jika item belum ada, tambahkan ke keranjang
+            $cart[$itemId] = [
+                'name' => $itemName,
+                'quantity' => 1,
+                // Tambahkan data lain yang diperlukan
+            ];
+        }
+
+        session()->put('cart', $cart);
+        return redirect()->back()->with('success', 'Item added to cart!');
+    }
+
+
+    public function removeCart($id)
+    {
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+
 }

@@ -70,7 +70,7 @@
                     <div>
                         <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Data Type:</label>
                         <select id="flagVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="all">All Data Reading</option>
+                            <option value="overall_value">All Data Reading</option>
                             @foreach($dropdownOptions['flags'] as $flag)
                                 <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
                             @endforeach
@@ -122,6 +122,15 @@
                     </div>
                 </div>
                 <script>
+                    function captureChartAsImage(canvasId) {
+                        const canvas = document.getElementById(canvasId);
+                        if (!canvas) {
+                            console.error("Chart canvas not found:", canvasId);
+                            return null;
+                        }
+                        return canvas.toDataURL('image/png'); // Convert the chart to a base64 image
+                    }
+
                     function getParameterByName(name, url = window.location.href) {
                         name = name.replace(/[\[\]]/g, '\\$&');
                         const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
@@ -131,10 +140,55 @@
                         return decodeURIComponent(results[2].replace(/\+/g, ' '));
                     }
 
+                    function getSelectedFlag() {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get('selected_flag') || 'overall_value'; // Default to 'overall_value' if not found
+                    }
+
+                    function updateQueryStringParameter(key, value) {
+                        let url = new URL(window.location.href);
+                        if (value === null || value === '' || value === 'all') {
+                            url.searchParams.delete(key);
+                        } else {
+                            url.searchParams.set(key, value);
+                        }
+                        window.history.replaceState(null, '', url);
+                    }
+
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const flagSelect = document.getElementById('flagVal');
+                        const typeSelect = document.getElementById('TypeVal');
+                        const provinceSelect = document.getElementById('provinceVal');
+
+                        // Get values from the URL or set default
+                        const urlSelectedFlag = getParameterByName('selected_flag') || 'overall_value';
+                        const urlSelectedType = getParameterByName('type') || 'all';
+                        const urlSelectedProvince = getParameterByName('province') || 'all';
+
+                        // Set dropdown values based on the URL
+                        flagSelect.value = urlSelectedFlag;
+                        typeSelect.value = urlSelectedType;
+                        provinceSelect.value = urlSelectedProvince;
+
+                        // Update the URL when a selection changes
+                        flagSelect.addEventListener('change', (event) => {
+                            updateQueryStringParameter('selected_flag', event.target.value);
+                        });
+
+                        typeSelect.addEventListener('change', (event) => {
+                            updateQueryStringParameter('type', event.target.value);
+                        });
+
+                        provinceSelect.addEventListener('change', (event) => {
+                            updateQueryStringParameter('province', event.target.value);
+                        });
+                    });
+
                     function downloadStationReport(stationName) {
                         // Fetch start_date and end_date from the URL
                         let startDate = getParameterByName('start_date');
                         let endDate = getParameterByName('end_date');
+                        let selectedFlag = getSelectedFlag();
 
                         // Fallback to defaults if dates are not present in the URL
                         if (!startDate || !endDate) {
@@ -146,10 +200,15 @@
                             endDate = today.toISOString().split('T')[0];
                         }
 
-                        // Build the URL with proper date parameters
-                        const url = `/station/download-pdf?station_name=${encodeURIComponent(stationName)}&start_date=${startDate}&end_date=${endDate}`;
+                        // Capture the chart image
+                        const chartImage = captureChartAsImage(`chart-${stationName.replace(/\s+/g, '-')}`);
+
+                        // Build the URL with date parameters & chart image
+                        const url = `/station/download-pdf?station_name=${encodeURIComponent(stationName)}&start_date=${startDate}&end_date=${endDate}&selected_flag=${encodeURIComponent(selectedFlag)}&chart_image=${encodeURIComponent(chartImage || '')}`;
+
                         window.open(url, '_blank');
                     }
+
 
                     document.addEventListener('DOMContentLoaded', () => {
 
@@ -251,7 +310,7 @@
             <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
             <br>
             <button class="download-btn" 
-                onclick="downloadStationReport('${station.name_station}', '${station.date_range}','${selectedFlag}')">
+                onclick="downloadStationReport('${station.name_station}')">
                 Download Report
             </button>
         `)

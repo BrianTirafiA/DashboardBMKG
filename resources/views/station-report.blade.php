@@ -9,17 +9,37 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
         }
 
         .header {
+        margin-bottom: 20px;
+        background-color: #f0f0f0;
+        padding: 20px;
+        border-bottom: 2px solid #000;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: none;
+        }
+
+        .header-table td {
+            vertical-align: middle;
+            padding: 10px;
+            border-collapse: collapse;
+            border: none;
+        }
+
+        .logo-container {
+            width: 80px;
             text-align: center;
-            margin-bottom: 20px;
         }
 
         .logo {
-            width: 100px;
-            height: auto;
+            width: 70px;
+            text-align: center;
         }
 
         table {
@@ -48,23 +68,22 @@
         }
 
         .header-info {
-            text-align: center;
-            margin-bottom: 20px;
+            text-align: left;
         }
 
         .header-info h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 19px;
         }
 
         .header-info h2 {
-            margin: 0;
-            font-size: 18px;
+            margin: 5px 0;
+            font-size: 12px;
         }
 
         .header-info h3 {
-            margin: 0;
-            font-size: 16px;
+            margin: 5px 0;
+            font-size: 12px;
         }
 
         /* Hide top and bottom borders if the table is empty */
@@ -77,12 +96,20 @@
 
 <body>
     <div class="header">
-        <img src="/public/assets/logo-bmkg.png" alt="BMKG Logo" class="logo">
-        <div class="header-info">
-            <h1>Badan Meteorologi, Klimatologi, dan Geofisika</h1>
-            <h2>Jl. Angkasa I No.2, Kemayoran, Jakarta 10720</h2>
-            <h3>Email: info@bmkg.go.id | Website: www.bmkg.go.id</h3>
-        </div>
+        <table class="header-table">
+            <tr>
+                <td class="logo-container">
+                    <img src="/public/assets/logo-bmkg.png" alt="Logo BMKG" class="logo">
+                </td>
+                <td class="header-info">
+                    <h1>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h1>
+                    <h2 style="font-weight: bold;">DIREKTORAT DATA DAN KOMPUTASI</h2>
+                    <h3>Jl. Angkasa I No. 2, Jakarta 10610 Telp: (021) 4246321 Fax: (021) 4246703</h3>
+                    <h3>P.O. BOX 3540 JKT, Website: <a href="http://www.bmkg.go.id">www.bmkg.go.id</a> Email: <a
+                    href="pusatdatabase@bmkg.go.id">pusatdatabase@bmkg.go.id</a></h3>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <h2><strong>{{ $stationName }}</strong></h2>
@@ -148,125 +175,44 @@
     </table>
 
     <div class="chart-container">
-        <h3>Chart: Station Data</h3>
-        <canvas id="chart"></canvas>
+        <h3>Chart: Data {{ $stationName }}</h3>
+        <img src="{{ $chartImage }}" alt="Chart Image" style="width: 100%; max-width: 800px;">
     </div>
 
     <h3 class="table-title">Detail Persentase Chart</h3>
     <table id="chart-table">
         <thead>
             <tr>
-                <th>Kategori</th>
                 <th>Tanggal (Hari/Bulan/Tahun)</th>
-                <th>Presentase</th>
+                <th style="background-color: #006d7e; font-weight: bold; text-align: center;">Valid</th>
+                <th style="background-color: #f7c92e; text-align: center;">Invalid</th>
+                <th style="background-color: #b12629; text-align: center;">Missing</th>
             </tr>
         </thead>
         <tbody>
-            {{-- Valid Data --}}
-            @foreach ($validData as $date => $value)
-                <tr>
-                    @if ($loop->first)
-                        <td style="background-color: #006d7e; font-weight: bold;">Valid</td>
-                    @else
-                        <td style="background-color: #006d7e;"></td>
-                    @endif
-                    <td>{{ $date }}</td>
-                    <td>{{ $value }}%</td>
-                </tr>
-            @endforeach
+    @foreach ($validData as $date => $value)
+    <tr>
+        {{-- Date Column --}}
+        <td>{{ $date }}</td>
 
-            {{-- Invalid Data --}}
-            @foreach ($invalidData as $date => $flags)
-                <tr>
-                        @if ($loop->first)
-                            <td style="background-color: #f7c92e; font-weight: bold;">Invalid</td>
-                        @else
-                            <td style="background-color: #f7c92e;"></td>
-                        @endif
-                    <td>{{ $date }}</td>
-                    <td>{{ array_sum($flags) }}%</td>
-                </tr>
-            @endforeach
+        {{-- Valid Data --}}
+        <td>
+            {{ $value }}%
+        </td>
 
-            {{-- Missing Data --}}
-            @foreach ($missingData as $date => $value)
-                <tr>
-                    @if ($loop->first)
-                        <td style="background-color: #b12629; font-weight: bold;">Missing</td>
-                    @else
-                        <td style="background-color: #b12629;"></td>
-                    @endif
-                    <td>{{ $date }}</td>
-                    <td>{{ $value }}%</td>
-                </tr>
-            @endforeach
-        </tbody>
+        {{-- Invalid Data --}}
+        <td>
+            {{ isset($invalidData[$date]) ? array_sum($invalidData[$date]) : '0' }}%
+        </td>
+
+        {{-- Missing Data --}}
+        <td>
+            {{ $missingData[$date] ?? '0' }}%
+        </td>
+    </tr>
+    @endforeach
+</tbody>
     </table>
-
-    <script>
-        // Function to check if a table is empty and hide top/bottom borders
-        function checkTableEmpty(tableId) {
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector('tbody');
-            if (tbody.children.length === 0) {
-                table.classList.add('empty-table');
-            } else {
-                table.classList.remove('empty-table');
-            }
-        }
-
-        // Check tables on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            checkTableEmpty('flagging-table');
-            checkTableEmpty('chart-table');
-        });
-
-        // Chart initialization
-        const chartData = @json($chartData);
-
-        const ctx = document.getElementById('chart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: chartData.dates,
-                datasets: [
-                    {
-                        label: 'Valid',
-                        data: chartData.valid,
-                        backgroundColor: '#006d7e'
-                    },
-                    {
-                        label: 'Invalid',
-                        data: chartData.invalid,
-                        backgroundColor: '#f7c830'
-                    },
-                    {
-                        label: 'Missing',
-                        data: chartData.missing,
-                        backgroundColor: '#b12629'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        max: 100
-                    },
-                    x: {
-                        stacked: true
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 
 </html>

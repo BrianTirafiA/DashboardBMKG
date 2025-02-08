@@ -57,6 +57,8 @@ class StationFlagController extends Controller
         $stationName = $request->input('station_name');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $selectedFlag = $request->input('selected_flag', 'overall_value');
+        $chartImage = $request->input('chart_image');
     
         // Validate input parameters
         if (!$stationName || !$startDate || !$endDate) {
@@ -80,42 +82,29 @@ class StationFlagController extends Controller
         $missingData = [];
     
         foreach ($stations as $station) {
-            // Calculate the total percentage
-            $total = $station->overall_value_0_percent +
-                     $station->overall_value_1_percent +
-                     $station->overall_value_2_percent +
-                     $station->overall_value_3_percent +
-                     $station->overall_value_4_percent +
-                     $station->overall_value_5_percent +
-                     $station->overall_value_6_percent +
-                     $station->overall_value_7_percent +
-                     $station->overall_value_8_percent +
-                     $station->overall_value_9_percent;
+            // Dynamically fetch the valid column based on selectedFlag
+            $validColumn = "{$selectedFlag}_0_percent";
     
-            // Check if total is greater than zero to avoid division by zero
+            // Dynamically fetch invalid flags 1 to 7
+            $invalidFlags = [];
+            for ($i = 1; $i <= 7; $i++) {
+                $invalidFlags["Flag $i"] = $station->{"{$selectedFlag}_{$i}_percent"} ?? 0;
+            }
+    
+            // Fetch the missing data column
+            $missingColumn = "{$selectedFlag}_9_percent";
+    
+            // Calculate the total sum to normalize percentages
+            $total = $station->$validColumn + array_sum($invalidFlags) + $station->$missingColumn;
+    
+            // Ensure total is greater than zero to avoid division by zero
             if ($total > 0) {
-                $validData[$station->date_only] = ($station->overall_value_0_percent / $total) * 100;
-                $invalidData[$station->date_only] = [
-                    'Flag 1' => ($station->overall_value_1_percent / $total) * 100,
-                    'Flag 2' => ($station->overall_value_2_percent / $total) * 100,
-                    'Flag 3' => ($station->overall_value_3_percent / $total) * 100,
-                    'Flag 4' => ($station->overall_value_4_percent / $total) * 100,
-                    'Flag 5' => ($station->overall_value_5_percent / $total) * 100,
-                    'Flag 6' => ($station->overall_value_6_percent / $total) * 100,
-                    'Flag 7' => ($station->overall_value_7_percent / $total) * 100,
-                ];
-                $missingData[$station->date_only] = ($station->overall_value_9_percent / $total) * 100;
+                $validData[$station->date_only] = ($station->$validColumn / $total) * 100;
+                $invalidData[$station->date_only] = array_map(fn ($value) => ($value / $total) * 100, $invalidFlags);
+                $missingData[$station->date_only] = ($station->$missingColumn / $total) * 100;
             } else {
                 $validData[$station->date_only] = 0;
-                $invalidData[$station->date_only] = [
-                    'Flag 1' => 0,
-                    'Flag 2' => 0,
-                    'Flag 3' => 0,
-                    'Flag 4' => 0,
-                    'Flag 5' => 0,
-                    'Flag 6' => 0,
-                    'Flag 7' => 0,
-                ];
+                $invalidData[$station->date_only] = array_map(fn ($value) => 0, $invalidFlags);
                 $missingData[$station->date_only] = 0;
             }
         }
@@ -137,6 +126,7 @@ class StationFlagController extends Controller
             'invalidData' => $invalidData,
             'missingData' => $missingData,
             'chartData' => $chartData,
+            'chartImage' => $chartImage,
         ]);
     
         // Return the PDF for download

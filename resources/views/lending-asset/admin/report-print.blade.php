@@ -163,26 +163,26 @@
                             <table class="detail-table">
                                 <tr>
                                     <td>Nama Peminjam</td>
-                                    <td>{{ $request->user->fullname }}</td>
+                                    <td>{{ $request->user->fullname ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Durasi Peminjaman</td>
-                                    <td>{{ $request->durasi_peminjaman }} Hari</td>
+                                    <td>{{ $request->durasi_peminjaman ?? 'N/A'}} Hari</td>
                                 </tr>
                                 <tr>
                                     <td>Admin Penerima</td>
-                                    <td>{{ $request->admin->fullname }}</td>
+                                    <td>{{ $request->admin->fullname ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Status</td>
-                                    <td>{{ $request->approval_status }}</td>
+                                    <td>{{ $request->approval_status ?? 'N/A' }}</td>
                                 </tr>
                             </table>
                         </td>
                         <td>
                             <ul>
                                 @foreach ($request->items as $item)
-                                    <li>{{ $item->itemDetail->nama_item }} ({{ $item->quantity }})</li>
+                                    <li>{{ $item->itemDetail->nama_item ?? 'N/A' }} ({{ $item->quantity ?? 'N/A' }})</li>
                                 @endforeach
                             </ul>
                         </td>

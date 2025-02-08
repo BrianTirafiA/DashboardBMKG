@@ -1,14 +1,29 @@
 <x-user-layout-template>
     <div class="mt-1 flex flex-wrap gap-4">
         <div class="flex-row">
-            <div class="mb-3">
-                <h5 class="block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900">
-                    Daftar Barang / Lisensi yang dapat diajukan peminjaman
-                </h5>
-                <p class="block  font-sans text-base font-normal leading-relaxed text-gray-700">
-                    Masukkan keranjang untuk pengajuan beberapa item sekaligus (Keranjang hanya bersifat sementara)
-                </p>
+            <div class="flex justify-between">
+                <div class="mb-3">
+                    <h5 class="block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900">
+                        Daftar Barang / Lisensi yang dapat diajukan peminjaman
+                    </h5>
+                    <p class="block  font-sans text-base font-normal leading-relaxed text-gray-700">
+                        Masukkan keranjang untuk pengajuan beberapa item sekaligus (Keranjang hanya bersifat sementara)
+                    </p>
+                </div>
+
+                <div class="me-1">
+                    <button id="LihatCart" onclick="openCartModal()"
+                        class="block bg-[#F1F5F9] w-full flex gap-2 select-none rounded-lg bg-blue-gray-900/10 p-3 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all border border-gray-300 hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-bag-heart-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
+                        </svg>
+                        Lihat Keranjang
+                    </button>
+                </div>
             </div>
+
             <div class="flex gap-5">
                 <!-- Search Form -->
                 <div class="w-[39rem]">
@@ -147,7 +162,7 @@
                                     $isInactive = ($item->jumlah_item - $item->borrowed_quantity <= 0 || $item->status->name_status !== 'Available');
                                 @endphp
                                 <div id="carditem"
-                                    class="flex-shrink-0 w-[18rem] min-w-[18rem] flex flex-col rounded-xl shadow-md shadow-blue-gray-900 border border-blue-gray-100 border-collapse bg-clip-border {{ $isInactive ? 'opacity-50 bg-gray-100 pointer-events-none' : '' }}">
+                                    class="flex-shrink-0 w-[18rem] min-w-[18rem] flex flex-col rounded-xl shadow-md shadow-blue-gray-900 border border-blue-gray-100 border-collapse bg-clip-border {{ $isInactive ? 'opacity-50 bg-gray-100 border-gray-500 pointer-events-none' : '' }}">
                                     <div
                                         class="relative mx-4 mt-4 h-64 overflow-hidden rounded-xl bg-white bg-clip-border border border-gray-300 text-gray-700 {{ $isInactive ? 'border-gray-500' : '' }}">
                                         <!-- Image Display -->
@@ -193,7 +208,8 @@
                                             {{ $item->description ?? "-"}}
                                         </p>
 
-                                        <div class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 {{ $isInactive ? 'border-gray-500' : '' }}">
+                                        <div
+                                            class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 {{ $isInactive ? 'border-gray-500' : '' }}">
                                             <div class="flex justify-between">
                                                 <p class="block font-sans text-sm leading-relaxed b text-blue-gray-900 antialiased">
                                                     Brand
@@ -215,7 +231,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 {{ $isInactive ? 'border-gray-500' : '' }}">
+                                        <div
+                                            class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 {{ $isInactive ? 'border-gray-500' : '' }}">
                                             <div class="flex justify-between">
                                                 <p class="block font-sans text-sm leading-relaxed b text-blue-gray-900 antialiased">
                                                     Status
@@ -237,7 +254,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="flex-row border border-gray-30 w-full p-3 rounded-xl justify-between mb-3 {{ $isInactive ? 'border-gray-500' : '' }}">
+                                        <div
+                                            class="flex-row border border-gray-30 w-full p-3 rounded-xl justify-between mb-3 {{ $isInactive ? 'border-gray-500' : '' }} ">
 
 
                                             <div class="mb-2 flex items-center gap-5">
@@ -270,7 +288,7 @@
                                     </div>
                                     <div class="p-5 -mt-10 flex gap-3">
                                         <button id="Ajukan"
-                                            class="block w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all border border-gray-300 hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                            class="block w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all border border-gray-300 hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none {{ $isInactive ? 'border-gray-500' : '' }}"
                                             type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->nama_item }}"
                                             data-item-type="{{ $item->type_item ?? "N/A"}}"
                                             data-item-brand="{{ $item->brand->name_brand ?? "N/A" }}"
@@ -281,14 +299,22 @@
                                             onclick="openModal(this)">
                                             Ajukan Peminjaman
                                         </button>
-                                        <button id="cart"
-                                            class="block w-1/5 select-none rounded-lg bg-blue-gray-900/10 transition-all border border-gray-300 hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                class="bi bi-bag-heart-fill ms-3 me-3" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
-                                            </svg>
-                                        </button>
+                                        <form action="{{ route('cart.add') }}" method="POST"
+                                            class="py-3 border border-gray-300 rounded-lg bg-blue-gray-900/10 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none {{ $isInactive ? 'border-gray-500' : '' }}">
+                                            @csrf
+                                            <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                            <input type="hidden" name="item_name" value="{{ $item->nama_item }}">
+                                            <!-- Input tersembunyi untuk item_name -->
+                                            <button type="submit" class="block w-1/5 select-none ">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                    class="bi bi-bag-heart-fill ms-3 me-3" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
+                                                </svg>
+                                            </button>
+                                        </form>
+
+
                                     </div>
                                 </div>
                 @endforeach
@@ -301,11 +327,11 @@
         // JavaScript to handle image switching
         const itemImages = {
             @foreach ($item_details as $item)
-                                                                    '{{ $item->id }}': [
+                                                                                                                        '{{ $item->id }}': [
                     @foreach ([$item->image1_url, $item->image2_url, $item->image3_url, $item->image4_url] as $image)
-                                                                                                                    @if ($image)
-                                                                                                                        '{{ $image }}',
-                                                                                                                    @endif
+                                                                                                                                                                                                                            @if ($image)
+                                                                                                                                                                                                                                '{{ $image }}',
+                                                                                                                                                                                                                            @endif
                     @endforeach
                 ],
             @endforeach };
@@ -408,7 +434,6 @@
         </div>
     </div>
 
-
     <script>
         function openModal(button) {
             // Ambil data dari atribut data
@@ -463,7 +488,116 @@
         }
     </script>
 
+    <!-- Modal Keranjang -->
+    <div id="cartModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50" >
+        <div class="bg-white rounded-lg p-5 w-2/3">
+            <h2 class="text-lg text-center text-red-500 font-bold mb-4">Keranjang Peminjaman (Fitur Ini Belum Tersedia Saat Ini)</h2>
+
+            <!-- Daftar Item dalam Keranjang -->
+            <div id="cartItems">
+                <table class="w-full border-collapse border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border p-2">Nama Item</th>
+                            <th class="border p-2">Jumlah</th>
+                            <th class="border p-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartItemList">
+                        <!-- Data keranjang akan di-load melalui JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Form Permohonan Peminjaman -->
+            <form id="loanForm" action="{{ route('storefromcart') }}" method="POST" enctype="multipart/form-data" class="opacity-50 bg-gray-100 border-gray-500 pointer-events-none rounded-xl p-3 mt-2">
+                @csrf
+                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                <input type="hidden" name="tanggal_pengajuan" value="{{ now()->format('Y-m-d') }}">
+
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold">Durasi Peminjaman (hari)</label>
+                    <input type="number" name="durasi_peminjaman" class="w-full border rounded p-2" required min="1">
+                </div>
+
+                <div class="mt-2">
+                    <label class="block text-sm font-semibold">Alasan Peminjaman</label>
+                    <textarea name="alasan_peminjaman" class="w-full border rounded p-2" required></textarea>
+                </div>
+
+                <div class="mt-2">
+                    <label class="block text-sm font-semibold">Berkas Pendukung (Opsional)</label>
+                    <input type="file" name="berkas_pendukung" class="w-full border rounded p-2">
+                </div>
+
+                <input type="hidden" name="items" id="cartItemsInput">
+
+                <!-- Tombol Submit -->
+                <div class="mt-4 flex justify-between">
+                    
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Buat Permohonan</button>
+                </div>
+            </form>
+
+            <button type="button" onclick="closeCartModal()" class="bg-red-500 text-white px-4 py-2 rounded-xl mt-2">Tutup</button>
+        </div>
+    </div>
 
 
+    <!-- JavaScript untuk Menampilkan & Memproses Keranjang -->
+    <script>
+        function openCartModal() {
+            document.getElementById('cartModal').classList.remove('hidden');
+            loadCartItems(); // Memuat item keranjang
+
+            // Tambahkan console log untuk memeriksa saat modal dibuka
+            console.log("Modal Keranjang Dibuka");
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            loadCartItems();
+        });
+
+        // Fungsi untuk Memuat Item dari Keranjang
+        function loadCartItems() {
+            const cartItems = @json(session('cart', [])); // Mengambil data dari session
+
+            const cartItemList = document.getElementById('cartItemList');
+            cartItemList.innerHTML = ''; // Kosongkan daftar item
+
+            // Loop melalui item di keranjang dan tambahkan ke tabel
+            for (const [itemId, item] of Object.entries(cartItems)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td class="border p-2">${item.name}</td>
+            <td class="border p-2">${item.quantity}</td>
+            <td class="border p-2">
+            <button onclick="removeFromCart('${itemId}')" class="text-red-500">Hapus</button>
+            </td>
+        `;
+                cartItemList.appendChild(row);
+            }
+        }
+
+        // Fungsi untuk Menghapus Item dari Keranjang
+        function removeFromCart(itemId) {
+            fetch(`/cart/remove/${itemId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCartItems(); // Muat ulang item keranjang
+                    }
+                });
+        }
+
+        // Fungsi untuk Menutup Modal
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.add('hidden'); // Sembunyikan modal
+        }
+    </script>
 
 </x-user-layout-template>

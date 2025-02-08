@@ -59,18 +59,18 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     Route::prefix('lendasset')->group(function () {
         Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');
-        Route::view('/report',  LaporanController::class,);
+        Route::view('/report', LaporanController::class, );
         Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
         Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
-        Route::resource('/transaksi-pengajuan', LoanRequestController::class,);
+        Route::resource('/transaksi-pengajuan', LoanRequestController::class, );
         Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');
-        Route::resource('/transaksi-proses', LoanRequestController::class,);
+        Route::resource('/transaksi-proses', LoanRequestController::class, );
         Route::get('/transaksi-proses', [LoanRequestController::class, 'onprocessindex'])->name('proses.index');
-        Route::view('/transaksi-pengembalian',  LoanRequestController::class,);
+        Route::view('/transaksi-pengembalian', LoanRequestController::class, );
         Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
-        Route::view('/transaksi-dibatalkan',  LoanRequestController::class,);
+        Route::view('/transaksi-dibatalkan', LoanRequestController::class, );
         Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
-        
+
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
         Route::resource('/brand', ItemBrandController::class);
@@ -93,14 +93,19 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {
     Route::resource('/dashboard', UserDashboard::class);
     Route::get('/dashboard', [UserDashboard::class, 'itemindex'])->name('item.index');
+    Route::post('/dashboard/addcart', [UserDashboard::class, 'addToCart'])->name('cart.add');
+    Route::get('/dashboard/get', [UserDashboard::class, 'getCart'])->name('cart.get');
+    Route::post('/dashboard/update', [UserDashboard::class, 'updateCart'])->name('cart.update');
+    Route::post('/dashboard/remove', [UserDashboard::class, 'removeCart'])->name('cart.remove');
+    Route::post('/dashboard/addrequest', [UserDashboard::class, 'storefromcart'])->name('storefromcart');
     Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);
-    Route::resource('/pengajuan', LoanRequestController::class,);
+    Route::resource('/pengajuan', LoanRequestController::class, );
     Route::get('/pengajuan', [LoanRequestController::class, 'user_pengajuanindex'])->name('user_pengajuanindex');
-    Route::resource('/proses', LoanRequestController::class,);
+    Route::resource('/proses', LoanRequestController::class, );
     Route::get('/proses', [LoanRequestController::class, 'user_prosesindex'])->name('user_prosesindex');
-    Route::resource('/pengembalian', LoanRequestController::class,);
+    Route::resource('/pengembalian', LoanRequestController::class, );
     Route::get('/pengembalian', [LoanRequestController::class, 'user_pengembalianindex'])->name('user_pengembalianindex');
-    Route::resource('/riwayat', LoanRequestController::class,);
+    Route::resource('/riwayat', LoanRequestController::class, );
     Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
 
 });

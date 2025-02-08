@@ -56,7 +56,7 @@ class LaporanController extends Controller
     }
 
     // Mengambil data dengan pagination
-    $loan_requests = $loan_requests->paginate(10);
+    $loan_requests = $loan_requests->paginate(9);
 
     // Menangani jika tidak ada data yang ditemukan  
     if ($loan_requests->isEmpty()) {

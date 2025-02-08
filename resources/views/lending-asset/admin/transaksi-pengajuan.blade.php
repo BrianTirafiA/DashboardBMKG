@@ -247,6 +247,13 @@
                 <input type="hidden" name="admin_id" value="{{ session('id') }}">
                 <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
 
+                <div class="mb-4">
+                    <label for="note" class="block text-sm font-medium text-gray-700">Pesan Penolakan</label>
+                    <textarea id="note" name="note" required
+                        class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                        rows="3" placeholder="Masukkan Pesan Konfirmasi"></textarea>
+                </div>
+
                 <div class="flex justify-end mt-4">
                     <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
                         onclick="closeRejectModal()">Batal</button>

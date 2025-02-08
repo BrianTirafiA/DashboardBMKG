@@ -7,6 +7,8 @@ use App\Models\LoanRequestItem;
 use App\Models\ItemDetail;
 use Illuminate\Http\Request;
 use SebastianBergmann\Environment\Console;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailSend;
 
 class LoanRequestController extends Controller
 {
@@ -33,7 +35,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -69,7 +71,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -104,7 +106,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -139,7 +141,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -173,7 +175,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -224,47 +226,85 @@ class LoanRequestController extends Controller
 
     // Mengupdate permohonan peminjaman  
     public function update(Request $request, $id)
-{
-    // Validasi input    
-    $request->validate([
-        'approval_status' => 'nullable|string',
-        'admin_id' => 'nullable|exists:users,id',
-        'approval_date' => 'nullable|date',
-        'confirmation_date' => 'date',
-        'returned_date' => 'date|string',
-    ]);
+    {
+        // Validasi input    
+        $request->validate([
+            'approval_status' => 'nullable|string',
+            'admin_id' => 'nullable|exists:users,id',
+            'approval_date' => 'nullable|date',
+            'confirmation_date' => 'nullable|date',
+            'returned_date' => 'nullable|date|string',
+            'note' => 'nullable|string',
+        ]);
 
-    // Temukan permohonan peminjaman
-    $loan_request = LoanRequest::findOrFail($id);
+        // Temukan permohonan peminjaman
+        $loan_request = LoanRequest::findOrFail($id);
 
-    // Simpan status persetujuan yang baru
-    $loan_request->update([
-        'approval_status' => $request->approval_status,
-        'admin_id' => $request->admin_id,
-        'approval_date' => $request->approval_date,
-        'confirmation_date' => $request->confirmation_date,
-        'returned_date' => $request->returned_date,
-    ]);
+        // Array of fields to update
+        $fieldsToUpdate = [];
 
-    // Jika status diubah menjadi "rejected" atau "returned"
-    if (in_array($request->approval_status, ['rejected', 'returned'])) {
-        // Ambil semua item yang terkait dengan permohonan ini
-        $loan_request_items = LoanRequestItem::where('loan_request_id', $id)->get();
+        // Check each field and add to the update array if present in the request
+        if ($request->has('approval_status')) {
+            $fieldsToUpdate['approval_status'] = $request->approval_status;
+        }
+        if ($request->has('admin_id')) {
+            $fieldsToUpdate['admin_id'] = $request->admin_id;
+        }
+        if ($request->has('approval_date')) {
+            $fieldsToUpdate['approval_date'] = $request->approval_date;
+        }
+        if ($request->has('confirmation_date')) {
+            $fieldsToUpdate['confirmation_date'] = $request->confirmation_date;
+        }
+        if ($request->has('returned_date')) {
+            $fieldsToUpdate['returned_date'] = $request->returned_date;
+        }
+        if ($request->has('note')) {
+            $fieldsToUpdate['note'] = $request->note;
+        }
 
-        foreach ($loan_request_items as $item) {
-            // Temukan detail item
-            $itemDetail = ItemDetail::find($item->item_details_id);
-            if ($itemDetail) {
-                // Kurangi borrowed_quantity
-                $itemDetail->borrowed_quantity -= $item->quantity;
-                $itemDetail->save();
+        // Simpan status persetujuan yang baru
+        $loan_request->update($fieldsToUpdate);
+
+        // Kirim email setelah pembaruan
+        $this->kirimEmail($loan_request);
+
+        // Jika status diubah menjadi "rejected" atau "returned"
+        if (in_array($request->approval_status, ['rejected', 'returned'])) {
+            // Ambil semua item yang terkait dengan permohonan ini
+            $loan_request_items = LoanRequestItem::where('loan_request_id', $id)->get();
+
+            foreach ($loan_request_items as $item) {
+                // Temukan detail item
+                $itemDetail = ItemDetail::find($item->item_details_id);
+                if ($itemDetail) {
+                    // Kurangi borrowed_quantity
+                    $itemDetail->borrowed_quantity -= $item->quantity;
+                    $itemDetail->save();
+                }
             }
         }
+
+        return redirect()->back();
     }
 
-    return response()->json(['message' => 'Status permohonan berhasil diperbarui.']);
-}
+    private function kirimEmail($loan_request)
+    {
+        $details = [
+            'fullname' => $loan_request->user->fullname, // Pastikan relasi user ada
+            'email' => $loan_request->user->email, // Pastikan relasi user ada
+            'email_admin' => $loan_request->admin->email, // Pastikan relasi user ada
+            'fullname_admin' => $loan_request->admin->fullname, // Pastikan relasi user ada
+            'nip_admin' => $loan_request->admin->nip, // Pastikan relasi user ada
+            'approval_status' => $loan_request->approval_status,
+            'note' => $loan_request->note,
+            'templateview' => 'lending-asset.admin.email-print',
+        ]; 
 
+        Mail::to($details['email'])->send(new MailSend($details));
+
+        // Anda bisa menambahkan logika tambahan jika diperlukan
+    }
 
     // Menampilkan daftar permohonan peminjaman hanya untuk user yang sedang login
     public function user_pengajuanindex(Request $request)
@@ -293,7 +333,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan
 
         // Menangani jika tidak ada data yang ditemukan
         if ($loan_requests->isEmpty()) {
@@ -334,7 +374,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -372,7 +412,7 @@ class LoanRequestController extends Controller
                     });
                 });
             })
-            ->paginate(10); // Atur jumlah data per halaman sesuai kebutuhan      
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
@@ -394,27 +434,27 @@ class LoanRequestController extends Controller
             ->where('user_id', $userId) // Filter berdasarkan user yang sedang login    
             ->when($request->search, function ($query) use ($request) {
                 $searchTerm = $request->search;
-    
+
                 // Mengubah search term menjadi lowercase    
                 $searchTermLower = strtolower($searchTerm);
-    
+
                 // Mencari berdasarkan nama pengguna, alasan peminjaman, dan item      
                 $query->whereHas('user', function ($q) use ($searchTermLower) {
                     $q->whereRaw('LOWER(fullname) LIKE ?', ['%' . $searchTermLower . '%']);
                 })
-                ->orWhereRaw('LOWER(alasan_peminjaman) LIKE ?', ['%' . $searchTermLower . '%'])
-                ->orWhereHas('items', function ($q) use ($searchTermLower) {
+                    ->orWhereRaw('LOWER(alasan_peminjaman) LIKE ?', ['%' . $searchTermLower . '%'])
+                    ->orWhereHas('items', function ($q) use ($searchTermLower) {
                     $q->whereHas('itemDetail', function ($subQuery) use ($searchTermLower) {
                         $subQuery->whereRaw('LOWER(nama_item) LIKE ?', ['%' . $searchTermLower . '%']);
                     });
                 });
             });
-    
+
         // Memfilter berdasarkan periode
         if ($request->has('periode') && $request->periode != '') {
             $periode = $request->periode;
             $now = now();
-    
+
             switch ($periode) {
                 case 'sepekan':
                     $loan_requests->where('tanggal_pengajuan', '>=', $now->subWeek());
@@ -433,10 +473,10 @@ class LoanRequestController extends Controller
                     break;
             }
         }
-    
+
         // Mengambil data dengan pagination
         $loan_requests = $loan_requests->paginate(10);
-    
+
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {
             return view('lending-asset.user.user-riwayat', [
@@ -444,7 +484,7 @@ class LoanRequestController extends Controller
                 'message' => 'Tidak ada permohonan yang ditemukan.' // Pesan untuk ditampilkan di tampilan  
             ]);
         }
-    
+
         return view('lending-asset.user.user-riwayat', compact('loan_requests'));
     }
 

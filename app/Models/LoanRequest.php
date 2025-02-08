@@ -22,6 +22,8 @@ class LoanRequest extends Model
         'admin_id',    
         'approval_date',    
         'returned_date',  
+        'confirmation_date',
+        'note',
     ];    
     
     // Relasi dengan model User untuk pengguna yang mengajukan pinjaman  

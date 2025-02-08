@@ -133,5 +133,83 @@ class StationFlagController extends Controller
         return $pdf->download("Station_Report_{$stationName}.pdf");
     }
 
-
+    public function downloadAllStationsPdf(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $selectedFlag = $request->input('selected_flag', 'overall_value');
+        $type = $request->input('type', 'all');
+        $province = $request->input('province', 'all');
+    
+        // Validate date range
+        if (!$startDate || !$endDate) {
+            return response()->json(['error' => 'Please provide start_date and end_date.'], 400);
+        }
+    
+        // Fetch all stations based on filters
+        $stations = Station::when($province !== 'all', function ($query) use ($province) {
+                return $query->where('nama_propinsi', $province);
+            })
+            ->when($type !== 'all', function ($query) use ($type) {
+                return $query->where('tipe_station', $type);
+            })
+            ->whereBetween('date_only', [$startDate, $endDate])
+            ->orderBy('name_station')
+            ->orderBy('date_only', 'ASC')
+            ->get();
+    
+        // Check if any stations exist
+        if ($stations->isEmpty()) {
+            return response()->json(['error' => 'No data found for the given filters.'], 404);
+        }
+    
+        // Group data by station
+        $groupedStations = $stations->groupBy('name_station');
+    
+        $reportData = [];
+    
+        foreach ($groupedStations as $stationName => $stationData) {
+            $validData = [];
+            $invalidData = [];
+            $missingData = [];
+    
+            foreach ($stationData as $station) {
+                // Fetch valid, invalid, and missing percentages
+                $validColumn = "{$selectedFlag}_0_percent";
+                $invalidFlags = [];
+                for ($i = 1; $i <= 7; $i++) {
+                    $invalidFlags["Flag $i"] = $station->{"{$selectedFlag}_{$i}_percent"} ?? 0;
+                }
+                $missingColumn = "{$selectedFlag}_9_percent";
+    
+                // Calculate total
+                $total = $station->$validColumn + array_sum($invalidFlags) + $station->$missingColumn;
+    
+                if ($total > 0) {
+                    $validData[$station->date_only] = ($station->$validColumn / $total) * 100;
+                    $invalidData[$station->date_only] = array_map(fn ($value) => ($value / $total) * 100, $invalidFlags);
+                    $missingData[$station->date_only] = ($station->$missingColumn / $total) * 100;
+                } else {
+                    $validData[$station->date_only] = 0;
+                    $invalidData[$station->date_only] = array_map(fn ($value) => 0, $invalidFlags);
+                    $missingData[$station->date_only] = 0;
+                }
+            }
+    
+            // Store data for this station
+            $reportData[] = [
+                'stationName' => $stationName,
+                'validData' => $validData,
+                'invalidData' => $invalidData,
+                'missingData' => $missingData,
+            ];
+        }
+    
+        // Generate PDF using a Blade template
+        $pdf = Pdf::loadView('all-stations-report', ['reportData' => $reportData]);
+    
+        // Return the PDF for download
+        return $pdf->download("All_Stations_Report.pdf");
+    }
+    
 }

@@ -33,38 +33,59 @@
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <div style="max-width: 300px;">
+                <div style="width: 100%; margin: auto;">
                     <form action="{{ route('stations.filter') }}" method="GET"
-                        style="display: flex; flex-direction: column; gap: 15px;">
-                        <label for="start_date" style="font-weight: bold; color: #333;">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" required placeholder="Select start date"
-                            style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                        style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex: 1; margin-right: 15px;">
+                                <label for="start_date"
+                                    style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">Start
+                                    Date</label>
+                                <input type="date" name="start_date" id="start_date" required
+                                    placeholder="Select start date"
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                            </div>
+                            <div style="flex: 1; position: relative;">
+                                <label for="end_date"
+                                    style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">End
+                                    Date</label>
+                                <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                                <button type="button" id="downloadAllDataButton"
+                                    style="position: absolute; top: 0; right: 0; padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
+                                    Download Seluruh Data
+                                </button>
 
-                        <label for="end_date" style="font-weight: bold; color: #333;">End Date</label>
-                        <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
-                            style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                            </div>
+                        </div>
 
-                        <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <button type="button" id="todayButton"
-                                style="padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                Today
-                            </button>
-                            <button type="button" id="last7DaysButton"
-                                style="padding: 10px 15px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                Last 7 Days
-                            </button>
-                            <button type="button" id="last30DaysButton"
-                                style="padding: 10px 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                Last 30 Days
+
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; gap: 10px;">
+                            <div style="display: flex; flex-grow: 1; gap: 10px;">
+                                <button type="button" id="todayButton"
+                                    style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                    Today
+                                </button>
+                                <button type="button" id="last7DaysButton"
+                                    style="padding: 10px 20px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                    Last 7 Days
+                                </button>
+                                <button type="button" id="last30DaysButton"
+                                    style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                    Last 30 Days
+                                </button>
+                            </div>
+                            <button type="submit"
+                                style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 6;">
+                                Filter By Date
                             </button>
                         </div>
 
-                        <button type="submit"
-                            style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
-                            Filter
-                        </button>
+
                     </form>
                 </div>
+
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
                     <div>
@@ -100,27 +121,34 @@
                     </div>
                 </div>
 
-                <div id="map" class="mt-6"></div>
+                <div id="map" class="mt-6 mb-10"></div>
 
-                <div class="flex flex-wrap justify-center items-start gap-3 lg:gap-4 mt-4">
-                    <div class="chart-container w-full sm:w-3/4 lg:w-1/2 lg:ml-auto">
-                        <div class="relative h-[50vh] lg:h-[80vh] max-h-600px">
+
+                <div class="flex flex-wrap lg:flex-nowrap justify-between items-start gap-12 mt-10 w-full"
+                    style="margin: auto;">
+                    <!-- Bar Chart -->
+                    <div class="chart-container w-full lg:w-4/5">
+                        <div class="relative h-[70vh] max-h-[600px]" id="bar-chart-container">
                             <canvas id="chart1"></canvas>
                         </div>
                     </div>
 
-                    <div class="chart-container w-full sm:w-2/3 lg:w-1/3 lg:ml-auto">
-                        <div class="relative h-[50vh] lg:h-[60vh] max-h-400px">
-                            <canvas id="chart2"></canvas>
+                    <!-- Pie/Doughnut Charts -->
+                    <div class="flex flex-col w-full lg:w-1/5 relative h-[70vh] max-h-[500px] gap-1">
+                        <div class="chart-container flex-1">
+                            <div class="relative h-full">
+                                <canvas id="chart2"></canvas>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="chart-container w-full sm:w-2/3 lg:w-1/3 lg:ml-auto">
-                        <div class="relative h-[50vh] lg:h-[60vh] max-h-400px">
-                            <canvas id="chart3"></canvas>
+                        <div class="chart-container flex-1">
+                            <div class="relative h-full">
+                                <canvas id="chart3"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
                 <script>
                     function captureChartAsImage(canvasId) {
                         const canvas = document.getElementById(canvasId);
@@ -143,6 +171,16 @@
                     function getSelectedFlag() {
                         const urlParams = new URLSearchParams(window.location.search);
                         return urlParams.get('selected_flag') || 'overall_value'; // Default to 'overall_value' if not found
+                    }
+
+                    function getType() {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get('type') || 'all'; // Default to 'overall_value' if not found
+                    }
+
+                    function getProvince() {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get('province') || 'all'; // Default to 'overall_value' if not found
                     }
 
                     function updateQueryStringParameter(key, value) {
@@ -208,6 +246,25 @@
 
                         window.open(url, '_blank');
                     }
+
+                    document.getElementById('downloadAllDataButton').addEventListener('click', function () {
+                        let startDate = getParameterByName('start_date');
+                        let endDate = getParameterByName('end_date');
+                        let selectedFlag = getSelectedFlag();
+                        let selectedType = getType();
+                        let selectedProvince = getProvince();
+
+                        if (!startDate || !endDate) {
+                            alert("Please select a valid start date and end date.");
+                            return;
+                        }
+
+                        let url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(selectedType)}&province=${encodeURIComponent(selectedProvince)}`;
+
+                        window.open(url, '_blank');
+                    });
+
+
 
 
                     document.addEventListener('DOMContentLoaded', () => {
@@ -309,9 +366,9 @@
             <b>Station:</b> ${station.name_station}<br>
             <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
             <br>
-            <button class="download-btn" 
+            <button class="download-btn" style="padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;"
                 onclick="downloadStationReport('${station.name_station}')">
-                Download Report
+                Download Report Station
             </button>
         `)
                                 .on('popupopen', () => generatePopupChart(station));
@@ -519,20 +576,82 @@
                         const ctx1 = document.getElementById('chart1').getContext('2d');
                         chart1Instance = new Chart(ctx1, {
                             type: 'bar',
-                            data: { labels: [], datasets: [] },
+                            data: {
+                                labels: [],
+                                datasets: [],
+                            },
                             options: {
                                 responsive: true,
-                                plugins: { legend: { position: 'top' } },
-                                scales: { y: { beginAtZero: true, stacked: true, max: 100 }, x: { stacked: true } },
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Persentase Validasi Berdasarkan Tipe Mesin', // Bar chart title
+                                        font: {
+                                            size: 16, // Title font size
+                                            weight: 'bold', // Title font weight
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 10,
+                                        },
+                                    },
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        stacked: true,
+                                        max: 100, // Maximum value for y-axis
+                                    },
+                                    x: {
+                                        stacked: true, // Stacked bars
+                                    },
+                                },
                             },
                         });
 
                         const ctx2 = document.getElementById('chart2').getContext('2d');
                         chart2Instance = new Chart(ctx2, {
                             type: 'pie',
-                            data: { labels: [], datasets: [{ label: 'Overall Percentages', data: [], backgroundColor: ['#006d7e', '#f7c92e', '#b12629'] }] },
-                            options: { responsive: true, plugins: { legend: { position: 'top' } } },
+                            data: {
+                                labels: [], // Example: ['Category A', 'Category B', 'Category C']
+                                datasets: [
+                                    {
+                                        label: 'Overall Percentages',
+                                        data: [], // Example: [40, 30, 30]
+                                        backgroundColor: ['#006d7e', '#f7c92e', '#b12629'],
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                        labels: {
+                                            boxWidth: 10, // Smaller box size for legend
+                                            usePointStyle: true, // Use point style instead of default square
+                                            pointStyle: 'circle', // Change the legend symbol to a circle
+                                        },
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Persentase Validasi Global', // Chart title
+                                        font: {
+                                            size: 16, // Title font size
+                                            weight: 'bold', // Title font weight
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 10,
+                                        },
+                                    },
+                                },
+                            },
                         });
+
 
                         document.getElementById('flagVal').addEventListener('change', (event) => {
                             selectedFlag = event.target.value; // Update selected flag
@@ -579,13 +698,63 @@
                         }
 
                         const ctx3 = document.getElementById('chart3').getContext('2d');
+
+                        function calculateTotal(dataArray) {
+                            return dataArray.reduce((acc, val) => acc + val, 0); // Sum all data values
+                        }
+
                         chart3Instance = new Chart(ctx3, {
                             type: 'doughnut',
-                            data: { labels: [], datasets: [{ label: 'Jumlah Mesin', data: [], backgroundColor: [] }] },
+                            data: {
+                                labels: [], // Example: ['Mesin A', 'Mesin B', 'Mesin C']
+                                datasets: [
+                                    {
+                                        label: 'Jumlah Mesin',
+                                        data: [], // Example: [10, 20, 30]
+                                        backgroundColor: [], // Example: ['#FF6384', '#36A2EB', '#FFCE56']
+                                    },
+                                ],
+                            },
                             options: {
                                 responsive: true,
-                                plugins: { legend: { position: 'top' } },
-                                scales: { y: { beginAtZero: true } },
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                        labels: {
+                                            boxWidth: 10, // Smaller box size for the color indicator
+                                            usePointStyle: true, // Use a circular shape
+                                            pointStyle: 'circle', // Set the shape to a circle
+                                            generateLabels: (chart) => {
+                                                const data = chart.data;
+                                                const dataset = data.datasets[0];
+                                                return data.labels.map((label, index) => {
+                                                    const value = dataset.data[index];
+                                                    return {
+                                                        text: `${label}: ${value}`, // Combines the label and the value
+                                                        fillStyle: dataset.backgroundColor[index],
+                                                        hidden: false,
+                                                        pointStyle: 'circle', // Ensures a circular style
+                                                    };
+                                                });
+                                            },
+                                        },
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: (ctx) => {
+                                            const total = calculateTotal(ctx.chart.data.datasets[0].data);
+                                            return `Distribusi Mesin (Total=${total})`;
+                                        }, // Dynamically updates the title
+                                        font: {
+                                            size: 16, // Title font size
+                                            weight: 'bold', // Title font weight
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 10,
+                                        },
+                                    },
+                                },
                             },
                         });
 

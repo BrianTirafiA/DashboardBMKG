@@ -158,13 +158,27 @@
                             Total Data: {{ $loan_requests->total() }} | Page {{ $loan_requests->currentPage() }} of {{ $loan_requests->lastPage() }}
                         </p>
                         <div class="flex gap-2 me-2">
+                            @php
+                                // Ambil semua query parameter, kecuali 'page'
+                                $queryParams = request()->query();
+                                unset($queryParams['page']); // Hindari duplikasi 'page'
+
+                                // Buat query string baru tanpa parameter 'page'
+                                $queryString = $queryParams ? '&' . http_build_query($queryParams) : '';
+
+                                // Tambahkan query string ke URL pagination
+                                $prevUrl = $loan_requests->previousPageUrl() . $queryString;
+                                $nextUrl = $loan_requests->nextPageUrl() . $queryString;
+                            @endphp
+
                             @if($loan_requests->onFirstPage())
                                 <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">Previous</span>
                             @else
-                                <a href="{{ $loan_requests->previousPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Previous</a>
+                                <a href="{{ $prevUrl }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Previous</a>
                             @endif
+
                             @if($loan_requests->hasMorePages())
-                                <a href="{{ $loan_requests->nextPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Next</a>
+                                <a href="{{ $nextUrl }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Next</a>
                             @else
                                 <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">Next</span>
                             @endif

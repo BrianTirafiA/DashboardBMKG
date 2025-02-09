@@ -123,21 +123,12 @@
                                                 <div class="flex-row items-center gap-3 justify-center">  
                                                     <div>
                                                     <button type="button" class="text-blue-500 flex items-center gap-2"  
-                                                            onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->user->profile_photo }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->berkas_pendukung }}', '{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">  
+                                                            onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">  
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">  
                                                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />  
                                                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />  
                                                         </svg>  
                                                         Detail Pesanan
-                                                    </button>  
-                                                    </div>
-                                                    <div>
-                                                    <button type="button" class="text-blue-500 flex items-center gap-2"  
-                                                            onclick="openConfirmationModal('{{ $loanRequest->id }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->user->email }}')">  
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                                            </svg>
-                                                        Kirim Pesanan
                                                     </button>  
                                                     </div>
                                                 </div>  
@@ -247,12 +238,7 @@
                 <div class="flex-row w-full">
                     <h2 class="text-md font-semibold mb-5">Detail Pemohon</h2>
                     <div class="flex space-x-5">
-                        <div>
-                            <div class="text-center">
-                                <img id="modalProfilePhoto" src=" " alt="Profile Photo"
-                                    class="w-36 h-36 border border-gray-300 p-2 rounded-2xl mx-auto">
-                            </div>
-                        </div>
+                        
                         <div class="w-full">
                             <div class="mb-1">
                                 <label for="modalNamaPemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama
@@ -320,7 +306,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="modalSubmissionDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
-                            Pengembalian (Jika Disetujui)</label>
+                            Pengembalian (Jika Konfirmasi Sudah Dikirim)</label>
                         <span id="modalSubmissionDate"
                             class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
                         </span>
@@ -334,16 +320,7 @@
                     </div>
                 </div>
 
-                <div class="w-full">
-                    <h2 class="text-md font-semibold mb-4">Berkas Pendukung</h2>
-                    <div class="mb-4">
-                        <label for="modalSupportingDocuments"
-                            class="block text-sm font-medium text-gray-700 mb-2">Berkas Pendukung</label>
-                        <span id="modalSupportingDocuments"
-                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
-                        </span>
-                    </div>
-                </div>
+                 
             </div>
 
             <div class="flex justify-end mt-4">
@@ -353,77 +330,26 @@
     </div>
 
     <script>
-        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, profile_photo, loanDuration, loanReason, submissionDate, supportingDocuments, items) {
+        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, loanDuration, loanReason, submissionDate, items) {
             document.getElementById('modalRequestId').textContent = id;
             document.getElementById('modalNamaPemohon').textContent = fullname ? fullname : "Nama Lengkap Pemohon Tidak Ada";
             document.getElementById('modalEmailPemohon').textContent = email ? email : "Email Pemohon Tidak Ada";
             document.getElementById('modalNIP').textContent = nip ? nip : "Nomor Induk Pegawai Pemohon Tidak Ada";
             document.getElementById('modalTelepon').textContent = no_telepon ? no_telepon : "Nomor Telepon Pemohon Tidak Ada";
             document.getElementById('modalDepartemen').textContent = unit_kerja ? unit_kerja : "Unit Kerja Pemohon Tidak Ada";
-            document.getElementById('modalProfilePhoto').src =
-                document.getElementById('modalLoanDuration').textContent = loanDuration;
+            document.getElementById('modalLoanDuration').textContent = loanDuration;
             document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
             document.getElementById('modalSubmissionDate').textContent = submissionDate;
-            document.getElementById('modalSupportingDocuments').textContent = supportingDocuments ? supportingDocuments : "Dokumen Tidak Tersedia";
             document.getElementById('modalItems').textContent = items;
 
             // Tampilkan modal  
             document.getElementById('requestModal').classList.remove('hidden');
-
-            console.log('fafafa');
         }
 
         function closeRequestModal() {
             document.getElementById('requestModal').classList.add('hidden');
         }
 
-    </script>
-
-    <!-- Modal untuk Mengirim Konfirmasi -->
-    <div id="confirmationModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 w-1/3">
-            <h2 class="text-lg font-semibold">Kirimkan Konfirmasi Pesanan Barang/Lisensi</h2>
-            <form id="acceptForm" action="{{ route('transaksi-pengajuan.update', '') }}" method="POST">
-                @csrf
-                @method('PUT')                
-                <input type="hidden" name="id" id="acceptRequestId">
-                <input type="hidden" name="approval_status" id="acceptStatus" value="approved">
-                <input type="hidden" name="confirmation_date" value="{{ now()->format('Y-m-d H:i:s') }}">
-                <input type="hidden" name="returned_date" id="returnedDate" value="">
-
-                <div class="flex justify-end mt-4">
-                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
-                        onclick="closeAcceptModal()">Batal</button>
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Kirim Pesan Konfirmasi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-       function openConfirmationModal(id, durasi_peminjaman, email) {    
-    document.getElementById('acceptRequestId').value = id;    
-  
-    // Menghitung tanggal pengembalian    
-    const currentDate = new Date();    
-    console.log('Current Date:', currentDate); // Log tanggal saat ini  
-  
-    // Menambahkan durasi peminjaman  
-    const returnedDate = new Date(currentDate.getTime() + (durasi_peminjaman * 24 * 60 * 60 * 1000)); // Menghitung tanggal pengembalian  
-  
-    // Mengatur nilai tanggal pengembalian dalam format yang sesuai    
-    document.getElementById('returnedDate').value = returnedDate.toISOString().split('T')[0]; // Format YYYY-MM-DD    
-  
-    // Menampilkan modal    
-    document.getElementById('confirmationModal').classList.remove('hidden');    
-    document.getElementById('acceptForm').action = "{{ route('transaksi-pengajuan.update', '') }}/" + id;    
-  
-    console.log('Returned Date:', returnedDate.toISOString().split('T')[0]); // Log tanggal pengembalian  
-    }  
-
-        function closeAcceptModal() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-        }  
     </script>
 
 </x-user-layout-template>

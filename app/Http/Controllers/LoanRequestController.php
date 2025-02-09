@@ -291,6 +291,7 @@ class LoanRequestController extends Controller
     private function kirimEmail($loan_request)
     {
         $details = [
+            'tiket' => $loan_request->id,
             'fullname' => $loan_request->user->fullname, // Pastikan relasi user ada
             'email' => $loan_request->user->email, // Pastikan relasi user ada
             'email_admin' => $loan_request->admin->email, // Pastikan relasi user ada

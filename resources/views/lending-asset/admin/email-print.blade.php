@@ -116,15 +116,27 @@
 
     <div class="content">
         <p style="text-align: left; margin: 0; font-size: 16px;"> Dear, {{ $details['fullname'] }} </p>
-        <p style="text-align: left; margin: 0; font-size: 16px;"> Peminjaman barang/lisensi/layanan anda, sudah diterima dengan status {{ $details['approval_status'] }} </p>
-        <p style="text-align: left; margin: 0; font-size: 16px;"> {!! nl2br(e($details['note'] ?? "Perbaruan lebih lanjut dapat dilihat melalui website Asset Management System - Direktorat Data dan Komputasi")) !!}
-        </p>
+        <p style="text-align: left; margin: 0; font-size: 16px;"> Peminjaman barang/lisensi/layanan anda, sudah diterima dengan keterangan:</p>
+        <p style="text-align: left; margin: 0; font-size: 16px;"> No. Tiket:  {{ $details['tiket'] }} </p>
+        <p 
+    style="text-align: left; margin: 0; font-size: 16px;" 
+    class="
+        {{
+            ($details['approval_status'] === 'rejected') ? 'bg-red-500 rounded-full' :
+            (($details['approval_status'] === 'approved' || $details['approval_status'] === 'onprocess') ? 'bg-green-500' : 
+            ($details['approval_status'] === 'returned' ? 'bg-yellow-500' : ''))
+        }}
+        px-4 py-2 text-white
+    "
+>
+    Status: {{ $details['approval_status'] }}
+</p>
+
+        <p style="text-align: left; margin: 0; font-size: 16px;"> Pesan Admin: {!! nl2br(e($details['note'] ?? 'Perbaruan lebih lanjut dapat dilihat melalui website Asset Management System - Direktorat Data dan Komputasi')) !!}</p>
 
 
-        <p style="text-align: left; margin: 0; margin-top: 10px; font-size: 16px;"> Anda tidak perlu membalas surel ini.
-            Surel ini dikirim secara otomastis pada {{ now()->format('d F Y') }} </p>
-        <p style="text-align: left; margin: 0; font-size: 16px;"> oleh Layanan Website Manajemen Asset - Direktorat Data
-            dan Komputasi BMKG Pusat</a> </p>
+        <p style="text-align: left; margin: 0; margin-top: 10px; font-size: 16px;"> Anda tidak perlu membalas surel ini. Surel ini dikirim secara otomastis pada {{ now()->format('d F Y') }} </p>
+        <p style="text-align: left; margin: 0; font-size: 16px;"> oleh Layanan Website Manajemen Asset - Direktorat Data dan Komputasi BMKG Pusat</a> </p>
         <p style="text-align: left; margin: 0; font-size: 16px;"> Terima Kasih telah menggunakan layanan kami </p>
 
         <p style="text-align: left; margin: 0; margin-top: 10px; font-size: 16px;"> Regards,</p>

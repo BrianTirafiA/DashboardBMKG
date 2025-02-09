@@ -113,8 +113,8 @@
                                                                             <td class="border-b border-blue-gray-100">
                                                                                 <div class="flex items-center gap-3 justify-center">
                                                                                     <button type="button" class="text-blue-500 flex items-center gap-2"
-                                                                                        onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->user->profile_photo }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->berkas_pendukung }}', '{{ $loanRequest->items->map(function ($item) {
-                                            return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">
+                                                                                        onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}',  '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', 
+                                                                                        '{{ $loanRequest->items->map(function ($item) {return $item->itemDetail ? $item->itemDetail->nama_item . ' (Jumlah: ' . $item->quantity . ')' : 'Item tidak ditemukan';})->join(', ') }}')">
                                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                                                             fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                                                                             <path
@@ -166,6 +166,7 @@
                             @endif
                         </div>
                     </div>
+                    <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50"></div>
                 </div>
             </div>
         </div>
@@ -210,6 +211,7 @@
                 <input type="hidden" name="approval_status" id="acceptStatus" value="onprocess">
                 <input type="hidden" name="admin_id" value="{{ session('id') }}">
                 <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
+                <input type="hidden" name="note" id="acceptStatus" value="Perbaruan lebih lanjut dapat dilihat melalui website Asset Management System - Direktorat Data dan Komputasi  ">
 
                 <div class="flex justify-end mt-4">
                     <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
@@ -242,7 +244,8 @@
             <p>Apakah Anda yakin ingin menolak permohonan ini?</p>
             <form id="rejectedForm" action="{{ route('transaksi-pengajuan.update', '') }}" method="POST">
                 @csrf
-                @method('PUT')                 <input type="hidden" name="id" id="rejectedRequestId">
+                @method('PUT')                 
+                <input type="hidden" name="id" id="rejectedRequestId">
                 <input type="hidden" name="approval_status" id="acceptStatus" value="rejected">
                 <input type="hidden" name="admin_id" value="{{ session('id') }}">
                 <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
@@ -287,12 +290,7 @@
                 <div class="flex-row w-full">
                     <h2 class="text-md font-semibold mb-5">Detail Pemohon</h2>
                     <div class="flex space-x-5">
-                        <div>
-                            <div class="text-center">
-                                <img id="modalProfilePhoto" src=" " alt="Profile Photo"
-                                    class="w-36 h-36 border border-gray-300 p-2 rounded-2xl mx-auto">
-                            </div>
-                        </div>
+                 
                         <div class="w-full">
                             <div class="mb-1">
                                 <label for="modalNamaPemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama
@@ -374,16 +372,6 @@
                     </div>
                 </div>
 
-                <div class="w-full">
-                    <h2 class="text-md font-semibold mb-4">Berkas Pendukung</h2>
-                    <div class="mb-4">
-                        <label for="modalSupportingDocuments"
-                            class="block text-sm font-medium text-gray-700 mb-2">Berkas Pendukung</label>
-                        <span id="modalSupportingDocuments"
-                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
-                        </span>
-                    </div>
-                </div>
             </div>
 
             <div class="flex justify-end mt-4">
@@ -394,30 +382,25 @@
 
 
     <script>
-        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, profile_photo, loanDuration, loanReason, submissionDate, supportingDocuments, items) {
+        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, loanDuration, loanReason, submissionDate, items) {
             document.getElementById('modalRequestId').textContent = id;
             document.getElementById('modalNamaPemohon').textContent = fullname ? fullname : "Nama Lengkap Pemohon Tidak Ada";
             document.getElementById('modalEmailPemohon').textContent = email ? email : "Email Pemohon Tidak Ada";
             document.getElementById('modalNIP').textContent = nip ? nip : "Nomor Induk Pegawai Pemohon Tidak Ada";
             document.getElementById('modalTelepon').textContent = no_telepon ? no_telepon : "Nomor Telepon Pemohon Tidak Ada";
             document.getElementById('modalDepartemen').textContent = unit_kerja ? unit_kerja : "Unit Kerja Pemohon Tidak Ada";
-            document.getElementById('modalProfilePhoto').src =
-                document.getElementById('modalLoanDuration').textContent = loanDuration;
+            document.getElementById('modalLoanDuration').textContent = loanDuration;
             document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
             document.getElementById('modalSubmissionDate').textContent = submissionDate;
-            document.getElementById('modalSupportingDocuments').textContent = supportingDocuments ? supportingDocuments : "Dokumen Tidak Tersedia";
             document.getElementById('modalItems').textContent = items;
 
             // Tampilkan modal  
             document.getElementById('requestModal').classList.remove('hidden');
-
-            console.log('fafafa');
         }
 
         function closeRequestModal() {
             document.getElementById('requestModal').classList.add('hidden');
         }
-
     </script>
 
 </x-lend-layout-template>

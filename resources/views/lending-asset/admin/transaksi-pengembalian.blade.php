@@ -17,9 +17,9 @@
                     ['key' => 'id', 'title' => 'ID'],
                     ['key' => 'user.name', 'title' => 'Nama Pemohon'],
                     ['key' => 'durasi_peminjaman', 'title' => 'Durasi (Hari)'],
-                    ['key' => 'tanggal_pengajuan', 'title' => 'Tanggal Pengajuan'],
                     ['key' => 'confirmation_date', 'title' => 'Tanggal Penerimaan'],
                     ['key' => 'items', 'title' => 'Item (Jumlah)'],
+                    ['key' => 'note', 'title' => 'Pesan Admin'],
                     ['key' => 'returned_date', 'title' => 'Tanggal Pengembalian'],
                 ];      
             @endphp      
@@ -120,7 +120,7 @@
                                             <td class="border-b border-blue-gray-100">  
                                                 <div class="flex items-center gap-3 justify-center">  
                                                     <button type="button" class="text-blue-500 flex items-center gap-2"  
-                                                            onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->user->profile_photo }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->berkas_pendukung }}', '{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">  
+                                                            onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->note }}', '{{ $loanRequest->returned_date }}', '{{ $loanRequest->items->map(function ($item) {return $item->itemDetail ? $item->itemDetail->nama_item . ' (Jumlah: ' . $item->quantity . ')' : 'Item tidak ditemukan';})->join(', ') }}')">  
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">  
                                                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />  
                                                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />  
@@ -181,9 +181,9 @@
         // Memperbarui tampilan countdown  
         const countdownElement = document.getElementById(elementId);  
         if (daysRemaining > 0) {  
-            countdownElement.innerText = `${daysRemaining} hari tersisa`;  
+            countdownElement.innerText = `${daysRemaining} days later`;  
         } else {  
-            countdownElement.innerText = 'Sudah lewat';  
+            countdownElement.innerText = 'days late';  
         }  
     }  
   
@@ -234,16 +234,10 @@
                 <div class="flex-row w-full">
                     <h2 class="text-md font-semibold mb-5">Detail Pemohon</h2>
                     <div class="flex space-x-5">
-                        <div>
-                            <div class="text-center">
-                                <img id="modalProfilePhoto" src=" " alt="Profile Photo"
-                                    class="w-36 h-36 border border-gray-300 p-2 rounded-2xl mx-auto">
-                            </div>
-                        </div>
+                        
                         <div class="w-full">
                             <div class="mb-1">
-                                <label for="modalNamaPemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama
-                                    Pemohon</label>
+                                <label for="modalNamaPemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemohon</label>
                                 <span id="modalNamaPemohon"
                                     class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
                                 </span>
@@ -299,34 +293,23 @@
                         </span>
                     </div>
                     <div class="mb-4">
-                        <label for="modalSubmissionDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
-                            Pengajuan</label>
-                        <span id="modalSubmissionDate"
+                        <label for="modalReturnedDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Pengembalian</label>
+                        <span id="modalReturnedDate"
                             class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
                         </span>
                     </div>
                     <div class="mb-4">
-                        <label for="modalSubmissionDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
-                            Pengembalian (Jika Disetujui)</label>
-                        <span id="modalSubmissionDate"
+                        <label for="modalAdminChat" class="block text-sm font-medium text-gray-700 mb-2">Pesan 
+                            Admin</label>
+                        <span id="modalAdminChat"
                             class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
                         </span>
                     </div>
+                  
 
                     <div class="mb-4">
                         <label for="modalItems" class="block text-sm font-medium text-gray-700 mb-2">Items</label>
                         <span id="modalItems"
-                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
-                        </span>
-                    </div>
-                </div>
-
-                <div class="w-full">
-                    <h2 class="text-md font-semibold mb-4">Berkas Pendukung</h2>
-                    <div class="mb-4">
-                        <label for="modalSupportingDocuments"
-                            class="block text-sm font-medium text-gray-700 mb-2">Berkas Pendukung</label>
-                        <span id="modalSupportingDocuments"
                             class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
                         </span>
                     </div>
@@ -341,18 +324,32 @@
 
 
     <script>
-        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, profile_photo, loanDuration, loanReason, submissionDate, supportingDocuments, items) {
+
+        function formatDate(dateString) {
+            const months = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+
+            return `${day} ${month} ${year}`;
+        }
+
+        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, loanDuration, loanReason, note, returned_date, items) {
             document.getElementById('modalRequestId').textContent = id;
             document.getElementById('modalNamaPemohon').textContent = fullname ? fullname : "Nama Lengkap Pemohon Tidak Ada";
             document.getElementById('modalEmailPemohon').textContent = email ? email : "Email Pemohon Tidak Ada";
             document.getElementById('modalNIP').textContent = nip ? nip : "Nomor Induk Pegawai Pemohon Tidak Ada";
             document.getElementById('modalTelepon').textContent = no_telepon ? no_telepon : "Nomor Telepon Pemohon Tidak Ada";
             document.getElementById('modalDepartemen').textContent = unit_kerja ? unit_kerja : "Unit Kerja Pemohon Tidak Ada";
-            document.getElementById('modalProfilePhoto').src =
-                document.getElementById('modalLoanDuration').textContent = loanDuration;
+            document.getElementById('modalLoanDuration').textContent = loanDuration;
             document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
-            document.getElementById('modalSubmissionDate').textContent = submissionDate;
-            document.getElementById('modalSupportingDocuments').textContent = supportingDocuments ? supportingDocuments : "Dokumen Tidak Tersedia";
+            document.getElementById('modalAdminChat').textContent = note;
+            document.getElementById('modalReturnedDate').textContent = formatDate(returned_date);
             document.getElementById('modalItems').textContent = items;
 
             // Tampilkan modal  

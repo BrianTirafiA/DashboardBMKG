@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemDetailController;
 use App\Http\Controllers\ItemLocationController;
@@ -58,7 +59,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
     });
 
     Route::prefix('lendasset')->group(function () {
-        Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::view('/report', LaporanController::class, );
         Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
         Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
@@ -70,7 +71,6 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
         Route::view('/transaksi-dibatalkan', LoanRequestController::class, );
         Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
-
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
         Route::resource('/brand', ItemBrandController::class);
@@ -93,6 +93,9 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {
     Route::resource('/dashboard', UserDashboard::class);
     Route::get('/dashboard', [UserDashboard::class, 'itemindex'])->name('item.index');
+    Route::resource('/layanan', UserDashboard::class);
+    Route::get('/layanan', [UserDashboard::class, 'layananindex'])->name('layanan.index');
+    Route::post('/layanan/store', [UserDashboard::class, 'layananstore'])->name('layanan.store');
     Route::post('/dashboard/addcart', [UserDashboard::class, 'addToCart'])->name('cart.add');
     Route::get('/dashboard/get', [UserDashboard::class, 'getCart'])->name('cart.get');
     Route::post('/dashboard/update', [UserDashboard::class, 'updateCart'])->name('cart.update');

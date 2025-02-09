@@ -22,9 +22,96 @@ class UserDashboard extends Controller
         $categoryFilter = $request->input('category');
         $statusFilter = $request->input('status');
         $locationFilter = $request->input('location');
+    
+        // Jika kategori yang dipilih adalah "Layanan", redirect ke halaman /user/layanan
+        if ($categoryFilter) {
+            $category = ItemCategory::find($categoryFilter);
+            if ($category && $category->name_category === 'Layanan') {
+                return redirect('/user/layanan');
+            }
+        }
+    
+        // Memulai query untuk ItemDetail  
+        $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
+            ->whereDoesntHave('category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })
+            ->when($search, function ($query, $search) {
+                return $query->where('nama_item', 'like', "%{$search}%")
+                    ->orWhere('type_item', 'like', "%{$search}%")
+                    ->orWhere('nama_vendor', 'like', "%{$search}%")
+                    ->orWhereHas('brand', function ($q) use ($search) {
+                        $q->where('name_brand', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('name_category', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('status', function ($q) use ($search) {
+                        $q->where('name_status', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('location', function ($q) use ($search) {
+                        $q->where('nama_lokasi', 'like', "%{$search}%");
+                    });
+            })
+            ->when($brandFilter, function ($query, $brandFilter) {
+                return $query->whereHas('brand', function ($q) use ($brandFilter) {
+                    $q->where('id', $brandFilter);
+                });
+            })
+            ->when($categoryFilter, function ($query, $categoryFilter) {
+                return $query->whereHas('category', function ($q) use ($categoryFilter) {
+                    $q->where('id', $categoryFilter);
+                });
+            })
+            ->when($statusFilter, function ($query, $statusFilter) {
+                return $query->whereHas('status', function ($q) use ($statusFilter) {
+                    $q->where('id', $statusFilter);
+                });
+            })
+            ->when($locationFilter, function ($query, $locationFilter) {
+                return $query->whereHas('location', function ($q) use ($locationFilter) {
+                    $q->where('id', $locationFilter);
+                });
+            })
+            ->paginate(10);
+    
+        // Mengambil URL gambar
+        foreach ($item_details as $item) {
+            $item->image1_url = Storage::url($item->image1);
+            $item->image2_url = Storage::url($item->image2);
+            $item->image3_url = Storage::url($item->image3);
+            $item->image4_url = Storage::url($item->image4);
+        }
+    
+        $categories = ItemCategory::all();
+        $brands = ItemBrand::all();
+        $locations = ItemLocation::all();
+        $status = ItemStatus::all();
+    
+        // Mengembalikan view dengan data item  
+        return view('lending-asset.user.user-dashboard', compact('item_details', 'brands', 'categories', 'status', 'locations'));
+    }
+    
+
+    public function layananindex(Request $request)
+    {
+        // Mengambil input pencarian dan filter dari request  
+        $search = $request->input('search');
+        $brandFilter = $request->input('brand');
+        $categoryFilter = $request->input('category');
+        $statusFilter = $request->input('status');
+        $locationFilter = $request->input('location');
+
+        $categories = ItemCategory::all();
+        $brands = ItemBrand::all();
+        $locations = ItemLocation::all();
+        $status = ItemStatus::all();
 
         // Memulai query untuk ItemDetail  
         $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
+            ->whereHas('category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })
             ->when($search, function ($query, $search) {
                 return $query->where('nama_item', 'like', "%{$search}%")
                     ->orWhere('type_item', 'like', "%{$search}%")
@@ -72,13 +159,9 @@ class UserDashboard extends Controller
             $item->image4_url = Storage::url($item->image4);
         }
 
-        $categories = ItemCategory::all();
-        $brands = ItemBrand::all();
-        $locations = ItemLocation::all();
-        $status = ItemStatus::all();
 
         // Mengembalikan view dengan data item  
-        return view('lending-asset.user.user-dashboard', compact('item_details', 'brands', 'categories', 'status', 'locations'));
+        return view('lending-asset.user.user-layanan', compact('item_details', 'brands', 'categories', 'status', 'locations'));
     }
 
     public function store(Request $request)
@@ -122,7 +205,7 @@ class UserDashboard extends Controller
                 'durasi_peminjaman' => $request->durasi_peminjaman,
                 'alasan_peminjaman' => $request->alasan_peminjaman,
                 'tanggal_pengajuan' => $request->tanggal_pengajuan,
-                'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('berkas_pendukung','public') : null,
+                'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('berkas_pendukung', 'public') : null,
                 'approval_status' => 'pending',
             ]);
 
@@ -152,6 +235,62 @@ class UserDashboard extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
         }
     }
+
+        public function layananstore(Request $request)
+        {
+            // Validasi data
+            $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'durasi_peminjaman' => 'required|integer|min:1',
+                'alasan_peminjaman' => 'required|string',
+                'tanggal_pengajuan' => 'required|date',
+                'berkas_pendukung' => 'nullable|file',
+                'items' => 'required|array',
+                'items.*.item_details_id' => 'required|exists:item_details,id',
+                'items.*.quantity' => 'required|integer|min:1',
+            ]);
+
+            // Mulai transaksi database
+            DB::beginTransaction();
+
+            try {
+                // Simpan permohonan peminjaman
+                $loanRequest = LoanRequest::create([
+                    'user_id' => $request->user_id,
+                    'durasi_peminjaman' => $request->durasi_peminjaman,
+                    'alasan_peminjaman' => $request->alasan_peminjaman,
+                    'tanggal_pengajuan' => $request->tanggal_pengajuan,
+                    'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('berkas_pendukung', 'public') : null,
+                    'approval_status' => 'pending',
+                ]);
+
+                // Simpan item peminjaman dan update borrowed_quantity
+                foreach ($request->items as $item) {
+                    LoanRequestItem::create([
+                        'loan_request_id' => $loanRequest->id,
+                        'item_details_id' => $item['item_details_id'],
+                        'quantity' => $item['quantity'],
+                    ]);
+
+                        // Update jumlah barang yang sedang dipinjam
+                        $itemDetail = ItemDetail::lockForUpdate()->find($item['item_details_id']);
+                        if ($itemDetail) {
+                            $itemDetail->borrowed_quantity += $item['quantity'];
+                            $itemDetail->save();
+                        }
+                }
+
+                // Commit transaksi jika semua berhasil
+                DB::commit();
+
+                return redirect()->back()->with('success', 'Permohonan peminjaman berhasil ditambahkan.');
+            } catch (\Exception $e) {
+                // Rollback jika terjadi error
+                DB::rollback();
+                return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
+            }
+        }
+
 
     public function storefromcart(Request $request)
     {

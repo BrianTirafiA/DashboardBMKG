@@ -20,6 +20,7 @@
                     ['key' => 'tanggal_pengajuan', 'title' => 'Tanggal Pengajuan'],
                     ['key' => 'confirmation_date', 'title' => 'Tanggal Penerimaan'],
                     ['key' => 'items', 'title' => 'Item (Jumlah)'],
+                    ['key' => 'note', 'title' => 'Pesan Admin'],
                     ['key' => 'returned_date', 'title' => 'Tanggal Pengembalian'],
                 ];      
             @endphp      

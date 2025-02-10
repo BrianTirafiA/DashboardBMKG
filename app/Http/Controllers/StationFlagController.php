@@ -59,6 +59,10 @@ class StationFlagController extends Controller
         $endDate = $request->input('end_date');
         $selectedFlag = $request->input('selected_flag', 'overall_value');
         $chartImage = $request->input('chart_image');
+
+        if ($selectedFlag === 'all'){
+            $selectedFlag = 'overall_value';
+        };
     
         // Validate input parameters
         if (!$stationName || !$startDate || !$endDate) {
@@ -142,6 +146,10 @@ class StationFlagController extends Controller
     $selectedFlag = $request->input('selected_flag', 'overall_value');
     $type = $request->input('type', 'all');
     $province = $request->input('province', 'all');
+
+    if ($selectedFlag === 'all'){
+        $selectedFlag = 'overall_value';
+    };
 
     // Validate Date Inputs
     if (!$startDate || !$endDate) {

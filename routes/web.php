@@ -164,4 +164,3 @@ Route::delete('/profile/{id}/delete-image', [UserControllerForUpdateData::class,
 Route::get('/profile-photo/{filename}', [ProfilePhotoController::class, 'show'])->name('profile.photo');
 Route::post('/items/{id}/update-images', [ItemController::class, 'updateImages'])->name('items.update.images');
 Route::delete('/items/{id}/delete-image/{imageNumber}', [ItemController::class, 'deleteImage'])->name('items.delete.image');
-

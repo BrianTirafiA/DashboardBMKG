@@ -33,44 +33,65 @@
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <div style="max-width: 300px;">
+                <div style="width: 100%; margin: auto;">
                     <form action="{{ route('stations.filter') }}" method="GET"
-                        style="display: flex; flex-direction: column; gap: 15px;">
-                        <label for="start_date" style="font-weight: bold; color: #333;">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" required placeholder="Select start date"
-                            style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                        style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex: 1; margin-right: 15px;">
+                                <label for="start_date"
+                                    style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">Start
+                                    Date</label>
+                                <input type="date" name="start_date" id="start_date" required
+                                    placeholder="Select start date"
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                            </div>
+                            <div style="flex: 1; position: relative;">
+                                <label for="end_date"
+                                    style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">End
+                                    Date</label>
+                                <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                                <button type="button" id="downloadAllDataButton"
+                                    style="position: absolute; top: 0; right: 0; padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
+                                    Download Seluruh Data
+                                </button>
 
-                        <label for="end_date" style="font-weight: bold; color: #333;">End Date</label>
-                        <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
-                            style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                            </div>
+                        </div>
 
-                        <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <button type="button" id="todayButton"
-                                style="padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                Today
-                            </button>
-                            <button type="button" id="last7DaysButton"
-                                style="padding: 10px 15px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                Last 7 Days
-                            </button>
-                            <button type="button" id="last30DaysButton"
-                                style="padding: 10px 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                Last 30 Days
+
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; gap: 10px;">
+                            <div style="display: flex; flex-grow: 1; gap: 10px;">
+                                <button type="button" id="todayButton"
+                                    style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                    Today
+                                </button>
+                                <button type="button" id="last7DaysButton"
+                                    style="padding: 10px 20px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                    Last 7 Days
+                                </button>
+                                <button type="button" id="last30DaysButton"
+                                    style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                    Last 30 Days
+                                </button>
+                            </div>
+                            <button type="submit"
+                                style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 6;">
+                                Filter By Date
                             </button>
                         </div>
 
-                        <button type="submit"
-                            style="padding: 10px 15px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s;">
-                            Filter
-                        </button>
+
                     </form>
                 </div>
+
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
                     <div>
                         <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Data Type:</label>
                         <select id="flagVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="all">All Data Reading</option>
+                            <option value="overall_value">All Data Reading</option>
                             @foreach($dropdownOptions['flags'] as $flag)
                                 <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
                             @endforeach
@@ -100,22 +121,144 @@
                     </div>
                 </div>
 
-                <div id="map" class="mt-6"></div>
+                <div id="map" class="mt-6 mb-10"></div>
 
-                <div class="flex flex-wrap justify-center items-start gap-3 lg:gap-4 mt-4">
-                    <div class="chart-container w-full sm:w-3/4 lg:w-1/2 lg:ml-auto">
-                        <div class="relative h-[50vh] lg:h-[80vh] max-h-600px">
+
+                <div class="flex flex-wrap lg:flex-nowrap justify-between items-start gap-12 mt-10 w-full"
+                    style="margin: auto;">
+                    <!-- Bar Chart -->
+                    <div class="chart-container w-full lg:w-4/5">
+                        <div class="relative h-[70vh] max-h-[600px]" id="bar-chart-container">
                             <canvas id="chart1"></canvas>
                         </div>
                     </div>
 
-                    <div class="chart-container w-full sm:w-2/3 lg:w-1/3 lg:ml-auto">
-                        <div class="relative h-[50vh] lg:h-[60vh] max-h-400px">
-                            <canvas id="chart2"></canvas>
+                    <!-- Pie/Doughnut Charts -->
+                    <div class="flex flex-col w-full lg:w-1/5 relative h-[70vh] max-h-[500px] gap-1">
+                        <div class="chart-container flex-1">
+                            <div class="relative h-full">
+                                <canvas id="chart2"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container flex-1">
+                            <div class="relative h-full">
+                                <canvas id="chart3"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
                 <script>
+                    function captureChartAsImage(canvasId) {
+                        const canvas = document.getElementById(canvasId);
+                        if (!canvas) {
+                            console.error("Chart canvas not found:", canvasId);
+                            return null;
+                        }
+                        return canvas.toDataURL('image/png'); // Convert the chart to a base64 image
+                    }
+
+                    function getQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let selectedFlag = urlParams.get("selected_flag") || "overall_value";
+
+    return {
+        selectedFlag: selectedFlag === "overall_value" ? "all" : selectedFlag, // Ensure UI sync
+        type: urlParams.get("type") || "all",
+        province: urlParams.get("province") || "all",
+        startDate: urlParams.get("start_date"),
+        endDate: urlParams.get("end_date"),
+    };
+}
+
+
+
+
+function updateQueryStringParameter(key, value) {
+    let url = new URL(window.location.href);
+
+    if (value === null || value === "" || (key !== "selected_flag" && value === "all")) {
+        url.searchParams.delete(key);
+    } else if (key === "selected_flag" && value === "all") {
+        url.searchParams.set(key, "overall_value"); // Convert 'all' to 'overall_value' for selected_flag
+        document.getElementById("flagVal").value = "overall_value"; // Ensure dropdown reflects the change
+    } else {
+        url.searchParams.set(key, value);
+    }
+
+    window.history.replaceState(null, "", url);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const { selectedFlag, type, province } = getQueryParams();
+
+    const flagSelect = document.getElementById("flagVal");
+    const typeSelect = document.getElementById("TypeVal");
+    const provinceSelect = document.getElementById("provinceVal");
+
+    flagSelect.value = selectedFlag; // Ensure correct dropdown value
+    typeSelect.value = type;
+    provinceSelect.value = province;
+
+    flagSelect.addEventListener("change", (event) => {
+        updateQueryStringParameter("selected_flag", event.target.value);
+        updateCharts();
+    });
+
+    typeSelect.addEventListener("change", (event) => {
+        updateQueryStringParameter("type", event.target.value);
+        addMarkers();
+    });
+
+    provinceSelect.addEventListener("change", (event) => {
+        updateQueryStringParameter("province", event.target.value);
+        addMarkers();
+    });
+});
+
+
+
+
+                    function downloadStationReport(stationName) {
+                        // Fetch start_date and end_date from the URL
+                        const { startDate, endDate, selectedFlag } = getQueryParams();
+
+                        // Fallback to defaults if dates are not present in the URL
+                        if (!startDate || !endDate) {
+                            const today = new Date();
+                            const last7Days = new Date(today);
+                            last7Days.setDate(today.getDate() - 6);
+
+                            startDate = last7Days.toISOString().split('T')[0];
+                            endDate = today.toISOString().split('T')[0];
+                        }
+
+                        // Capture the chart image
+                        const chartImage = captureChartAsImage(`chart-${stationName.replace(/\s+/g, '-')}`);
+
+                        // Build the URL with date parameters & chart image
+                        const url = `/station/download-pdf?station_name=${encodeURIComponent(stationName)}&start_date=${startDate}&end_date=${endDate}&selected_flag=${encodeURIComponent(selectedFlag)}&chart_image=${encodeURIComponent(chartImage || '')}`;
+
+                        window.open(url, '_blank');
+                    }
+
+                    document.getElementById("downloadAllDataButton").addEventListener("click", () => {
+        const { startDate, endDate, selectedFlag, type, province } = getQueryParams();
+
+        if (!startDate || !endDate) {
+            alert("Please select a valid start date and end date.");
+            return;
+        }
+
+        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}`;
+
+        window.open(url, "_blank");
+    });
+
+
+
+
                     document.addEventListener('DOMContentLoaded', () => {
 
                         const startDateInput = document.getElementById('start_date');
@@ -163,6 +306,8 @@
                         });
 
                         const markerData = @json($markerData);
+
+                        let selectedFlag = 'overall_value';
                         // Map visual setting
                         const map = L.map('map', { attributionControl: false }).setView([-2.0, 118.0], 5);
                         const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
@@ -210,12 +355,16 @@
 
                                 // Click pin popup
                                 .bindPopup(`
-                                <b>Station:</b> ${station.name_station}<br>
-                                <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
-                                `)
+            <b>Station:</b> ${station.name_station}<br>
+            <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
+            <br>
+            <button class="download-btn" style="padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;"
+                onclick="downloadStationReport('${station.name_station}')">
+                Download Report Station
+            </button>
+        `)
                                 .on('popupopen', () => generatePopupChart(station));
                         }
-
                         function generatePopupChart(station) {
                             const stationData = markerData.filter(s => s.name_station === station.name_station);
 
@@ -226,7 +375,7 @@
                                     groupedByDate[date] = { valid: 0, invalid: 0, missing: 0, total: 0 };
                                 }
                                 for (let i = 0; i <= 9; i++) {
-                                    const value = data[`overall_value_${i}_percent`] || 0;
+                                    const value = data[`${selectedFlag}_${i}_percent`] || 0;
                                     groupedByDate[date].total += value;
                                     if (i === 0) groupedByDate[date].valid += value;
                                     else if (i >= 1 && i <= 8) groupedByDate[date].invalid += value;
@@ -253,9 +402,9 @@
                                     data: {
                                         labels: dates, // Each label is a date
                                         datasets: [
-                                            { label: 'Valid', data: validData, backgroundColor: 'blue' },
-                                            { label: 'Invalid', data: invalidData, backgroundColor: 'yellow' },
-                                            { label: 'Missing', data: missingData, backgroundColor: 'red' },
+                                            { label: 'Valid', data: validData, backgroundColor: '#006d7e' },
+                                            { label: 'Invalid', data: invalidData, backgroundColor: '#f7c830' },
+                                            { label: 'Missing', data: missingData, backgroundColor: '#b12629' },
                                         ],
                                     },
                                     options: {
@@ -315,6 +464,12 @@
                             return button;
                         };
                         resetButton.addTo(map);
+
+                        document.getElementById('flagVal').addEventListener('change', (event) => {
+                            selectedFlag = event.target.value; // Update selected flag
+                            updateCharts(); // Refresh the charts
+                        });
+
                         addMarkers();
 
                         document.getElementById('TypeVal').addEventListener('change', addMarkers);
@@ -324,6 +479,9 @@
                         const rawData = @json($markerData);
                         let chart1Instance, chart2Instance;
 
+                        // Default selected flag
+                        let selectedFlag = 'overall_value';
+
                         function processData(data) {
                             return data.reduce((acc, station) => {
                                 const type = station.tipe_station;
@@ -332,7 +490,7 @@
                                 }
 
                                 for (let i = 0; i <= 9; i++) {
-                                    const value = station[`overall_value_${i}_percent`] || 0;
+                                    const value = station[`${selectedFlag}_${i}_percent`] || 0;
                                     acc[type].total += value;
                                     if (i === 0) acc[type].valid += value;
                                     else if (i >= 1 && i <= 8) acc[type].invalid += value;
@@ -379,9 +537,9 @@
 
                             chart1Instance.data.labels = labels;
                             chart1Instance.data.datasets = [
-                                { label: 'Valid', data: validData, backgroundColor: 'blue' },
-                                { label: 'Invalid', data: invalidData, backgroundColor: 'yellow' },
-                                { label: 'Missing', data: missingData, backgroundColor: 'red' },
+                                { label: 'Valid', data: validData, backgroundColor: '#006d7e' },
+                                { label: 'Invalid', data: invalidData, backgroundColor: '#f7c92e' },
+                                { label: 'Missing', data: missingData, backgroundColor: '#af2729' },
                             ];
                             chart1Instance.update();
                         }
@@ -410,25 +568,193 @@
                         const ctx1 = document.getElementById('chart1').getContext('2d');
                         chart1Instance = new Chart(ctx1, {
                             type: 'bar',
-                            data: { labels: [], datasets: [] },
+                            data: {
+                                labels: [],
+                                datasets: [],
+                            },
                             options: {
                                 responsive: true,
-                                plugins: { legend: { position: 'top' } },
-                                scales: { y: { beginAtZero: true, stacked: true, max: 100 }, x: { stacked: true } },
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Persentase Validasi Berdasarkan Tipe Mesin', // Bar chart title
+                                        font: {
+                                            size: 16, // Title font size
+                                            weight: 'bold', // Title font weight
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 10,
+                                        },
+                                    },
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        stacked: true,
+                                        max: 100, // Maximum value for y-axis
+                                    },
+                                    x: {
+                                        stacked: true, // Stacked bars
+                                    },
+                                },
                             },
                         });
 
                         const ctx2 = document.getElementById('chart2').getContext('2d');
                         chart2Instance = new Chart(ctx2, {
                             type: 'pie',
-                            data: { labels: [], datasets: [{ label: 'Overall Percentages', data: [], backgroundColor: ['blue', 'yellow', 'red'] }] },
-                            options: { responsive: true, plugins: { legend: { position: 'top' } } },
+                            data: {
+                                labels: [], // Example: ['Category A', 'Category B', 'Category C']
+                                datasets: [
+                                    {
+                                        label: 'Overall Percentages',
+                                        data: [], // Example: [40, 30, 30]
+                                        backgroundColor: ['#006d7e', '#f7c92e', '#b12629'],
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                        labels: {
+                                            boxWidth: 10, // Smaller box size for legend
+                                            usePointStyle: true, // Use point style instead of default square
+                                            pointStyle: 'circle', // Change the legend symbol to a circle
+                                        },
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Persentase Validasi Global', // Chart title
+                                        font: {
+                                            size: 16, // Title font size
+                                            weight: 'bold', // Title font weight
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 10,
+                                        },
+                                    },
+                                },
+                            },
+                        });
+
+
+                        document.getElementById('flagVal').addEventListener('change', (event) => {
+                            selectedFlag = event.target.value; // Update selected flag
+                            updateCharts(); // Refresh the charts
                         });
 
                         updateCharts();
                         document.getElementById('TypeVal').addEventListener('change', updateCharts);
                         document.getElementById('provinceVal').addEventListener('change', updateCharts);
                     });
+
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const rawData = @json($markerData);
+                        let chart3Instance;
+
+                        function countUniqueStationsByType(data) {
+                            const selectedProvince = document.getElementById('provinceVal').value;
+                            const uniqueStations = {};
+
+                            data.forEach(station => {
+                                if (selectedProvince === 'all' || station.nama_propinsi === selectedProvince) {
+                                    uniqueStations[station.name_station] = station.tipe_station;
+                                }
+                            });
+
+                            const typeCounts = {};
+                            Object.values(uniqueStations).forEach(type => {
+                                typeCounts[type] = (typeCounts[type] || 0) + 1;
+                            });
+
+                            return typeCounts;
+                        }
+
+                        function updateChart3() {
+                            const uniqueCounts = countUniqueStationsByType(rawData);
+                            const labels = Object.keys(uniqueCounts);
+                            const counts = Object.values(uniqueCounts);
+                            const colors = ['#369bcf', '#28a79e', '#39b449', '#8cc63e', '#e1cf23', '#f8af3e', '#f7941f'];
+
+                            chart3Instance.data.labels = labels;
+                            chart3Instance.data.datasets[0].data = counts;
+                            chart3Instance.data.datasets[0].backgroundColor = colors.slice(0, labels.length);
+                            chart3Instance.update();
+                        }
+
+                        const ctx3 = document.getElementById('chart3').getContext('2d');
+
+                        function calculateTotal(dataArray) {
+                            return dataArray.reduce((acc, val) => acc + val, 0); // Sum all data values
+                        }
+
+                        chart3Instance = new Chart(ctx3, {
+                            type: 'doughnut',
+                            data: {
+                                labels: [], // Example: ['Mesin A', 'Mesin B', 'Mesin C']
+                                datasets: [
+                                    {
+                                        label: 'Jumlah Mesin',
+                                        data: [], // Example: [10, 20, 30]
+                                        backgroundColor: [], // Example: ['#FF6384', '#36A2EB', '#FFCE56']
+                                    },
+                                ],
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                        labels: {
+                                            boxWidth: 10, // Smaller box size for the color indicator
+                                            usePointStyle: true, // Use a circular shape
+                                            pointStyle: 'circle', // Set the shape to a circle
+                                            generateLabels: (chart) => {
+                                                const data = chart.data;
+                                                const dataset = data.datasets[0];
+                                                return data.labels.map((label, index) => {
+                                                    const value = dataset.data[index];
+                                                    return {
+                                                        text: `${label}: ${value}`, // Combines the label and the value
+                                                        fillStyle: dataset.backgroundColor[index],
+                                                        hidden: false,
+                                                        pointStyle: 'circle', // Ensures a circular style
+                                                    };
+                                                });
+                                            },
+                                        },
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: (ctx) => {
+                                            const total = calculateTotal(ctx.chart.data.datasets[0].data);
+                                            return `Distribusi Mesin (Total=${total})`;
+                                        }, // Dynamically updates the title
+                                        font: {
+                                            size: 16, // Title font size
+                                            weight: 'bold', // Title font weight
+                                        },
+                                        padding: {
+                                            top: 10,
+                                            bottom: 10,
+                                        },
+                                    },
+                                },
+                            },
+                        });
+
+                        updateChart3();
+
+                        document.getElementById('provinceVal').addEventListener('change', updateChart3);
+                    });
+
                 </script>
 
         </main>

@@ -10,12 +10,6 @@ class RackAttributeSeeder extends Seeder
 {
     public function run()
     {
-        // Pastikan ada rack_type untuk menghindari error foreign key
-        $rackType = RackType::firstOrCreate(
-            ['id' => 1], 
-            ['name' => 'Default Rack Type', 'description' => 'Tipe rak default']
-        );
-
         // Data atribut yang akan di-seed
         $attributes = [
             ['name' => 'Nama Device', 'data_type' => 'string', 'is_required' => false],

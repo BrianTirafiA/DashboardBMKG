@@ -152,6 +152,8 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 
 
 Route::get('/admin/qcdashboard', [StationFlagController::class, 'filter'])->name('stations.filter');
+Route::match(['get', 'post'], '/station/download-pdf', [StationFlagController::class, 'downloadPdf'])->name('station.download-pdf');
+Route::match(['get', 'post'], '/stations/download-all-pdf', [StationFlagController::class, 'downloadAllStationsPdf'])->name('stations.download-all-pdf');
 
 // Rute resource untuk FAQ  
 Route::resource('/edit-faq', PertanyaanController::class)->middleware(OnlyAdminMiddleware::class);

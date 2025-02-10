@@ -30,6 +30,8 @@ use App\Http\Controllers\DashboardServer;
 use App\Http\Controllers\RakPanelController;
 use App\Http\Controllers\RackController;
 use App\Http\Controllers\PanelController;
+use App\Http\Controllers\PrintServerReportController;
+
 
 
 
@@ -54,7 +56,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::resource('/dashboard',DashboardServer::class);
 
         Route::view('/device', 'itAsset.device');
-        // Route::view('/rack', 'itAsset.rack-controller');
+        Route::view('/rack', 'itAsset.rack');
         Route::resource('racks', RackController::class);
         Route::post('/rack/update/{rack}', [RackController::class, 'updateValues']);
         Route::post('rack/{rack}/add-row', [RackController::class, 'addRow']);
@@ -69,6 +71,7 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::Resource('/power', RakPanelController::class);
         Route::resource('rak', RackController::class);
         Route::get('/rack/add', [RackController::class, 'create'])->name('add.create');
+        Route::get('/rack/report/{rack}', [PrintServerReportController::class, 'showReport'])->name('rack.report');
 
         Route::get('/power', [RakPanelController::class, 'index'])->name('power.index');
         Route::post('/power/{rakPanel}/add-panel', [RakPanelController::class, 'addPanel'])->name('power.addPanel');

@@ -79,7 +79,7 @@
                                 </thead>
                                 <tbody>  
                                     @forelse ($loan_requests as $loanRequest)  
-                                        <tr>  
+                                    <tr>  
                                             <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">  
                                                 {{ $loan_requests->firstItem() + $loop->index }}  
                                             </td>  
@@ -126,6 +126,14 @@
                                                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />  
                                                         </svg>  
                                                         Detail  
+                                                    </button>  
+
+                                                    <button type="button" class="text-blue-500 flex items-center gap-1"  
+                                                            onclick="OpenReturnedModal('{{ $loanRequest->id }}', '{{ $loanRequest->items->map(function ($item) {return $item->itemDetail ? $item->itemDetail->nama_item . ' (Jumlah: ' . $item->quantity . ')' : 'Item tidak ditemukan';})->join(', ') }}')">  
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-back" viewBox="0 0 16 16">
+                                                            <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+                                                            </svg>
+                                                        Return
                                                     </button>  
                                                 </div>  
                                             </td>  
@@ -322,7 +330,6 @@
         </div>
     </div>
 
-
     <script>
 
         function formatDate(dateString) {
@@ -362,6 +369,42 @@
             document.getElementById('requestModal').classList.add('hidden');
         }
 
+    </script>
+
+     <!-- Modal untuk Mengembalikan Permohonan -->
+     <div id="returnedModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white flex-row rounded-lg p-6 w-1/3">
+            <h2 class="text-lg font-semibold">Kembalikan Status Permohonan</h2>
+            <p>Berikut adalah detail barang/layanan yang dipinjam</p>
+            <span id="detailitem"></span>
+            <p>Harap periksa kembali kelengkapan. Apakah Anda yakin ingin mengembalikan status peminjaman ini?</p>
+            <form id="returnForm" action="{{ route('returnedadmin', '') }}" method="POST">
+                @csrf
+                @method('PUT')                 
+                <input type="hidden" name="id" id="returnedRequestId">
+                <input type="hidden" name="approval_status" id="acceptStatus" value="returned">
+                <input type="hidden" name="note" id="note" value="Peminjaman Anda Telah Dikembalikan oleh Admin">
+
+                <div class="flex justify-end mt-4">
+                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        onclick="closeReturnedModal()">Batal</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Kembalikan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function OpenReturnedModal(id, items) {
+            document.getElementById('returnedRequestId').value = id;
+            document.getElementById('detailitem').textContent = items;
+            document.getElementById('returnForm').action = "{{ route('returnedadmin', '') }}/" + id;
+            // Menampilkan modal  
+            document.getElementById('returnedModal').classList.remove('hidden');
+        }
+        function closeReturnedModal() {
+            document.getElementById('returnedModal').classList.add('hidden');
+        }  
     </script>
 
 </x-lend-layout-template>

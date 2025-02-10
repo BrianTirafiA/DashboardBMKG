@@ -63,13 +63,20 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/report', LaporanController::class, );
         Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
         Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
-        Route::resource('/transaksi-pengajuan', LoanRequestController::class, );
-        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-pengajuan-peminjaman', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan-peminjaman', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-pengajuan-layanan', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan-layanan', [LoanRequestController::class, 'pengajuanlayananindex'])->name('pengajuanlayanan.index');
         Route::resource('/transaksi-proses', LoanRequestController::class, );
         Route::get('/transaksi-proses', [LoanRequestController::class, 'onprocessindex'])->name('proses.index');
-        Route::view('/transaksi-pengembalian', LoanRequestController::class, );
+        Route::resource('/transaksi-pengembalian', LoanRequestController::class, );
         Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
-        Route::view('/transaksi-dibatalkan', LoanRequestController::class, );
+        Route::post('/transaksi-pengembalian', [LoanRequestController::class, 'returned'])->name('returnedadmin');
+        Route::resource('/report-layanan', LoanRequestController::class, );
+        Route::get('/report-layanan', [LoanRequestController::class, 'layananindex'])->name('reportlayanan.index');
+        Route::resource('/report-peminjaman', LoanRequestController::class, );
+        Route::get('/report-peminjaman', [LoanRequestController::class, 'peminjamanindex'])->name('reportpeminjaman.index');
+        Route::resource('/transaksi-dibatalkan', LoanRequestController::class, );
         Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
@@ -108,6 +115,7 @@ Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () 
     Route::get('/proses', [LoanRequestController::class, 'user_prosesindex'])->name('user_prosesindex');
     Route::resource('/pengembalian', LoanRequestController::class, );
     Route::get('/pengembalian', [LoanRequestController::class, 'user_pengembalianindex'])->name('user_pengembalianindex');
+    Route::post('/pengembalian', [UserDashboard::class, 'returned'])->name('returned');
     Route::resource('/riwayat', LoanRequestController::class, );
     Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
 

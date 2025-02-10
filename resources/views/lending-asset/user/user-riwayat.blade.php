@@ -87,7 +87,7 @@
                             <table id="usertable" class="w-full mt-4 text-left table-auto">
                                 <thead>
                                     <tr>
-                                        <th class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">#</th>
+                                        <th class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">No.</th>
                                         @foreach ($columns as $column)
                                             <th class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
                                                 {{ $column['title'] }}

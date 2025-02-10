@@ -26,6 +26,11 @@ use App\Http\Middleware\LogoutMiddleware;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TypeDeviceController;
 use App\Http\Controllers\UserControllerForAdmin;
+use App\Http\Controllers\DashboardServer;
+use App\Http\Controllers\RakPanelController;
+use App\Http\Controllers\RackController;
+use App\Http\Controllers\PanelController;
+
 
 
 Route::get('/', [HomeController::class, 'home']);
@@ -46,13 +51,31 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     Route::prefix('itasset')->group(function () {
         Route::view('/dashboard', 'itAsset.dashboard');
+        Route::resource('/dashboard',DashboardServer::class);
+
         Route::view('/device', 'itAsset.device');
-        Route::view('/rack', 'itAsset.rack');
-        Route::view('/power', 'itAsset.power');
+        // Route::view('/rack', 'itAsset.rack-controller');
+        Route::resource('racks', RackController::class);
+        Route::post('/rack/update/{rack}', [RackController::class, 'updateValues']);
+        Route::post('rack/{rack}/add-row', [RackController::class, 'addRow']);
+        Route::view('/rack/add', 'itAsset.rack-controller');  
+        Route::get('rack/{rack}', [RackController::class, 'show'])->name('rack.show');
+        Route::delete('/rack/delete/{rack}', [RackController::class, 'destroy'])->name('rack.destroy');
+
         Route::view('/report', 'itAsset.report');
         Route::view('/maintenance', 'itAsset.maintenance');
         Route::view('/log', 'itAsset.log');
-        Route::Resource('/device', controller: DeviceController::class);
+        Route::Resource('/device', DeviceController::class);
+        Route::Resource('/power', RakPanelController::class);
+        Route::resource('rak', RackController::class);
+        Route::get('/rack/add', [RackController::class, 'create'])->name('add.create');
+
+        Route::get('/power', [RakPanelController::class, 'index'])->name('power.index');
+        Route::post('/power/{rakPanel}/add-panel', [RakPanelController::class, 'addPanel'])->name('power.addPanel');
+        Route::post('/power/update', [PanelController::class, 'updatePanelData'])->name('power.updatePanelData');
+
+        Route::delete('/power/{id}', [RakPanelController::class, 'destroy'])->name('power.destroy');
+        Route::delete('/power/panel/{id}', [RakPanelController::class, 'destroy_panel'])->name('power.destroy_panel');
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
         Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
 
@@ -63,13 +86,20 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::view('/report', LaporanController::class, );
         Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
         Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
-        Route::resource('/transaksi-pengajuan', LoanRequestController::class, );
-        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-pengajuan-peminjaman', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan-peminjaman', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-pengajuan-layanan', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan-layanan', [LoanRequestController::class, 'pengajuanlayananindex'])->name('pengajuanlayanan.index');
         Route::resource('/transaksi-proses', LoanRequestController::class, );
         Route::get('/transaksi-proses', [LoanRequestController::class, 'onprocessindex'])->name('proses.index');
-        Route::view('/transaksi-pengembalian', LoanRequestController::class, );
+        Route::resource('/transaksi-pengembalian', LoanRequestController::class, );
         Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
-        Route::view('/transaksi-dibatalkan', LoanRequestController::class, );
+        Route::post('/transaksi-pengembalian', [LoanRequestController::class, 'returned'])->name('returnedadmin');
+        Route::resource('/report-layanan', LoanRequestController::class, );
+        Route::get('/report-layanan', [LoanRequestController::class, 'layananindex'])->name('reportlayanan.index');
+        Route::resource('/report-peminjaman', LoanRequestController::class, );
+        Route::get('/report-peminjaman', [LoanRequestController::class, 'peminjamanindex'])->name('reportpeminjaman.index');
+        Route::resource('/transaksi-dibatalkan', LoanRequestController::class, );
         Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
@@ -108,6 +138,7 @@ Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () 
     Route::get('/proses', [LoanRequestController::class, 'user_prosesindex'])->name('user_prosesindex');
     Route::resource('/pengembalian', LoanRequestController::class, );
     Route::get('/pengembalian', [LoanRequestController::class, 'user_pengembalianindex'])->name('user_pengembalianindex');
+    Route::post('/pengembalian', [UserDashboard::class, 'returned'])->name('returned');
     Route::resource('/riwayat', LoanRequestController::class, );
     Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
 
@@ -133,4 +164,3 @@ Route::delete('/profile/{id}/delete-image', [UserControllerForUpdateData::class,
 Route::get('/profile-photo/{filename}', [ProfilePhotoController::class, 'show'])->name('profile.photo');
 Route::post('/items/{id}/update-images', [ItemController::class, 'updateImages'])->name('items.update.images');
 Route::delete('/items/{id}/delete-image/{imageNumber}', [ItemController::class, 'deleteImage'])->name('items.delete.image');
-

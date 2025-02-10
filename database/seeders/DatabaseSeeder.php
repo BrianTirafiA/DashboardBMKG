@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             UnitKerjaSeeder::class,
+            RackTypeSeeder::class,
             RackAttributeSeeder::class,
             RackStatusSeeder::class,
-            RackTypeSeeder::class,
             TypeDeviceSeeder::class,
         ]);
     }

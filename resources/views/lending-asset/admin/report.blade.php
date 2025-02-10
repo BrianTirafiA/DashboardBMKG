@@ -11,7 +11,7 @@
     <div>
         <div class="me-7 mt-1">
             @php      
-                                $title = 'Laporan';
+                $title = 'Laporan';
                 $description = 'Halaman ini berisi Laporan yang dapat Anda kelola.';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],
@@ -100,7 +100,7 @@
                             </div>
 
                             <!-- Print Button -->
-                            <a href="{{ route('laporan.cetak', ['periode' => request('periode'), 'search' => request('search')]) }}"
+                            <a href="{{ route('laporan.cetak', ['periode' => request('periode'), 'search' => request('search')]) }}" target="_blank"
                                 class="flex items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg h-10 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-printer" viewBox="0 0 16 16">

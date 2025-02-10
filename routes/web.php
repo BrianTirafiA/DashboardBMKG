@@ -167,5 +167,3 @@ Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->middlewar
 Route::post('/profile/{id}/upload-image', [UserControllerForUpdateData::class, 'uploadImage'])->name('profile.upload.image');
 Route::delete('/profile/{id}/delete-image', [UserControllerForUpdateData::class, 'deleteImage'])->name('profile.delete.image');
 Route::get('/profile-photo/{filename}', [ProfilePhotoController::class, 'show'])->name('profile.photo');
-Route::post('/items/{id}/update-images', [ItemController::class, 'updateImages'])->name('items.update.images');
-Route::delete('/items/{id}/delete-image/{imageNumber}', [ItemController::class, 'deleteImage'])->name('items.delete.image');

@@ -118,10 +118,18 @@ public function cetak(Request $request)
     $total_pages = ceil($loan_requests->count() / 10);
     $page = 1;
 
+    // Mendapatkan nama admin dari request
+    $admin_fullname = auth()->user()->fullname ?? 'Admin'; // Default jika tidak ada nama admin
+    $tanggal = now()->format('Y-m-d'); // Format tanggal saat ini
+
+    // Nama file sesuai format yang diinginkan
+    $file_name = "Laporan Ringkasan Permohonan {$tanggal} oleh {$admin_fullname}.pdf";
+
     $pdf = PDF::loadView('lending-asset.admin.report-print', compact('loan_requests', 'request', 'total_pages', 'page'));
 
-    return $pdf->download('laporan.pdf');
+    return $pdf->stream($file_name);
 }
+
 
 
 

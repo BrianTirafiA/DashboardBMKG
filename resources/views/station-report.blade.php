@@ -118,9 +118,9 @@
     <table id="flagging-table">
         <thead>
             <tr>
-                <th>Kategori</th>
-                <th>Tanggal (Hari/Bulan/Tahun)</th>
-                <th>Presentase</th>
+                <th style="background-color: #f0f0f0; font-weight: bold;">Kategori</th>
+                <th style="background-color: #f0f0f0; font-weight: bold;">Tanggal (Hari/Bulan/Tahun)</th>
+                <th style="background-color: #f0f0f0; font-weight: bold;">Presentase</th>
             </tr>
         </thead>
         <tbody>
@@ -183,7 +183,7 @@
     <table id="chart-table">
         <thead>
             <tr>
-                <th>Tanggal (Hari/Bulan/Tahun)</th>
+                <th style="background-color: #f0f0f0; font-weight: bold;">Tanggal (Hari/Bulan/Tahun)</th>
                 <th style="background-color: #006d7e; font-weight: bold; text-align: center;">Valid</th>
                 <th style="background-color: #f7c92e; text-align: center;">Invalid</th>
                 <th style="background-color: #b12629; text-align: center;">Missing</th>

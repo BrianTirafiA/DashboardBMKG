@@ -159,74 +159,70 @@
                         return canvas.toDataURL('image/png'); // Convert the chart to a base64 image
                     }
 
-                    function getParameterByName(name, url = window.location.href) {
-                        name = name.replace(/[\[\]]/g, '\\$&');
-                        const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
-                        const results = regex.exec(url);
-                        if (!results) return null;
-                        if (!results[2]) return '';
-                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-                    }
+                    function getQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let selectedFlag = urlParams.get("selected_flag") || "overall_value";
 
-                    function getSelectedFlag() {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        return urlParams.get('selected_flag') || 'overall_value'; // Default to 'overall_value' if not found
-                    }
+    return {
+        selectedFlag: selectedFlag === "overall_value" ? "all" : selectedFlag, // Ensure UI sync
+        type: urlParams.get("type") || "all",
+        province: urlParams.get("province") || "all",
+        startDate: urlParams.get("start_date"),
+        endDate: urlParams.get("end_date"),
+    };
+}
 
-                    function getType() {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        return urlParams.get('type') || 'all'; // Default to 'overall_value' if not found
-                    }
 
-                    function getProvince() {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        return urlParams.get('province') || 'all'; // Default to 'overall_value' if not found
-                    }
 
-                    function updateQueryStringParameter(key, value) {
-                        let url = new URL(window.location.href);
-                        if (value === null || value === '' || value === 'all') {
-                            url.searchParams.delete(key);
-                        } else {
-                            url.searchParams.set(key, value);
-                        }
-                        window.history.replaceState(null, '', url);
-                    }
 
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const flagSelect = document.getElementById('flagVal');
-                        const typeSelect = document.getElementById('TypeVal');
-                        const provinceSelect = document.getElementById('provinceVal');
+function updateQueryStringParameter(key, value) {
+    let url = new URL(window.location.href);
 
-                        // Get values from the URL or set default
-                        const urlSelectedFlag = getParameterByName('selected_flag') || 'overall_value';
-                        const urlSelectedType = getParameterByName('type') || 'all';
-                        const urlSelectedProvince = getParameterByName('province') || 'all';
+    if (value === null || value === "" || (key !== "selected_flag" && value === "all")) {
+        url.searchParams.delete(key);
+    } else if (key === "selected_flag" && value === "all") {
+        url.searchParams.set(key, "overall_value"); // Convert 'all' to 'overall_value' for selected_flag
+        document.getElementById("flagVal").value = "overall_value"; // Ensure dropdown reflects the change
+    } else {
+        url.searchParams.set(key, value);
+    }
 
-                        // Set dropdown values based on the URL
-                        flagSelect.value = urlSelectedFlag;
-                        typeSelect.value = urlSelectedType;
-                        provinceSelect.value = urlSelectedProvince;
+    window.history.replaceState(null, "", url);
+}
 
-                        // Update the URL when a selection changes
-                        flagSelect.addEventListener('change', (event) => {
-                            updateQueryStringParameter('selected_flag', event.target.value);
-                        });
+document.addEventListener("DOMContentLoaded", () => {
+    const { selectedFlag, type, province } = getQueryParams();
 
-                        typeSelect.addEventListener('change', (event) => {
-                            updateQueryStringParameter('type', event.target.value);
-                        });
+    const flagSelect = document.getElementById("flagVal");
+    const typeSelect = document.getElementById("TypeVal");
+    const provinceSelect = document.getElementById("provinceVal");
 
-                        provinceSelect.addEventListener('change', (event) => {
-                            updateQueryStringParameter('province', event.target.value);
-                        });
-                    });
+    flagSelect.value = selectedFlag; // Ensure correct dropdown value
+    typeSelect.value = type;
+    provinceSelect.value = province;
+
+    flagSelect.addEventListener("change", (event) => {
+        updateQueryStringParameter("selected_flag", event.target.value);
+        updateCharts();
+    });
+
+    typeSelect.addEventListener("change", (event) => {
+        updateQueryStringParameter("type", event.target.value);
+        addMarkers();
+    });
+
+    provinceSelect.addEventListener("change", (event) => {
+        updateQueryStringParameter("province", event.target.value);
+        addMarkers();
+    });
+});
+
+
+
 
                     function downloadStationReport(stationName) {
                         // Fetch start_date and end_date from the URL
-                        let startDate = getParameterByName('start_date');
-                        let endDate = getParameterByName('end_date');
-                        let selectedFlag = getSelectedFlag();
+                        const { startDate, endDate, selectedFlag } = getQueryParams();
 
                         // Fallback to defaults if dates are not present in the URL
                         if (!startDate || !endDate) {
@@ -247,22 +243,18 @@
                         window.open(url, '_blank');
                     }
 
-                    document.getElementById('downloadAllDataButton').addEventListener('click', function () {
-                        let startDate = getParameterByName('start_date');
-                        let endDate = getParameterByName('end_date');
-                        let selectedFlag = getSelectedFlag();
-                        let selectedType = getType();
-                        let selectedProvince = getProvince();
+                    document.getElementById("downloadAllDataButton").addEventListener("click", () => {
+        const { startDate, endDate, selectedFlag, type, province } = getQueryParams();
 
-                        if (!startDate || !endDate) {
-                            alert("Please select a valid start date and end date.");
-                            return;
-                        }
+        if (!startDate || !endDate) {
+            alert("Please select a valid start date and end date.");
+            return;
+        }
 
-                        let url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(selectedType)}&province=${encodeURIComponent(selectedProvince)}`;
+        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}`;
 
-                        window.open(url, '_blank');
-                    });
+        window.open(url, "_blank");
+    });
 
 
 

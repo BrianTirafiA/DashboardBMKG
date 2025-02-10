@@ -204,7 +204,7 @@
         <div class="bg-white rounded-lg p-6 w-1/3">
             <h2 class="text-lg font-semibold">Terima Permohonan</h2>
             <p>Apakah Anda yakin ingin menerima permohonan ini?</p>
-            <form id="acceptForm" action="{{ route('transaksi-pengajuan.update', '') }}" method="POST">
+            <form id="acceptForm" action="{{ route('transaksi-pengajuan-peminjaman.update', '') }}" method="POST">
                 @csrf
                 @method('PUT')                
                 <input type="hidden" name="id" id="acceptRequestId">
@@ -228,7 +228,7 @@
     
     // Menampilkan modal    
     document.getElementById('acceptModal').classList.remove('hidden');    
-    document.getElementById('acceptForm').action = "{{ route('transaksi-pengajuan.update', '') }}/" + id;    
+    document.getElementById('acceptForm').action = "{{ route('transaksi-pengajuan-peminjaman.update', '') }}/" + id;    
   
     console.log('Returned Date:', returnedDate.toISOString().split('T')[0]); // Log tanggal pengembalian  
 }  
@@ -242,7 +242,7 @@
         <div class="bg-white rounded-lg p-6 w-1/3">
             <h2 class="text-lg font-semibold">Tolak Permohonan</h2>
             <p>Apakah Anda yakin ingin menolak permohonan ini?</p>
-            <form id="rejectedForm" action="{{ route('transaksi-pengajuan.update', '') }}" method="POST">
+            <form id="rejectedForm" action="{{ route('transaksi-pengajuan-peminjaman.update', '') }}" method="POST">
                 @csrf
                 @method('PUT')                 
                 <input type="hidden" name="id" id="rejectedRequestId">
@@ -269,7 +269,7 @@
     <script>
         function openRejectModal(id) {
             document.getElementById('rejectedRequestId').value = id;
-            document.getElementById('rejectedForm').action = "{{ route('transaksi-pengajuan.update', '') }}/" + id;
+            document.getElementById('rejectedForm').action = "{{ route('transaksi-pengajuan-peminjaman.update', '') }}/" + id;
             // Menampilkan modal  
             document.getElementById('rejectedModal').classList.remove('hidden');
         }

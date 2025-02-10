@@ -19,7 +19,7 @@
     $totalitem = $data['totalitem'];
     $totalborrowed = $data['totalborrowed'];
     $totalcategory = $data['totalcategory'];
-    $totalbrand = $data['totalbrand'];
+    $totalservice = $data['totalservice'];
     $totallocation = $data['totallocation'];
     $totaltransaksi = $data['totaltransaksi'];
     $totalpermohonan = $data['totalpermohonan'];
@@ -242,6 +242,27 @@
           </div>
         </div>
 
+        <div id="totalservice">
+          <div class=" w-[250px] h-[216px] flex-row rounded-xl bg-[#F1F5F9] border border-gray-300 p-5 aspect">
+            <div class="">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#363840" class="bi bi-router-fill w-10 h-10" viewBox="0 0 16 16">
+                                  <path d="M5.525 3.025a3.5 3.5 0 0 1 4.95 0 .5.5 0 1 0 .707-.707 4.5 4.5 0 0 0-6.364 0 .5.5 0 0 0 .707.707"/>
+                                  <path d="M6.94 4.44a1.5 1.5 0 0 1 2.12 0 .5.5 0 0 0 .708-.708 2.5 2.5 0 0 0-3.536 0 .5.5 0 0 0 .707.707Z"/>
+                                  <path d="M2.974 2.342a.5.5 0 1 0-.948.316L3.806 8H1.5A1.5 1.5 0 0 0 0 9.5v2A1.5 1.5 0 0 0 1.5 13H2a.5.5 0 0 0 .5.5h2A.5.5 0 0 0 5 13h6a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5h.5a1.5 1.5 0 0 0 1.5-1.5v-2A1.5 1.5 0 0 0 14.5 8h-2.306l1.78-5.342a.5.5 0 1 0-.948-.316L11.14 8H4.86zM2.5 11a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m4.5-.5a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0m2.5.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m1.5-.5a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0m2 0a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0"/>
+                                  <path d="M8.5 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+                                </svg> 
+            </div>
+            <div class="">
+              <h2 class="mt-2 text-2xl font-bold">
+                <span>{{$totalservice}} Services</span>
+              </h2>
+            </div>
+            <div>
+              <p class="font-sans text-base font-medium text-gray-500">Total Permohonan Layanan</p>
+            </div>
+          </div>
+        </div>
+
         <div id="totalcategory">
           <div class=" w-[250px] h-[216px] flex-row rounded-xl bg-[#F1F5F9] border border-gray-300 p-5 aspect">
             <div class="">
@@ -263,27 +284,7 @@
           </div>
         </div>
 
-        <div id="totalbrand">
-          <div class=" w-[250px] h-[216px] flex-row rounded-xl bg-[#F1F5F9] border border-gray-300 p-5 aspect">
-            <div class="">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#363840"
-                class="bi bi-apple w-10 h-10" viewBox="0 0 16 16">
-                <path
-                  d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
-                <path
-                  d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
-              </svg>
-            </div>
-            <div class="">
-              <h2 class="mt-2 text-2xl font-bold">
-                <span>{{$totalbrand}} macam</span>
-              </h2>
-            </div>
-            <div>
-              <p class="font-sans text-base font-medium text-gray-500">Total Brand/Merek Item</p>
-            </div>
-          </div>
-        </div>
+        
 
         <div id="totallocation">
           <div class=" w-[250px] h-[216px] flex-row rounded-xl bg-[#F1F5F9] border border-gray-300 p-5 aspect">

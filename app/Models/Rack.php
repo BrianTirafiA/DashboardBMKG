@@ -32,5 +32,10 @@ class Rack extends Model
         return $this->hasMany(RackAttributeValue::class, 'rack_id'); // Sesuaikan jika ada nama kolom lain
     }
 
+    public function getDevicesCountAttribute()
+    {
+        return $this->attributes()->count();
+    }
+
 }
 

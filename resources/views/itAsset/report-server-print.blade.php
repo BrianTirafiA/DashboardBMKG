@@ -70,7 +70,7 @@
 <body>
 
     <div class="header">
-        <img src="{{ asset('assets/logo-bmkg.png') }}" alt="Logo BMKG">
+        <img src="/public/assets/logo-bmkg.png" alt="Logo BMKG">
         <h1>BADAN METEOROLOGI, KLIMATOLOGI, DAN GEOFISIKA</h1>
         <h2>PUSAT DATABASE</h2>
         <h3>SUB KOORDINATOR PEMELIHARAAN DATABASE UMUM</h3>

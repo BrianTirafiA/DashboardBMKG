@@ -141,7 +141,7 @@
 
         <p style="text-align: center; font-size: 14px; text-transform: capitalize;">Dibuat otomatis pada
             {{ now()->format('d F Y') }} <br>
-            Data difilter berdasarkan periode: {{ request()->periode }}</p>
+            Data difilter berdasarkan periode: {{ request()->periode ?? 'Seluruh Waktu' }}</p>
         <table>
             <thead>
                 <tr>

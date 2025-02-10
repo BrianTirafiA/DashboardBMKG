@@ -1,51 +1,26 @@
 <x-layout-server>
-    <h2 class="text-2xl font-semibold">Laporan Detail Rak: {{ $rack->name }}</h2>
-    <p>Ini adalah laporan detail untuk rak <strong>{{ $rack->name }}</strong>.</p>
+    <h2 class="text-2xl font-semibold mb-4 text-center">Laporan Semua Rak</h2>
 
-    <!-- Tombol Cetak -->
-    <div class="my-4">
-        <a href="{{ route('rack.report.print', ['rackId' => $rack->id]) }}" 
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Cetak Laporan
-        </a>
+    <!-- Container dengan scroll -->
+    <div class="max-h-[400px] overflow-y-auto p-3 border border-gray-300 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach ($racks as $rack)
+                <div class="bg-gray-100 p-5 rounded-lg shadow-md text-center flex flex-col items-center">
+                    <h3 class="font-semibold text-lg mb-3">{{ $rack->name }}</h3>
 
-        <a href="{{ route('rack.report.download', ['rackId' => $rack->id]) }}" 
-           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Download PDF
-        </a>
-    </div>
+                    <div class="flex flex-col gap-3 w-full items-center">
+                        <a href="{{ route('rack.report.show', $rack->id) }}"
+                            class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-5 rounded w-1/2">
+                            Lihat Laporan
+                        </a>
 
-    <!-- Tampilkan laporan -->
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Perangkat</th>
-                <th>Jenis</th>
-                <th>Tahun</th>
-                <th>Merek</th>
-                <th>PDU</th>
-                <th>Daya</th>
-                <th>User</th>
-                <th>Fungsi</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($formattedData as $row)
-                <tr>
-                    <td>{{ $row['No'] }}</td>
-                    <td>{{ $row['Perangkat'] ?? '-' }}</td>
-                    <td>{{ $row['Jenis'] ?? '-' }}</td>
-                    <td>{{ $row['Tahun'] ?? '-' }}</td>
-                    <td>{{ $row['Merek'] ?? '-' }}</td>
-                    <td>{{ $row['PDU'] ?? '-' }}</td>
-                    <td>{{ $row['Daya'] ?? '-' }}</td>
-                    <td>{{ $row['User'] ?? '-' }}</td>
-                    <td>{{ $row['Fungsi'] ?? '-' }}</td>
-                    <td class="status-operasional">{{ $row['Keterangan'] ?? '-' }}</td>
-                </tr>
+                        <a href="{{ route('rack.report.download', $rack->id) }}"
+                            class="bg-green-500 hover:bg-green-700 text-white text-sm font-bold py-2 px-5 rounded w-1/2">
+                            Download Laporan
+                        </a>
+                    </div>
+                </div>
             @endforeach
-        </tbody>
-    </table>
+        </div>
+    </div>
 </x-layout-server>

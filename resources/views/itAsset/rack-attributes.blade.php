@@ -11,7 +11,7 @@
             <form id="delete-rack-form" action="{{ url('/admin/itasset/rack/delete', $rack->id) }}" method="POST" class="hidden">
                 @csrf
                 @method('DELETE')
-            </form>
+            </form>     
 
             <button id="delete-rack" data-id="{{ $rack->id }}" 
                 class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
@@ -284,10 +284,6 @@
             saveButton.disabled = false;
         });
     });
-
-
-
-
 
 </script>
 

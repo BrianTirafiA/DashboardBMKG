@@ -159,5 +159,10 @@ class RackController extends Controller
         return redirect()->back()->with('success', 'PDU berhasil diperbarui!');
     }
 
-
+    public function showAllReports()
+    {
+        $racks = Rack::all(); // Ambil semua rak dari database
+        return view('itasset.report', compact('racks'));
+    }
+    
 }

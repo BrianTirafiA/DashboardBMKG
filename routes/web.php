@@ -71,7 +71,9 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::Resource('/power', RakPanelController::class);
         Route::resource('rak', RackController::class);
         Route::get('/rack/add', [RackController::class, 'create'])->name('add.create');
-        Route::get('/rack/report/{rack}', [PrintServerReportController::class, 'showReport'])->name('rack.report');
+        Route::get('/rack/report/show/{rack}', [PrintServerReportController::class, 'showReport'])->name('rack.report.show');
+        Route::get('/rack/report/download/{rack}', [PrintServerReportController::class, 'generatePDF'])->name('rack.report.download');
+        Route::get('/report', [RackController::class, 'showAllReports'])->name('rack.reports');
 
         Route::get('/power', [RakPanelController::class, 'index'])->name('power.index');
         Route::post('/power/{rakPanel}/add-panel', [RakPanelController::class, 'addPanel'])->name('power.addPanel');

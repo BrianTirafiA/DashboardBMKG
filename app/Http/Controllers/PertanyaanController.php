@@ -68,7 +68,7 @@ class PertanyaanController extends Controller
             'answer' => $request->answer,    
         ]);    
    
-        return redirect()->route('faq.index')->with('success', 'Pertanyaan berhasil diperbarui.');    
+        return redirect()->back()->with('success', 'Pertanyaan berhasil diperbarui.');    
     }    
       
     // Menghapus pertanyaan    
@@ -81,6 +81,6 @@ class PertanyaanController extends Controller
         $faq->delete();    
       
         // Redirect ke halaman index dengan pesan sukses    
-        return redirect()->route('faq.index')->with(['success' => 'Data Berhasil Dihapus!']);    
+        return redirect()->back()->with(['success' => 'Data Berhasil Dihapus!']);    
     }    
 }  

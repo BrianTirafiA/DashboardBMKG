@@ -1,25 +1,24 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemDetailController;
 use App\Http\Controllers\ItemLocationController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\ItemStatusController;
 use App\Http\Controllers\ItemBrandController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LoanRequestController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\UserControllerForUpdateData;
 use App\Http\Controllers\ProfilePhotoController;
+use App\Http\Controllers\UserDashboard;
 use App\Http\Middleware\CheckUserOrAdmin;
-use App\Models\RakPanel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\StationFlagController;
-use App\Http\Controllers\RakPanelController;
-use App\Http\Controllers\RackController;
-use App\Http\Controllers\PanelController;
 use App\Http\Middleware\OnlyGuestMiddleware;
 use App\Http\Middleware\OnlyAdminMiddleware;
 use App\Http\Middleware\OnlyUserMiddleware;
@@ -28,6 +27,9 @@ use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TypeDeviceController;
 use App\Http\Controllers\UserControllerForAdmin;
 use App\Http\Controllers\DashboardServer;
+use App\Http\Controllers\RakPanelController;
+use App\Http\Controllers\RackController;
+use App\Http\Controllers\PanelController;
 
 
 
@@ -79,13 +81,26 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     });
 
-    Route::prefix('lendasset')->group(function () {    
-        Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');    
-        Route::view('/report', 'lending-asset.admin.report');    
-        Route::view('/transaksi-peminjaman', 'lending-asset.admin.transaksi-peminjaman');    
-        Route::view('/transaksi-pengembalian', 'lending-asset.admin.transaksi-pengembalian');    
-        Route::resource('/transaksi-pengajuan', LoanRequestController::class);
-        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');     
+    Route::prefix('lendasset')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::view('/report', LaporanController::class, );
+        Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
+        Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
+        Route::resource('/transaksi-pengajuan-peminjaman', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan-peminjaman', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-pengajuan-layanan', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan-layanan', [LoanRequestController::class, 'pengajuanlayananindex'])->name('pengajuanlayanan.index');
+        Route::resource('/transaksi-proses', LoanRequestController::class, );
+        Route::get('/transaksi-proses', [LoanRequestController::class, 'onprocessindex'])->name('proses.index');
+        Route::resource('/transaksi-pengembalian', LoanRequestController::class, );
+        Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
+        Route::post('/transaksi-pengembalian', [LoanRequestController::class, 'returned'])->name('returnedadmin');
+        Route::resource('/report-layanan', LoanRequestController::class, );
+        Route::get('/report-layanan', [LoanRequestController::class, 'layananindex'])->name('reportlayanan.index');
+        Route::resource('/report-peminjaman', LoanRequestController::class, );
+        Route::get('/report-peminjaman', [LoanRequestController::class, 'peminjamanindex'])->name('reportpeminjaman.index');
+        Route::resource('/transaksi-dibatalkan', LoanRequestController::class, );
+        Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
         Route::resource('/brand', ItemBrandController::class);
@@ -106,15 +121,26 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
 // User Routes    
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {
-    Route::view('/dashboard', 'lending-asset.user.user-dashboard');
+    Route::resource('/dashboard', UserDashboard::class);
+    Route::get('/dashboard', [UserDashboard::class, 'itemindex'])->name('item.index');
+    Route::resource('/layanan', UserDashboard::class);
+    Route::get('/layanan', [UserDashboard::class, 'layananindex'])->name('layanan.index');
+    Route::post('/layanan/store', [UserDashboard::class, 'layananstore'])->name('layanan.store');
+    Route::post('/dashboard/addcart', [UserDashboard::class, 'addToCart'])->name('cart.add');
+    Route::get('/dashboard/get', [UserDashboard::class, 'getCart'])->name('cart.get');
+    Route::post('/dashboard/update', [UserDashboard::class, 'updateCart'])->name('cart.update');
+    Route::post('/dashboard/remove', [UserDashboard::class, 'removeCart'])->name('cart.remove');
+    Route::post('/dashboard/addrequest', [UserDashboard::class, 'storefromcart'])->name('storefromcart');
     Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);
-    Route::view('/kategori', 'lending-asset.user.user-kategori');
-    // Route::resource('/profile', UserControllerForUpdateData::class);
-    // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profile.index'); 
-    Route::view('/items', 'lending-asset.user.user-items');
-    Route::view('/pengajuan', 'lending-asset.user.user-pengajuan');
-    Route::view('/peminjaman', 'lending-asset.user.user-peminjaman');
-    Route::view('/pengembalian', 'lending-asset.user.user-pengembalian');
+    Route::resource('/pengajuan', LoanRequestController::class, );
+    Route::get('/pengajuan', [LoanRequestController::class, 'user_pengajuanindex'])->name('user_pengajuanindex');
+    Route::resource('/proses', LoanRequestController::class, );
+    Route::get('/proses', [LoanRequestController::class, 'user_prosesindex'])->name('user_prosesindex');
+    Route::resource('/pengembalian', LoanRequestController::class, );
+    Route::get('/pengembalian', [LoanRequestController::class, 'user_pengembalianindex'])->name('user_pengembalianindex');
+    Route::post('/pengembalian', [UserDashboard::class, 'returned'])->name('returned');
+    Route::resource('/riwayat', LoanRequestController::class, );
+    Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
 
 });
 

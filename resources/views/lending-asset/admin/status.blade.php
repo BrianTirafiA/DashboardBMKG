@@ -39,7 +39,7 @@
             @endphp              
 
             <div id="table"
-                class="relative flex flex-col w-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">
+                class="relative flex flex-col w-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-gray-900 border-collapse shadow-md rounded-xl bg-clip-border mb-2">
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                         <div>
@@ -210,7 +210,7 @@
                             <div class="flex justify-end">
                                 <button type="submit"
                                     class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Simpan Pengguna
+                                    Simpan Status Baru
                                 </button>
                                 <button type="button" id="closeAddModal"
                                     class="ml-2 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
@@ -221,11 +221,11 @@
                     </div>
                 </div>
 
-                <!-- Modal untuk Edit Pengguna -->
+                <!-- Modal untuk Edit Status -->
                 <div id="editModal"
                     class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center">
                     <div class="bg-white rounded-lg p-6 w-1/3">
-                        <h3 class="text-lg font-bold mb-4">Edit Pengguna</h3>
+                        <h3 class="text-lg font-bold mb-4">Edit Status</h3>
                         <form id="editForm" action="{{ route('status.update', '') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')                             
@@ -249,7 +249,7 @@
                             <div class="flex justify-end">
                                 <button type="submit"
                                     class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Update Pengguna
+                                    Update Status Baru
                                 </button>
                                 <button type="button" id="closeEditModal"
                                     class="ml-2 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">

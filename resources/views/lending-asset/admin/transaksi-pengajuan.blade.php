@@ -7,28 +7,11 @@
     <title>Daftar Permintaan Peminjaman - Admin</title>
 </head>
 
-@if(isset($error))
-    <div id="error-alert"
-        class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-4 py-3 mt-6 rounded-lg shadow-lg transition-opacity duration-400 opacity-100">
-        <span>{{ $error }}</span>
-    </div>
-
-    <script>
-        setTimeout(() => {
-            const alert = document.getElementById('error-alert');
-            if (alert) {
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 300); // Remove after fade-out          
-            }
-        }, 3000);  
-    </script>
-@endif
-
 <x-lend-layout-template>
     <div>
         <div class="me-7 mt-1">
-            @php  
-                                                                                                                                                                $title = 'Daftar Permintaan Peminjaman';
+            @php      
+                                $title = 'Daftar Permintaan Peminjaman';
                 $description = 'Halaman ini berisi daftar permintaan peminjaman yang dapat Anda kelola.';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],
@@ -37,9 +20,9 @@
                     ['key' => 'alasan_peminjaman', 'title' => 'Alasan'],
                     ['key' => 'tanggal_pengajuan', 'title' => 'Tanggal Pengajuan'],
                     ['key' => 'berkas_pendukung', 'title' => 'Berkas Pendukung'],
-                    ['key' => 'items', 'title' => 'Item (Jumlah)'], // Kolom baru untuk item  
-                ];  
-            @endphp  
+                    ['key' => 'items', 'title' => 'Item (Jumlah)'],
+                ];      
+            @endphp      
 
             <div id="table"
                 class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-gray-900 shadow-md rounded-xl mb-2">
@@ -82,91 +65,81 @@
                                     <tr>
                                         <th
                                             class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
-                                            #
-                                        </th>
+                                            #</th>
                                         @foreach ($columns as $column)  
-                                            <th
-                                                class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
-                                                {{ $column['title'] }}
-                                            </th>
+                                              <th
+                                                    class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
+                                                    {{ $column['title'] }}
+                                                </th>
                                         @endforeach
                                         <th
                                             class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
-                                            Actions
-                                        </th>
+                                            Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>  
-    @forelse ($loan_requests as $loanRequest)  
-        <tr>  
-            <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">  
-                {{ $loan_requests->firstItem() + $loop->index }}  
-            </td>  
-            @foreach ($columns as $column)  
-                <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">  
-                    @if ($column['key'] === 'user.name')  
-                        <span class="text-blue-500 cursor-pointer" onclick="openUserModal('{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->no_telepon }}')">  
-                            {{ $loanRequest->user ? $loanRequest->user->fullname : '-' }}  
-                        </span>  
-                    @elseif ($column['key'] === 'berkas_pendukung')  
-                        @if ($loanRequest->berkas_pendukung)  
-                            <a href="{{ asset('storage/' . $loanRequest->berkas_pendukung) }}" target="_blank" class="text-blue-500">Lihat Berkas</a>  
-                        @else  
-                            -  
-                        @endif  
-                    @elseif ($column['key'] === 'items')  
-                        <ul>  
-                            @foreach ($loanRequest->items as $item)  
-                                <li>  
-                                    {{ $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan' }}  
-                                    ({{ $item->quantity }})  
-                                </li>  
-                            @endforeach  
-                        </ul>  
-                    @else  
-                        {{ $loanRequest->{$column['key']} }}  
-                    @endif  
-                </td>  
-            @endforeach  
-  
-            <td class="border-b border-blue-gray-100">  
-                <div class="flex items-center gap-3 justify-center">  
-                    <!-- Tombol Terima Permintaan -->  
-                    <button type="button" class="text-blue-500 flex items-center gap-2"  
-                        onclick="openEditModal('{{ $loanRequest->id }}', '{{ $loanRequest->user_id }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->berkas_pendukung }}')">  
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">  
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />  
-                            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />  
-                        </svg>  
-                        Terima  
-                    </button>  
-                    {{-- Tombol Tolak Permintaan --}}  
-                    <form action="{{ route('transaksi-pengajuan.destroy', $loanRequest->id) }}" method="POST" class="inline">  
-                        @csrf  
-                        @method('DELETE')  
-                        <button type="button" class="text-red-500 flex items-center gap-1 delete-button"  
-                            data-id="{{ $loanRequest->id }}"  
-                            data-nama_item="{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}"  
-                            onclick="showDeleteConfirmation(this)">  
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-octagon" viewBox="0 0 16 16">  
-                                <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z" />  
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />  
-                            </svg>  
-                            Tolak  
-                        </button>  
-                    </form>  
-                </div>  
-            </td>  
-        </tr>  
-    @empty  
-        <tr>  
-            <td colspan="{{ count($columns) + 2 }}" class="p-4 text-center text-sm text-blue-gray-900">Data permintaan peminjaman belum tersedia.</td>  
-        </tr>  
-    @endforelse  
-</tbody>  
+                                <tbody>
+                                    @forelse ($loan_requests as $loanRequest)<tr>   
+                                                                            <td
+                                                                                class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
+                                                                                {{ $loan_requests->firstItem() + $loop->index }}</td>
+                                                                            @foreach ($columns as $column)  
+                                                                                 <td
+                                                                                                                        class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
+                                                                                                                        @if ($column['key'] === 'user.name')
+                                                                                                                            <span class="text-blue-500 cursor-pointer"
+                                                                                                                                onclick="openUserModal('{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->no_telepon }}')">
+                                                                                                                                {{ $loanRequest->user ? $loanRequest->user->fullname : '-' }}
+                                                                                                                            </span>
+                                                                                                                        @elseif ($column['key'] === 'berkas_pendukung')                                             
+                                                                                                                            @if ($loanRequest->berkas_pendukung)
+                                                                                                                                <a href="{{ asset('storage/' . $loanRequest->berkas_pendukung) }}"
+                                                                                                                                    target="_blank" class="text-blue-500">Lihat Berkas</a>
+                                                                                                                            @else
+                                                                                                                                -
+                                                                                                                            @endif
+                                                                                                                        @elseif ($column['key'] === 'items')                                 
+                                                                                                                            <ul>
+                                                                                                                                @foreach ($loanRequest->items as $item)      
+                                                                                                                                    <li>{{ $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan' }}
+                                                                                                                                        ({{ $item->quantity }})</li>
+                                                                                                                                @endforeach
+                                                                                                                            </ul>
+                                                                                                                        @else
+                                                                                                                            {{ $loanRequest->{$column['key']} }}
+                                                                                                                        @endif
+                                                                                                                    </td>
+                                                                            @endforeach
 
+                                                                            <td class="border-b border-blue-gray-100">
+                                                                                <div class="flex items-center gap-3 justify-center">
+                                                                                    <button type="button" class="text-blue-500 flex items-center gap-2"
+                                                                                        onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}',  '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', 
+                                                                                        '{{ $loanRequest->items->map(function ($item) {return $item->itemDetail ? $item->itemDetail->nama_item . ' (Jumlah: ' . $item->quantity . ')' : 'Item tidak ditemukan';})->join(', ') }}')">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                                            fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                                                            <path
+                                                                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                                                            <path
+                                                                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                                                        </svg>
+                                                                                        Detail
+                                                                                    </button>
+                                                                                    <button type="button" class="text-green-500"
+                                                                                        onclick="openAcceptModal('{{ $loanRequest->id }}')">Terima</button>
 
-
+                                                                                    <button type="button" class="text-red-500"
+                                                                                        onclick="openRejectModal('{{ $loanRequest->id }}')">Tolak</button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="{{ count($columns) + 2 }}"
+                                                class="p-4 text-center text-sm text-blue-gray-900">Data permintaan
+                                                peminjaman belum tersedia.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -179,97 +152,255 @@
                         <div class="flex gap-2 me-2">
                             @if($loan_requests->onFirstPage())
                                 <span
-                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
-                                    Previous
-                                </span>
+                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">Previous</span>
                             @else
                                 <a href="{{ $loan_requests->previousPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
-                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
-                                    Previous
-                                </a>
+                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Previous</a>
                             @endif
                             @if($loan_requests->hasMorePages())
                                 <a href="{{ $loan_requests->nextPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}"
-                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">
-                                    Next
-                                </a>
+                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Next</a>
                             @else
                                 <span
-                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">
-                                    Next
-                                </span>
+                                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">Next</span>
                             @endif
                         </div>
                     </div>
+                    <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal untuk Menampilkan Data Pengguna -->  
-<div id="userModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">  
-    <div class="bg-white rounded-lg p-6 w-1/3">  
-        <h2 class="text-lg font-semibold mb-4">Detail Pengguna</h2>  
-        <p><strong>Nama:</strong> <span id="modalUserName"></span></p>  
-        <p><strong>Email:</strong> <span id="modalUserEmail"></span></p>  
-        <p><strong>Telepon:</strong> <span id="modalUserPhone"></span></p>  
-        <div class="flex justify-end mt-4">  
-            <button id="closeUserModal" class="bg-blue-500 text-white px-4 py-2 rounded">Tutup</button>  
-        </div>  
-    </div>  
-</div>  
+    <!-- Modal untuk Menampilkan Data Pemohon -->
+    <div id="userModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-6 w-1/3">
+            <h2 class="text-lg font-semibold mb-4">Detail Pengguna</h2>
+            <p><strong>Nama:</strong> <span id="modalUserName"></span></p>
+            <p><strong>Email:</strong> <span id="modalUserEmail"></span></p>
+            <p><strong>Telepon:</strong> <span id="modalUserPhone"></span></p>
+            <div class="flex justify-end mt-4">
+                <button id="closeUserModal" class="bg-blue-500 text-white px-4 py-2 rounded">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openUserModal(fullname, email, no_telepon) {
+            document.getElementById('modalUserName').textContent = fullname;
+            document.getElementById('modalUserEmail').textContent = email;
+            document.getElementById('modalUserPhone').textContent = no_telepon;
+            document.getElementById('userModal').classList.remove('hidden');
+        }
+
+        // Event listener untuk menutup modal  
+        document.getElementById('closeUserModal').addEventListener('click', function () {
+            document.getElementById('userModal').classList.add('hidden');
+        });  
+    </script>
+
+    <!-- Modal untuk Menerima Permohonan -->
+    <div id="acceptModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-6 w-1/3">
+            <h2 class="text-lg font-semibold">Terima Permohonan</h2>
+            <p>Apakah Anda yakin ingin menerima permohonan ini?</p>
+            <form id="acceptForm" action="{{ route('transaksi-pengajuan-peminjaman.update', '') }}" method="POST">
+                @csrf
+                @method('PUT')                
+                <input type="hidden" name="id" id="acceptRequestId">
+                <input type="hidden" name="approval_status" id="acceptStatus" value="onprocess">
+                <input type="hidden" name="admin_id" value="{{ session('id') }}">
+                <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
+                <input type="hidden" name="note" id="acceptStatus" value="Perbaruan lebih lanjut dapat dilihat melalui website Asset Management System - Direktorat Data dan Komputasi  ">
+
+                <div class="flex justify-end mt-4">
+                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        onclick="closeAcceptModal()">Batal</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Terima Permohonan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+       function openAcceptModal(id, durasi_peminjaman) {    
+    document.getElementById('acceptRequestId').value = id;    
+    
+    // Menampilkan modal    
+    document.getElementById('acceptModal').classList.remove('hidden');    
+    document.getElementById('acceptForm').action = "{{ route('transaksi-pengajuan-peminjaman.update', '') }}/" + id;    
   
-<script>  
-function openUserModal(fullname, email, no_telepon) {  
-    document.getElementById('modalUserName').textContent = fullname;  
-    document.getElementById('modalUserEmail').textContent = email;  
-    document.getElementById('modalUserPhone').textContent = no_telepon;  
-    document.getElementById('userModal').classList.remove('hidden');  
+    console.log('Returned Date:', returnedDate.toISOString().split('T')[0]); // Log tanggal pengembalian  
 }  
-  
-// Event listener untuk menutup modal  
-document.getElementById('closeUserModal').addEventListener('click', function () {  
-    document.getElementById('userModal').classList.add('hidden');  
-});  
-</script>  
+        function closeAcceptModal() {
+            document.getElementById('acceptModal').classList.add('hidden');
+        }  
+    </script>
+
+    <!-- Modal untuk Menolak Permohonan -->
+    <div id="rejectedModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-6 w-1/3">
+            <h2 class="text-lg font-semibold">Tolak Permohonan</h2>
+            <p>Apakah Anda yakin ingin menolak permohonan ini?</p>
+            <form id="rejectedForm" action="{{ route('transaksi-pengajuan-peminjaman.update', '') }}" method="POST">
+                @csrf
+                @method('PUT')                 
+                <input type="hidden" name="id" id="rejectedRequestId">
+                <input type="hidden" name="approval_status" id="acceptStatus" value="rejected">
+                <input type="hidden" name="admin_id" value="{{ session('id') }}">
+                <input type="hidden" name="approval_date" value="{{ now()->format('Y-m-d H:i:s') }}">
+
+                <div class="mb-4">
+                    <label for="note" class="block text-sm font-medium text-gray-700">Pesan Penolakan</label>
+                    <textarea id="note" name="note" required
+                        class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                        rows="3" placeholder="Masukkan Pesan Konfirmasi"></textarea>
+                </div>
+
+                <div class="flex justify-end mt-4">
+                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        onclick="closeRejectModal()">Batal</button>
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Tolak Permohonan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openRejectModal(id) {
+            document.getElementById('rejectedRequestId').value = id;
+            document.getElementById('rejectedForm').action = "{{ route('transaksi-pengajuan-peminjaman.update', '') }}/" + id;
+            // Menampilkan modal  
+            document.getElementById('rejectedModal').classList.remove('hidden');
+        }
+        function closeRejectModal() {
+            document.getElementById('rejectedModal').classList.add('hidden');
+        }  
+    </script>
+
+    <!-- Modal untuk Menampilkan Detail Permohonan -->
+    <div id="requestModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-6 w-1/2">
+            <div class="text-center">
+                <h2 class="text-lg font-semibold">Detail Permohonan</h2>
+                <p><strong>ID:</strong> <span id="modalRequestId"></span></p>
+            </div>
+
+            <div class="flex w-full space-x-5">
+                <div class="flex-row w-full">
+                    <h2 class="text-md font-semibold mb-5">Detail Pemohon</h2>
+                    <div class="flex space-x-5">
+                 
+                        <div class="w-full">
+                            <div class="mb-1">
+                                <label for="modalNamaPemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama
+                                    Pemohon</label>
+                                <span id="modalNamaPemohon"
+                                    class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <label for="modalEmailPemohon"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Email Pemohon</label>
+                                <span id="modalEmailPemohon"
+                                    class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="modalNIP" class="block text-sm font-medium text-gray-700 mb-2">Nomor Induk
+                            Pegawai</label>
+                        <span id="modalNIP"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="modalTelepon" class="block text-sm font-medium text-gray-700 mb-2">Nomor
+                            Telepon</label>
+                        <span id="modalTelepon"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="modalDepartemen" class="block text-sm font-medium text-gray-700 mb-2">Unit
+                            Kerja</label>
+                        <span id="modalDepartemen"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex-row w-full">
+                    <h2 class="text-md font-semibold mb-5">Detail Permintaan</h2>
+                    <div class="mb-1">
+                        <label for="modalLoanDuration" class="block text-sm font-medium text-gray-700 mb-1">Durasi
+                            Peminjaman</label>
+                        <span id="modalLoanDuration"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="modalLoanReason" class="block text-sm font-medium text-gray-700 mb-1">Alasan
+                            Peminjaman</label>
+                        <span id="modalLoanReason"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="modalSubmissionDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
+                            Pengajuan</label>
+                        <span id="modalSubmissionDate"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="modalSubmissionDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
+                            Pengembalian (Jika Disetujui)</label>
+                        <span id="modalSubmissionDate"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="modalItems" class="block text-sm font-medium text-gray-700 mb-2">Items</label>
+                        <span id="modalItems"
+                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button id="closeRequestModal" onclick="closeRequestModal()" class="bg-blue-500 text-white px-4 py-2 rounded">Tutup</button>
+            </div>
+        </div>
+    </div>
 
 
     <script>
-        function openEditModal(id, user_id, durasi_peminjaman, alasan_peminjaman, tanggal_pengajuan, berkas_pendukung) {
-            document.getElementById('editLoanRequestId').value = id; // Set ID permintaan              
-            document.getElementById('editUser').value = user_id; // Set value Pengguna              
-            document.getElementById('editDurasiPeminjaman').value = durasi_peminjaman; // Set value Durasi Peminjaman              
-            document.getElementById('editAlasanPeminjaman').value = alasan_peminjaman; // Set value Alasan Peminjaman              
-            document.getElementById('editTanggalPengajuan').value = tanggal_pengajuan; // Set value Tanggal Pengajuan              
+        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, loanDuration, loanReason, submissionDate, items) {
+            document.getElementById('modalRequestId').textContent = id;
+            document.getElementById('modalNamaPemohon').textContent = fullname ? fullname : "Nama Lengkap Pemohon Tidak Ada";
+            document.getElementById('modalEmailPemohon').textContent = email ? email : "Email Pemohon Tidak Ada";
+            document.getElementById('modalNIP').textContent = nip ? nip : "Nomor Induk Pegawai Pemohon Tidak Ada";
+            document.getElementById('modalTelepon').textContent = no_telepon ? no_telepon : "Nomor Telepon Pemohon Tidak Ada";
+            document.getElementById('modalDepartemen').textContent = unit_kerja ? unit_kerja : "Unit Kerja Pemohon Tidak Ada";
+            document.getElementById('modalLoanDuration').textContent = loanDuration;
+            document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
+            document.getElementById('modalSubmissionDate').textContent = submissionDate;
+            document.getElementById('modalItems').textContent = items;
 
-            // Set action form edit              
-            document.getElementById('editForm').action = "{{ route('transaksi-pengajuan.update', '') }}/" + id; // Set action form edit              
-
-            // Tampilkan modal              
-            document.getElementById('editModal').classList.remove('hidden');
+            // Tampilkan modal  
+            document.getElementById('requestModal').classList.remove('hidden');
         }
 
-        let currentDeleteForm = null; // To store the current delete form                
-
-        // Function to show the delete confirmation modal                
-        function showDeleteConfirmation(button) {
-            const namaItem = button.dataset.nama_item; // Get item name                
-            document.getElementById('deleteItemName').textContent = namaItem; // Set item name in modal                
-            currentDeleteForm = button.closest('form'); // Get the closest form                
-            document.getElementById('delete-confirmation-modal').classList.remove('hidden'); // Show modal                
+        function closeRequestModal() {
+            document.getElementById('requestModal').classList.add('hidden');
         }
-
-        // Event listener for cancel button                
-        document.getElementById('cancel-delete').addEventListener('click', function () {
-            document.getElementById('delete-confirmation-modal').classList.add('hidden'); // Hide modal                
-        });
-
-        // Event listener for confirm delete button                
-        document.getElementById('confirm-delete').addEventListener('click', function () {
-            if (currentDeleteForm) {
-                currentDeleteForm.submit(); // Submit the form to delete the item                
-            }
-            document.getElementById('delete-confirmation-modal').classList.add('hidden'); // Hide modal                
-        });  
     </script>
+
 </x-lend-layout-template>

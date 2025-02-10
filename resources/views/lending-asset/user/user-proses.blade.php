@@ -4,22 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Permintaan Peminjaman - Admin</title>
+    <title>Daftar Pemohonanan Diterima</title>
 </head>
 
 <x-user-layout-template>
-<div>
+    <div>
         <div class="me-7 mt-1">
             @php      
-                                $title = 'Daftar Permintaan Peminjaman';
-                $description = 'Halaman ini berisi daftar permintaan peminjaman yang dapat Anda kelola.';
+                $title = 'Daftar Permohonan diterima';
+                $description = 'Halaman ini berisi daftar Permohonan diterima yang dapat Anda kelola.';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],
                     ['key' => 'user.name', 'title' => 'Nama Pemohon'],
                     ['key' => 'durasi_peminjaman', 'title' => 'Durasi (Hari)'],
-                    ['key' => 'alasan_peminjaman', 'title' => 'Alasan'],
                     ['key' => 'tanggal_pengajuan', 'title' => 'Tanggal Pengajuan'],
-                    ['key' => 'berkas_pendukung', 'title' => 'Berkas Pendukung'],
+                    ['key' => 'approval_date', 'title' => 'Tanggal Diterima'],
+                    ['key' => 'admin.name', 'title' => 'Admin Penerima'],
                     ['key' => 'items', 'title' => 'Item (Jumlah)'],
                 ];      
             @endphp      
@@ -40,7 +40,7 @@
 
                         <div class="flex flex-col gap-2 shrink-0 me-5 sm:flex-row">
                             <div class="w-full md:w-72">
-                                <form action="{{ route('user_pengajuanindex') }}" method="GET"
+                                <form action="{{ route('user_prosesindex') }}" method="GET"
                                     class="relative h-10 w-full min-w-[200px] bg-white">
                                     <input id="searchInput" name="search"
                                         class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 focus:border-2 focus:border-gray-900"
@@ -77,65 +77,69 @@
                                             Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @forelse ($loan_requests as $loanRequest)<tr>   
-                                                                            <td
-                                                                                class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
-                                                                                {{ $loan_requests->firstItem() + $loop->index }}</td>
-                                                                            @foreach ($columns as $column)  
-                                                                                 <td
-                                                                                                                        class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">
-                                                                                                                        @if ($column['key'] === 'user.name')
-                                                                                                                            <span class="text-blue-500 cursor-pointer"
-                                                                                                                                onclick="openUserModal('{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->no_telepon }}')">
-                                                                                                                                {{ $loanRequest->user ? $loanRequest->user->fullname : '-' }}
-                                                                                                                            </span>
-                                                                                                                        @elseif ($column['key'] === 'berkas_pendukung')                                             
-                                                                                                                            @if ($loanRequest->berkas_pendukung)
-                                                                                                                                <a href="{{ asset('storage/' . $loanRequest->berkas_pendukung) }}"
-                                                                                                                                    target="_blank" class="text-blue-500">Lihat Berkas</a>
-                                                                                                                            @else
-                                                                                                                                -
-                                                                                                                            @endif
-                                                                                                                        @elseif ($column['key'] === 'items')                                 
-                                                                                                                            <ul>
-                                                                                                                                @foreach ($loanRequest->items as $item)      
-                                                                                                                                    <li>{{ $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan' }}
-                                                                                                                                        ({{ $item->quantity }})</li>
-                                                                                                                                @endforeach
-                                                                                                                            </ul>
-                                                                                                                        @else
-                                                                                                                            {{ $loanRequest->{$column['key']} }}
-                                                                                                                        @endif
-                                                                                                                    </td>
-                                                                            @endforeach
-
-                                                                            <td class="border-b border-blue-gray-100">
-                                                                                <div class="flex items-center gap-3 justify-center">
-                                                                                    <button type="button" class="text-blue-500 flex items-center gap-2"
-                                                                                        onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->returned_date }}','{{ $loanRequest->berkas_pendukung }}', '{{ $loanRequest->items->map(function ($item) {
-                                            return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                                                            fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                                                                                            <path
-                                                                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                                                                            <path
-                                                                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                                                                                        </svg>
-                                                                                        Detail
-                                                                                    </button>
-                                                                                  
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="{{ count($columns) + 2 }}"
-                                                class="p-4 text-center text-sm text-blue-gray-900">Data permintaan
-                                                peminjaman belum tersedia.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
+                                <tbody>  
+                                    @forelse ($loan_requests as $loanRequest)  
+                                        <tr>  
+                                            <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">  
+                                                {{ $loan_requests->firstItem() + $loop->index }}  
+                                            </td>  
+                                            @foreach ($columns as $column)  
+                                                <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 whitespace-normal break-words max-w-[150px]">  
+                                                    @if ($column['key'] === 'user.name')  
+                                                        <span class="text-blue-500 cursor-pointer"  
+                                                            onclick="openUserModal('{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->no_telepon }}')">  
+                                                            {{ $loanRequest->user ? $loanRequest->user->fullname : '-' }}  
+                                                        </span>  
+                                                    @elseif ($column['key'] === 'berkas_pendukung')  
+                                                        @if ($loanRequest->berkas_pendukung)  
+                                                            <a href="{{ asset('storage/' . $loanRequest->berkas_pendukung) }}" target="_blank" class="text-blue-500">Lihat Berkas</a>  
+                                                        @else  
+                                                            -  
+                                                        @endif  
+                                                    @elseif ($column['key'] === 'admin.name')
+                                                        {{ $loanRequest->admin ? $loanRequest->admin->fullname : '-' }}
+                                                    @elseif ($column['key'] === 'items')  
+                                                        <ul>  
+                                                            @foreach ($loanRequest->items as $item)  
+                                                                <li>{{ $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan' }} ({{ $item->quantity }})</li>  
+                                                            @endforeach  
+                                                        </ul>  
+                                                    @elseif ($column['key'] === 'returned_date')  
+                                                        {{ $loanRequest->{$column['key']} }}  
+                                                        @php  
+                                                            $returnedDate = new DateTime($loanRequest->{$column['key']});  
+                                                            $currentDate = new DateTime();  
+                                                            $daysRemaining = $returnedDate->diff($currentDate)->days;  
+                                                        @endphp  
+                                                        <span id="countdown-{{ $loanRequest->id }}" class="inline-block w-1/2 px-3 py-1 text-xs {{ $returnedDate < $currentDate ? 'bg-red-500' : 'bg-green-500' }} text-white text-center rounded-full">  
+                                                            {{ $returnedDate < $currentDate ? 'Sudah lewat' : $daysRemaining . ' hari tersisa' }}  
+                                                        </span>  
+                                                    @else  
+                                                        {{ $loanRequest->{$column['key']} }}  
+                                                    @endif  
+                                                </td>  
+                                            @endforeach  
+                                            <td class="border-b border-blue-gray-100">  
+                                                <div class="flex-row items-center gap-3 justify-center">  
+                                                    <div>
+                                                    <button type="button" class="text-blue-500 flex items-center gap-2"  
+                                                            onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia'}}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">  
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">  
+                                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />  
+                                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />  
+                                                        </svg>  
+                                                        Detail Pesanan
+                                                    </button>  
+                                                    </div>
+                                                </div>  
+                                            </td>  
+                                        </tr>  
+                                    @empty  
+                                        <tr>  
+                                            <td colspan="{{ count($columns) + 2 }}" class="p-4 text-center text-sm text-blue-gray-900">Data permintaan peminjaman belum tersedia.</td>  
+                                        </tr>  
+                                    @endforelse  
+                                </tbody>  
                             </table>
                         </div>
                     </div>
@@ -162,10 +166,38 @@
                             @endif
                         </div>
                     </div>
+
+                    <div id="paginasi" class="flex items-center justify-between p-4 mt-1 border-t border-blue-gray-50"></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>  
+    function updateCountdown(returnedDate, elementId) {  
+        const returnedDateObj = new Date(returnedDate);  
+        const currentDate = new Date();  
+        const timeDifference = returnedDateObj - currentDate;  
+  
+        // Menghitung jumlah hari  
+        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));  
+  
+        // Memperbarui tampilan countdown  
+        const countdownElement = document.getElementById(elementId);  
+        if (daysRemaining > 0) {  
+            countdownElement.innerText = `${daysRemaining} hari tersisa`;  
+        } else {  
+            countdownElement.innerText = 'Sudah lewat';  
+        }  
+    }  
+  
+    // Memperbarui countdown untuk setiap baris  
+    document.addEventListener('DOMContentLoaded', function () {  
+        @foreach ($loan_requests as $loanRequest)  
+            updateCountdown('{{ $loanRequest->returned_date }}', 'countdown-{{ $loanRequest->id }}');  
+        @endforeach  
+    });  
+</script>
 
     <!-- Modal untuk Menampilkan Data Pemohon -->
     <div id="userModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -206,7 +238,7 @@
                 <div class="flex-row w-full">
                     <h2 class="text-md font-semibold mb-5">Detail Pemohon</h2>
                     <div class="flex space-x-5">
-                   
+                        
                         <div class="w-full">
                             <div class="mb-1">
                                 <label for="modalNamaPemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama
@@ -273,9 +305,9 @@
                         </span>
                     </div>
                     <div class="mb-4">
-                        <label for="modalReturnDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
-                            Pengembalian (Jika Disetujui)</label>
-                        <span id="modalReturnDate"
+                        <label for="modalSubmissionDate" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
+                            Pengembalian (Jika Konfirmasi Sudah Dikirim)</label>
+                        <span id="modalSubmissionDate"
                             class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
                         </span>
                     </div>
@@ -288,16 +320,7 @@
                     </div>
                 </div>
 
-                <div class="w-full">
-                    <h2 class="text-md font-semibold mb-4">Berkas Pendukung</h2>
-                    <div class="mb-4">
-                        <label for="modalSupportingDocuments"
-                            class="block text-sm font-medium text-gray-700 mb-2">Berkas Pendukung</label>
-                        <span id="modalSupportingDocuments"
-                            class="block w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md bg-gray-100">
-                        </span>
-                    </div>
-                </div>
+                 
             </div>
 
             <div class="flex justify-end mt-4">
@@ -306,9 +329,8 @@
         </div>
     </div>
 
-
     <script>
-        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, loanDuration, loanReason, submissionDate, returned_date, supportingDocuments, items) {
+        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, loanDuration, loanReason, submissionDate, items) {
             document.getElementById('modalRequestId').textContent = id;
             document.getElementById('modalNamaPemohon').textContent = fullname ? fullname : "Nama Lengkap Pemohon Tidak Ada";
             document.getElementById('modalEmailPemohon').textContent = email ? email : "Email Pemohon Tidak Ada";
@@ -318,8 +340,6 @@
             document.getElementById('modalLoanDuration').textContent = loanDuration;
             document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
             document.getElementById('modalSubmissionDate').textContent = submissionDate;
-            document.getElementById('modalReturnDate').textContent = returned_date ? returned_date : "Belum Ada Tanggal Pengembalian";
-            document.getElementById('modalSupportingDocuments').textContent = supportingDocuments ? supportingDocuments : "Dokumen Tidak Tersedia";
             document.getElementById('modalItems').textContent = items;
 
             // Tampilkan modal  

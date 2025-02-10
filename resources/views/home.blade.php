@@ -168,16 +168,8 @@
                         const initialCenter = [-2.0, 118.0]; // increase(+) or decrease(-) the value to change [+Higher -lower, +Right -left]
                         const initialZoom = 5;
 
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                        }).addTo(map);
-
-                        // Map border
-                        const bounds = [
-                            [-20.0, 80.0], // increase(+) to make it smaller or decrease(-) to make it larger [+DecreaseSouth -InscreaseSouth, +DecreaseWest -InscreaseWest]
-                            [22.0, 151.0], // increase(+) to make it larger or decrease(-) to make it smaller [+InscreaseNorth -DecreaseNorth, +InscreaseEast -DecreaseEast]
-                        ];
-                        map.setMaxBounds(bounds);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+                        map.setMaxBounds([[-20.0, 80.0], [22.0, 151.0]]);
                         map.setMinZoom(5);
                         map.setMaxZoom(15);
 
@@ -215,10 +207,72 @@
                                 fillOpacity: 0.6,
                             })
                                 .addTo(map)
+
                                 // Click pin popup
                                 .bindPopup(`
                                 <b>Station:</b> ${station.name_station}<br>
-                    `);
+                                <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
+                                `)
+                                .on('popupopen', () => generatePopupChart(station));
+                        }
+
+                        function generatePopupChart(station) {
+                            const stationData = markerData.filter(s => s.name_station === station.name_station);
+
+                            const groupedByDate = {};
+                            stationData.forEach(data => {
+                                const date = data.date_only;
+                                if (!groupedByDate[date]) {
+                                    groupedByDate[date] = { valid: 0, invalid: 0, missing: 0, total: 0 };
+                                }
+                                for (let i = 0; i <= 9; i++) {
+                                    const value = data[`overall_value_${i}_percent`] || 0;
+                                    groupedByDate[date].total += value;
+                                    if (i === 0) groupedByDate[date].valid += value;
+                                    else if (i >= 1 && i <= 8) groupedByDate[date].invalid += value;
+                                    else if (i === 9) groupedByDate[date].missing += value;
+                                }
+                            });
+
+                            Object.keys(groupedByDate).forEach(date => {
+                                const total = groupedByDate[date].total || 1;
+                                groupedByDate[date].valid = (groupedByDate[date].valid / total) * 100;
+                                groupedByDate[date].invalid = (groupedByDate[date].invalid / total) * 100;
+                                groupedByDate[date].missing = (groupedByDate[date].missing / total) * 100;
+                            });
+
+                            const dates = Object.keys(groupedByDate).sort();
+                            const validData = dates.map(date => groupedByDate[date].valid);
+                            const invalidData = dates.map(date => groupedByDate[date].invalid);
+                            const missingData = dates.map(date => groupedByDate[date].missing);
+
+                            setTimeout(() => {
+                                const ctx = document.getElementById(`chart-${station.name_station.replace(/\s+/g, '-')}`).getContext('2d');
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: dates, // Each label is a date
+                                        datasets: [
+                                            { label: 'Valid', data: validData, backgroundColor: 'blue' },
+                                            { label: 'Invalid', data: invalidData, backgroundColor: 'yellow' },
+                                            { label: 'Missing', data: missingData, backgroundColor: 'red' },
+                                        ],
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: { legend: { position: 'top' } },
+                                        scales: {
+                                            y: { beginAtZero: true, stacked: true, max: 100 }, // Y-axis always stacks to 100%
+                                            x: { stacked: true },
+                                        },
+                                    },
+                                });
+                            }, 500); // Ensures the popup is fully rendered before initializing the chart
+
+                            return `
+        <b>Station:</b> ${station.name_station}<br>
+        <canvas id="chart-${station.name_station.replace(/\s+/g, '-')}"></canvas>
+    `;
                         }
 
                         // Function to trigger pin generation and filtering
@@ -242,7 +296,7 @@
                             filteredStations.forEach(station => {
                                 if (!uniqueStations[station.name_station]) {
                                     uniqueStations[station.name_station] = true;
-                                    createCircleMarker(station.lat, station.lon, mapTipeStationToInt(station.tipe_station), station);
+                                    createCircleMarker(station.latt_station, station.long_station, mapTipeStationToInt(station.tipe_station), station);
                                 }
                             });
                         }
@@ -266,128 +320,114 @@
                         document.getElementById('TypeVal').addEventListener('change', addMarkers);
                         document.getElementById('provinceVal').addEventListener('change', addMarkers);
                     });
-                    // First Chart: Stacked bar for tipe_station
-                    const ctx1 = document.getElementById('chart1').getContext('2d');
-                    new Chart(ctx1, {
-                        type: 'bar',
-                        data: {
-                            labels: {!! json_encode($tipeStationData->keys()) !!},
-                            datasets: [
-                                {
-                                    label: 'Value 0',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 0'])->values()) !!},
-                                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                                },
-                                {
-                                    label: 'Value 1',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 1'])->values()) !!},
-                                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                                },
-                                {
-                                    label: 'Value 2',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 2'])->values()) !!},
-                                    backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                                },
-                                {
-                                    label: 'Value 3',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 3'])->values()) !!},
-                                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                                },
-                                {
-                                    label: 'Value 4',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 4'])->values()) !!},
-                                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                                },
-                                {
-                                    label: 'Value 5',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 5'])->values()) !!},
-                                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                                },
-                                {
-                                    label: 'Value 6',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 6'])->values()) !!},
-                                    backgroundColor: 'rgba(200, 99, 132, 0.5)',
-                                },
-                                {
-                                    label: 'Value 7',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 7'])->values()) !!},
-                                    backgroundColor: 'rgba(100, 162, 235, 0.5)',
-                                },
-                                {
-                                    label: 'Value 8',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 8'])->values()) !!},
-                                    backgroundColor: 'rgba(150, 206, 86, 0.5)',
-                                },
-                                {
-                                    label: 'Value 9',
-                                    data: {!! json_encode($tipeStationData->map(fn($values) => $values['Value 9'])->values()) !!},
-                                    backgroundColor: 'rgba(175, 192, 192, 0.5)',
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const rawData = @json($markerData);
+                        let chart1Instance, chart2Instance;
+
+                        function processData(data) {
+                            return data.reduce((acc, station) => {
+                                const type = station.tipe_station;
+                                if (!acc[type]) {
+                                    acc[type] = { valid: 0, invalid: 0, missing: 0, total: 0, provinces: new Set() };
                                 }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    stacked: true,
-                                    max: 100 // Ensure the Y-axis maximum is set to 100
-                                },
-                                x: {
-                                    stacked: true
+
+                                for (let i = 0; i <= 9; i++) {
+                                    const value = station[`overall_value_${i}_percent`] || 0;
+                                    acc[type].total += value;
+                                    if (i === 0) acc[type].valid += value;
+                                    else if (i >= 1 && i <= 8) acc[type].invalid += value;
+                                    else if (i === 9) acc[type].missing += value;
                                 }
-                            }
+                                acc[type].provinces.add(station.nama_propinsi);
+                                return acc;
+                            }, {});
                         }
-                    });
-                    // Second Chart: Overall percentages
-                    const ctx2 = document.getElementById('chart2').getContext('2d');
-                    new Chart(ctx2, {
-                        type: 'pie',
-                        data: {
-                            labels: {!! json_encode(array_keys($overallSum)) !!},
-                            datasets: [{
-                                label: 'Overall Percentages',
-                                data: {!! json_encode(array_values($overallSum)) !!},
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)',
-                                    'rgba(200, 99, 132, 0.2)',
-                                    'rgba(100, 162, 235, 0.2)',
-                                    'rgba(150, 206, 86, 0.2)',
-                                    'rgba(175, 192, 192, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)',
-                                    'rgba(200, 99, 132, 1)',
-                                    'rgba(100, 162, 235, 1)',
-                                    'rgba(150, 206, 86, 1)',
-                                    'rgba(175, 192, 192, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
+
+                        function normalizeData(data) {
+                            Object.keys(data).forEach(type => {
+                                const total = data[type].total || 1;
+                                data[type].valid = (data[type].valid / total) * 100;
+                                data[type].invalid = (data[type].invalid / total) * 100;
+                                data[type].missing = (data[type].missing / total) * 100;
+                            });
+                            return data;
+                        }
+
+                        function filterData() {
+                            const selectedType = document.getElementById('TypeVal').value;
+                            const selectedProvince = document.getElementById('provinceVal').value;
+
+                            const filteredData = rawData.filter(station => {
+                                return (selectedType === 'all' || station.tipe_station === selectedType) &&
+                                    (selectedProvince === 'all' || station.nama_propinsi === selectedProvince);
+                            });
+
+                            return normalizeData(processData(filteredData));
+                        }
+
+                        function updateCharts() {
+                            const filteredData = filterData();
+                            updateChart1(filteredData);
+                            updateChart2(filteredData);
+                        }
+
+                        function updateChart1(data) {
+                            const labels = Object.keys(data);
+                            const validData = labels.map(label => data[label].valid);
+                            const invalidData = labels.map(label => data[label].invalid);
+                            const missingData = labels.map(label => data[label].missing);
+
+                            chart1Instance.data.labels = labels;
+                            chart1Instance.data.datasets = [
+                                { label: 'Valid', data: validData, backgroundColor: 'blue' },
+                                { label: 'Invalid', data: invalidData, backgroundColor: 'yellow' },
+                                { label: 'Missing', data: missingData, backgroundColor: 'red' },
+                            ];
+                            chart1Instance.update();
+                        }
+
+                        function updateChart2(data) {
+                            let overallSum = { valid: 0, invalid: 0, missing: 0, total: 0 };
+
+                            Object.keys(data).forEach(type => {
+                                overallSum.valid += data[type].valid;
+                                overallSum.invalid += data[type].invalid;
+                                overallSum.missing += data[type].missing;
+                                overallSum.total += 100; // Since each type's values already sum to 100%
+                            });
+
+                            chart2Instance.data.labels = ['Valid', 'Invalid', 'Missing'];
+                            chart2Instance.data.datasets[0].data = [
+                                (overallSum.valid / overallSum.total) * 100,
+                                (overallSum.invalid / overallSum.total) * 100,
+                                (overallSum.missing / overallSum.total) * 100
+                            ];
+                            chart2Instance.update();
+                        }
+
+                        const processedData = normalizeData(processData(rawData));
+
+                        const ctx1 = document.getElementById('chart1').getContext('2d');
+                        chart1Instance = new Chart(ctx1, {
+                            type: 'bar',
+                            data: { labels: [], datasets: [] },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'top' } },
+                                scales: { y: { beginAtZero: true, stacked: true, max: 100 }, x: { stacked: true } },
                             },
-                        }
+                        });
+
+                        const ctx2 = document.getElementById('chart2').getContext('2d');
+                        chart2Instance = new Chart(ctx2, {
+                            type: 'pie',
+                            data: { labels: [], datasets: [{ label: 'Overall Percentages', data: [], backgroundColor: ['blue', 'yellow', 'red'] }] },
+                            options: { responsive: true, plugins: { legend: { position: 'top' } } },
+                        });
+
+                        updateCharts();
+                        document.getElementById('TypeVal').addEventListener('change', updateCharts);
+                        document.getElementById('provinceVal').addEventListener('change', updateCharts);
                     });
                 </script>
 

@@ -28,7 +28,7 @@ class ItemStatusController extends Controller
     {
         // Validasi input  
         $request->validate([
-            '_status_status' => 'required|string|max:255',
+            'name_status' => 'required|string|max:255',
             'description_status' => 'required|string|max:255',
         ]);
 

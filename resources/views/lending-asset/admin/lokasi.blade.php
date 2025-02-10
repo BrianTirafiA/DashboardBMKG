@@ -6,14 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Lokasi - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         #map {
             height: 500px;
@@ -67,7 +62,7 @@
             @endphp              
 
             <div id="table"
-                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-blue-gray-100 shadow-md rounded-xl mb-2">
+                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-gray-900 shadow-md rounded-xl mb-2">
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                         <div>

@@ -13,12 +13,15 @@ class MailSend extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $details;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($details)
     {
-        //
+        $this->details = $details;
+
     }
 
     /**
@@ -37,7 +40,7 @@ class MailSend extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'lending-asset.admin.email-print',
         );
     }
 
@@ -49,5 +52,14 @@ class MailSend extends Mailable
     public function attachments(): array
     {
         return [];
+    }
+
+    public function build()
+    {
+        $view = isset($this->details->templateview) ? $this->details->templateview : 'default.view';
+
+        return $this->subject('<NO-REPLY> Email Otomatis Direktorat Data dan Komputasi BMKG')
+                    ->view($view)
+                    ->with('details', $this->details);
     }
 }

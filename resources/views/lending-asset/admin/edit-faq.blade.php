@@ -19,7 +19,7 @@
                     ['key' => 'answer', 'title' => 'Jawaban'],
                 ];            
             @endphp        <div id="table"    
-                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border mb-2">
+                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-[#FFFFFF] border border-gray-900 border-collapse shadow-md rounded-xl bg-clip-border mb-2">
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-[#FFFFFF] rounded-none bg-clip-border">
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                         <div>

@@ -12,20 +12,22 @@
         ],
         [
             'type' => 'dropdown',
-            'title' => 'Peminjaman',
+            'title' => 'Permohonan',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
                         <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
                         </svg>',
             'active' => false, // Kunci active untuk dropdown
             'items' => [
-                ['title' => 'Pengajuan', 'link' => '/admin/lendasset/transaksi-pengajuan', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengajuan'],
-                ['title' => 'Peminjaman', 'link' => '/admin/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-peminjaman'],
-                ['title' => 'Pengembalian', 'link' => '/admin/lendasset/transaksi-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-peminjaman'],
+                ['title' => 'Permohonan Peminjaman', 'link' => '/admin/lendasset/transaksi-pengajuan-peminjaman', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengajuan-peminjaman'],
+                ['title' => 'Permohonan Layanan', 'link' => '/admin/lendasset/transaksi-pengajuan-layanan', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengajuan-layanan'],
+                ['title' => 'Permohonan Diterima (Memerlukan Tindaklanjut)', 'link' => '/admin/lendasset/transaksi-proses', 'active' => $currentRoute === 'admin/lendasset/transaksi-proses'],
+                ['title' => 'Permohonan Active (Memerlukan Pengembalian)', 'link' => '/admin/lendasset/transaksi-pengembalian', 'active' => $currentRoute === 'admin/lendasset/transaksi-pengembalian'],
+                ['title' => 'Permohonan Ditolak', 'link' => '/admin/lendasset/transaksi-dibatalkan', 'active' => $currentRoute === 'admin/lendasset/transaksi-dibatalkan'],
             ],
         ],
         [
             'type' => 'dropdown',
-            'title' => 'Items',
+            'title' => 'Data Barang/Lisensi',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z"/>
                         </svg>',
@@ -40,7 +42,7 @@
         ],
         [
             'type' => 'dropdown',
-            'title' => 'Users',
+            'title' => 'Data Pengguna',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                         <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
                         </svg>',
@@ -51,14 +53,18 @@
             ],
         ],
         [
-            'type' => 'static',
-            'title' => 'Laporan',
+            'type' => 'dropdown',
+            'title' => 'Riwayat & Laporan',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-check-fill" viewBox="0 0 16 16">
                         <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m1.354 4.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
                         </svg>',
             'link' => '/admin/lendasset/report',
-            'active' => $currentRoute === 'admin/lendasset/report', // Menandai aktif
+            'items' => [
+                ['title' => 'Riwayat Permohonan Peminjaman', 'link' => '/admin/lendasset/report-peminjaman', 'active' => $currentRoute === 'admin/lendasset/report-peminjaman'],
+                ['title' => 'Riwayat Permohonan Layanan', 'link' => '/admin/lendasset/report-layanan', 'active' => $currentRoute === 'admin/lendasset/report-layanan'],
+                ['title' => 'Laporan Keseluruhan', 'link' => '/admin/lendasset/report', 'active' => $currentRoute === 'admin/lendasset/report'],
 
+            ]
         ],
         [
             'type' => 'static',

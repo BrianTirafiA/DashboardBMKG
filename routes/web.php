@@ -1,25 +1,24 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemDetailController;
 use App\Http\Controllers\ItemLocationController;
 use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\ItemStatusController;
 use App\Http\Controllers\ItemBrandController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LoanRequestController;
 use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\UserControllerForUpdateData;
 use App\Http\Controllers\ProfilePhotoController;
+use App\Http\Controllers\UserDashboard;
 use App\Http\Middleware\CheckUserOrAdmin;
-use App\Models\RakPanel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\StationFlagController;
-use App\Http\Controllers\RakPanelController;
-use App\Http\Controllers\RackController;
-use App\Http\Controllers\PanelController;
 use App\Http\Middleware\OnlyGuestMiddleware;
 use App\Http\Middleware\OnlyAdminMiddleware;
 use App\Http\Middleware\OnlyUserMiddleware;
@@ -27,8 +26,6 @@ use App\Http\Middleware\LogoutMiddleware;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TypeDeviceController;
 use App\Http\Controllers\UserControllerForAdmin;
-use App\Http\Controllers\DashboardServer;
-
 
 
 Route::get('/', [HomeController::class, 'home']);
@@ -49,43 +46,31 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     Route::prefix('itasset')->group(function () {
         Route::view('/dashboard', 'itAsset.dashboard');
-        Route::resource('/dashboard',DashboardServer::class);
-
         Route::view('/device', 'itAsset.device');
-        // Route::view('/rack', 'itAsset.rack-controller');
-        Route::resource('racks', RackController::class);
-        Route::post('/rack/update/{rack}', [RackController::class, 'updateValues']);
-        Route::post('rack/{rack}/add-row', [RackController::class, 'addRow']);
-        Route::view('/rack/add', 'itAsset.rack-controller');  
-        Route::get('rack/{rack}', [RackController::class, 'show'])->name('rack.show');
-        Route::delete('/rack/delete/{rack}', [RackController::class, 'destroy'])->name('rack.destroy');
-
+        Route::view('/rack', 'itAsset.rack');
+        Route::view('/power', 'itAsset.power');
         Route::view('/report', 'itAsset.report');
         Route::view('/maintenance', 'itAsset.maintenance');
         Route::view('/log', 'itAsset.log');
-        Route::Resource('/device', DeviceController::class);
-        Route::Resource('/power', RakPanelController::class);
-        Route::resource('rak', RackController::class);
-        Route::get('/rack/add', [RackController::class, 'create'])->name('add.create');
-
-        Route::get('/power', [RakPanelController::class, 'index'])->name('power.index');
-        Route::post('/power/{rakPanel}/add-panel', [RakPanelController::class, 'addPanel'])->name('power.addPanel');
-        Route::post('/power/update', [PanelController::class, 'updatePanelData'])->name('power.updatePanelData');
-
-        Route::delete('/power/{id}', [RakPanelController::class, 'destroy'])->name('power.destroy');
-        Route::delete('/power/panel/{id}', [RakPanelController::class, 'destroy_panel'])->name('power.destroy_panel');
+        Route::Resource('/device', controller: DeviceController::class);
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
         Route::post('/type-device/store', [TypeDeviceController::class, 'store'])->name('typeDevice.store');
 
     });
 
-    Route::prefix('lendasset')->group(function () {    
-        Route::view('/dashboard', 'lending-asset.admin.dashboard-lending');    
-        Route::view('/report', 'lending-asset.admin.report');    
-        Route::view('/transaksi-peminjaman', 'lending-asset.admin.transaksi-peminjaman');    
-        Route::view('/transaksi-pengembalian', 'lending-asset.admin.transaksi-pengembalian');    
-        Route::resource('/transaksi-pengajuan', LoanRequestController::class);
-        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');     
+    Route::prefix('lendasset')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::view('/report', LaporanController::class, );
+        Route::get('/report', [LaporanController::class, 'reportindex'])->name('report.index');
+        Route::get('/report/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
+        Route::resource('/transaksi-pengajuan', LoanRequestController::class, );
+        Route::get('/transaksi-pengajuan', [LoanRequestController::class, 'index'])->name('pengajuan.index');
+        Route::resource('/transaksi-proses', LoanRequestController::class, );
+        Route::get('/transaksi-proses', [LoanRequestController::class, 'onprocessindex'])->name('proses.index');
+        Route::view('/transaksi-pengembalian', LoanRequestController::class, );
+        Route::get('/transaksi-pengembalian', [LoanRequestController::class, 'pengembalianindex'])->name('pengembalian.index');
+        Route::view('/transaksi-dibatalkan', LoanRequestController::class, );
+        Route::get('/transaksi-dibatalkan', [LoanRequestController::class, 'rejectedindex'])->name('rejected.index');
         Route::resource('/items', ItemDetailController::class);
         Route::get('/items', [ItemDetailController::class, 'index'])->name('item.index');
         Route::resource('/brand', ItemBrandController::class);
@@ -106,15 +91,25 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
 // User Routes    
 Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () {
-    Route::view('/dashboard', 'lending-asset.user.user-dashboard');
+    Route::resource('/dashboard', UserDashboard::class);
+    Route::get('/dashboard', [UserDashboard::class, 'itemindex'])->name('item.index');
+    Route::resource('/layanan', UserDashboard::class);
+    Route::get('/layanan', [UserDashboard::class, 'layananindex'])->name('layanan.index');
+    Route::post('/layanan/store', [UserDashboard::class, 'layananstore'])->name('layanan.store');
+    Route::post('/dashboard/addcart', [UserDashboard::class, 'addToCart'])->name('cart.add');
+    Route::get('/dashboard/get', [UserDashboard::class, 'getCart'])->name('cart.get');
+    Route::post('/dashboard/update', [UserDashboard::class, 'updateCart'])->name('cart.update');
+    Route::post('/dashboard/remove', [UserDashboard::class, 'removeCart'])->name('cart.remove');
+    Route::post('/dashboard/addrequest', [UserDashboard::class, 'storefromcart'])->name('storefromcart');
     Route::get('/faq', [PertanyaanController::class, 'index'])->middleware(OnlyUserMiddleware::class);
-    Route::view('/kategori', 'lending-asset.user.user-kategori');
-    // Route::resource('/profile', UserControllerForUpdateData::class);
-    // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profile.index'); 
-    Route::view('/items', 'lending-asset.user.user-items');
-    Route::view('/pengajuan', 'lending-asset.user.user-pengajuan');
-    Route::view('/peminjaman', 'lending-asset.user.user-peminjaman');
-    Route::view('/pengembalian', 'lending-asset.user.user-pengembalian');
+    Route::resource('/pengajuan', LoanRequestController::class, );
+    Route::get('/pengajuan', [LoanRequestController::class, 'user_pengajuanindex'])->name('user_pengajuanindex');
+    Route::resource('/proses', LoanRequestController::class, );
+    Route::get('/proses', [LoanRequestController::class, 'user_prosesindex'])->name('user_prosesindex');
+    Route::resource('/pengembalian', LoanRequestController::class, );
+    Route::get('/pengembalian', [LoanRequestController::class, 'user_pengembalianindex'])->name('user_pengembalianindex');
+    Route::resource('/riwayat', LoanRequestController::class, );
+    Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
 
 });
 

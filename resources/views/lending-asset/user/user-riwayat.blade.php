@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan - Admin</title>
+    <title>Riwayat Transaksi</title>
 </head>
 
-<x-lend-layout-template>
+<x-user-layout-template>
     <div>
         <div class="me-7 mt-1">
             @php      
-                $title = 'Laporan';
-                $description = 'Halaman ini berisi Laporan yang dapat Anda kelola.';
+                $title = 'Riwayat Transaksi Peminjaman';
+                $description = 'Halaman ini berisi riwayat yang anda telah lakukan';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],
                     ['key' => 'user.name', 'title' => 'Nama Pemohon'],
@@ -41,7 +41,7 @@
     <div class="flex flex-col gap-2 shrink-0 me-5 sm:flex-row">
         <!-- Search Form -->
         <div class="w-full md:w-64">
-            <form action="{{ route('report.index') }}" method="GET" class="relative h-10 w-full min-w-[200px] bg-white">
+            <form action="{{ route('user_riwayatindex') }}" method="GET" class="relative h-10 w-full min-w-[200px] bg-white">
                 <input id="searchInput" name="search" 
                     class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 focus:border-2 focus:border-gray-900" 
                     placeholder="Search" value="{{ request('search') }}" />
@@ -61,7 +61,7 @@
                     <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"></path>
                 </svg>
             </div>
-            <form action="{{ route('report.index') }}" method="GET" class="flex items-center mb-4">
+            <form action="{{ route('user_riwayatindex') }}" method="GET" class="flex items-center mb-4">
                 <select name="periode" id="periode" onchange="this.form.submit()" class="w-full text-sm text-gray-800 border border-gray-300 px-10 py-2 rounded-md outline-blue-600 appearance-none">
                     <option value="">Semua Periode Pengajuan</option>
                     <option value="sepekan" {{ request('periode') == 'sepekan' ? 'selected' : '' }}>Sepekan Terakhir</option>
@@ -78,14 +78,6 @@
             </form>
         </div>
 
-        <!-- Print Button -->
-        <a href="{{ route('laporan.cetak', ['periode' => request('periode'), 'search' => request('search')]) }}" class="flex items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg h-10 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
-                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
-                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
-            </svg>
-            Cetak Laporan
-        </a>
     </div>
 </div>
 
@@ -106,7 +98,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($loan_requests as $loanRequest)
-                                        <tr>
+                                     <tr>
                                             <td class="p-4 border-b border-blue-gray-100 text-sm text-blue-gray-900 text-center">
                                                 {{ $loan_requests->firstItem() + $loop->index }}
                                             </td>
@@ -133,7 +125,7 @@
                                             @endforeach
                                             <td class="border-b border-blue-gray-100">
                                                 <div class="flex items-center gap-3 justify-center">
-                                                    <button type="button" class="text-blue-500 flex items-center gap-2" onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia' }}', '{{ $loanRequest->user->profile_photo }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->berkas_pendukung }}', '{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">
+                                                    <button type="button" class="text-blue-500 flex items-center gap-2" onclick="openDetailModal('{{ $loanRequest->id }}', '{{ $loanRequest->user->fullname }}', '{{ $loanRequest->user->email }}', '{{ $loanRequest->user->nip }}', '{{ $loanRequest->user->no_telepon }}', '{{ $loanRequest->user->unit_kerja ? $loanRequest->user->unit_kerja->nama_unit_kerja : 'Unit Kerja Pemohon Tidak Tersedia' }}', '{{ $loanRequest->user->profile_photo }}', '{{ $loanRequest->durasi_peminjaman }}', '{{ $loanRequest->alasan_peminjaman }}', '{{ $loanRequest->tanggal_pengajuan }}', '{{ $loanRequest->returned_date }}','{{ $loanRequest->berkas_pendukung }}', '{{ $loanRequest->items->map(function ($item) { return $item->itemDetail ? $item->itemDetail->nama_item : 'Item tidak ditemukan'; })->join(', ') }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
                                                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
@@ -158,27 +150,13 @@
                             Total Data: {{ $loan_requests->total() }} | Page {{ $loan_requests->currentPage() }} of {{ $loan_requests->lastPage() }}
                         </p>
                         <div class="flex gap-2 me-2">
-                            @php
-                                // Ambil semua query parameter, kecuali 'page'
-                                $queryParams = request()->query();
-                                unset($queryParams['page']); // Hindari duplikasi 'page'
-
-                                // Buat query string baru tanpa parameter 'page'
-                                $queryString = $queryParams ? '&' . http_build_query($queryParams) : '';
-
-                                // Tambahkan query string ke URL pagination
-                                $prevUrl = $loan_requests->previousPageUrl() . $queryString;
-                                $nextUrl = $loan_requests->nextPageUrl() . $queryString;
-                            @endphp
-
                             @if($loan_requests->onFirstPage())
                                 <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">Previous</span>
                             @else
-                                <a href="{{ $prevUrl }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Previous</a>
+                                <a href="{{ $loan_requests->previousPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Previous</a>
                             @endif
-
                             @if($loan_requests->hasMorePages())
-                                <a href="{{ $nextUrl }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Next</a>
+                                <a href="{{ $loan_requests->nextPageUrl() . (request('search') ? '&search=' . urlencode(request('search')) : '') }}" class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75">Next</a>
                             @else
                                 <span class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center font-sans text-xs font-bold uppercase text-gray-900 transition-all opacity-50 cursor-not-allowed">Next</span>
                             @endif
@@ -281,7 +259,7 @@
 </script>
 
     <script>
-        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, profile_photo, loanDuration, loanReason, submissionDate, returnDate, supportingDocuments, items) {
+        function openDetailModal(id, fullname, email, nip, no_telepon, unit_kerja, profile_photo, loanDuration, loanReason, submissionDate, returned_date, supportingDocuments, items) {
             document.getElementById('modalRequestId').textContent = id;
             document.getElementById('modalNamaPemohon').textContent = fullname ? fullname : "Nama Lengkap Pemohon Tidak Ada";
             document.getElementById('modalEmailPemohon').textContent = email ? email : "Email Pemohon Tidak Ada";
@@ -292,7 +270,7 @@
             document.getElementById('modalLoanDuration').textContent = loanDuration;
             document.getElementById('modalLoanReason').textContent = loanReason ? loanReason : "Detail Alasan Tidak Tersedia";
             document.getElementById('modalSubmissionDate').textContent = submissionDate;
-            document.getElementById('modalReturnDate').textContent = returnDate || "Belum Kembali";
+            document.getElementById('modalReturnDate').textContent = returned_date || "Belum Kembali";
             document.getElementById('modalSupportingDocuments').textContent = supportingDocuments ? supportingDocuments : "Dokumen Tidak Tersedia";
             document.getElementById('modalItems').textContent = items;
 
@@ -305,5 +283,5 @@
         }
     </script>
 
-</x-lend-layout-template>
+</x-user-layout-template>
 </html>

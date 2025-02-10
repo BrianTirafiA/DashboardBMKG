@@ -4,23 +4,12 @@
             <div class="flex justify-between">
                 <div class="mb-3">
                     <h5 class="block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900">
-                        Daftar Barang / Lisensi yang dapat diajukan peminjaman
+                        Daftar Layanan
                     </h5>
-                    <p class="block  font-sans text-base font-normal leading-relaxed text-gray-700">
-                        Masukkan keranjang untuk pengajuan beberapa item sekaligus (Keranjang hanya bersifat sementara)
+                    <p class="block  font-sans text-base font-normal leading-relaxed text-gray-700"> Halaman ini berisi
+                        daftar layanan Direktorat Data dan Komputasi yang dapat diajukan permohonan untuk keperluan
+                        tertentu
                     </p>
-                </div>
-
-                <div class="me-1">
-                    <button id="LihatCart" onclick="openCartModal()"
-                        class="block bg-[#F1F5F9] w-full flex gap-2 select-none rounded-lg bg-blue-gray-900/10 p-3 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all border border-gray-300 hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-bag-heart-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
-                        </svg>
-                        Lihat Keranjang
-                    </button>
                 </div>
             </div>
 
@@ -40,38 +29,6 @@
                                 </path>
                             </svg>
                         </button>
-                    </form>
-                </div>
-
-                <!-- Filter by Kategori -->
-                <div class="relative flex items-center">
-                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none -mt-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z" />
-                            <path
-                                d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z" />
-                        </svg>
-                    </div>
-                    <form action="{{ route('item.index') }}" method="GET" class="flex items-center mb-4">
-                        <select name="category" onchange="this.form.submit()"
-                            class="w-72 text-sm text-gray-800 border border-gray-300 px-10 py-2 rounded-md outline-blue-600 appearance-none">
-                            <option value="">Filter Berdasarkan Kategori</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name_category }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-caret-down -ms-7 mt-1" viewBox="0 0 16 16">
-                                <path
-                                    d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659">
-                                </path>
-                            </svg>
-                        </div>
                     </form>
                 </div>
 
@@ -118,7 +75,7 @@
                     </div>
                     <form action="{{ route('item.index') }}" method="GET" class="flex items-center mb-4">
                         <select name="location" onchange="this.form.submit()"
-                            class="w-80 text-sm text-gray-800 border border-gray-300 px-10 py-2 rounded-md outline-blue-600 appearance-none">
+                            class="w-72 text-sm text-gray-800 border border-gray-300 px-10 py-2 rounded-md outline-blue-600 appearance-none">
                             <option value="">Filter Berdasarkan Lokasi</option>
                             @foreach ($locations as $location)
                                 <option value="{{ $location->id }}" {{ request('location') == $location->id ? 'selected' : '' }}> {{ $location->nama_lokasi }}</option>
@@ -159,10 +116,10 @@
                 @foreach ($sortedItems as $item)
                                 @php
                                     // Cek apakah item tidak tersedia
-                                    $isInactive = ($item->jumlah_item - $item->borrowed_quantity <= 0 || $item->status->name_status !== 'Available');
+                                    $isInactive = ($item->status->name_status !== 'Available');
                                 @endphp
                                 <div id="carditem"
-                                    class="flex-shrink-0 w-[18rem] min-w-[18rem] flex flex-col rounded-xl shadow-md shadow-blue-gray-900 border border-blue-gray-100 border-collapse bg-clip-border {{ $isInactive ? 'opacity-50 bg-gray-300 border-gray-500 pointer-events-none' : '' }}">
+                                    class="flex-shrink-0 w-[18rem] min-w-[18rem] flex flex-col rounded-xl shadow-md shadow-blue-gray-900 border border-blue-gray-100 border-collapse bg-clip-border {{ $isInactive ? 'opacity-50 bg-gray-100 border-gray-500 pointer-events-none' : '' }}">
                                     <div
                                         class="relative mx-4 mt-4 h-64 overflow-hidden rounded-xl bg-white bg-clip-border border border-gray-300 text-gray-700 {{ $isInactive ? 'border-gray-500' : '' }}">
                                         <!-- Image Display -->
@@ -238,7 +195,7 @@
                                                     Status
                                                 </p>
                                                 <p class="block font-sans text-sm leading-relaxed b text-blue-gray-900 antialiased">
-                                                    Jumlah
+                                                    Permohonan
                                                 </p>
                                             </div>
 
@@ -249,7 +206,7 @@
                                                 </p>
                                                 <p id="available_quantity"
                                                     class="block font-sans text-sm font-medium leading-relaxed b text-blue-gray-900 antialiased">
-                                                    {{ $item->jumlah_item - $item->borrowed_quantity ?? "-"}} pcs
+                                                    {{ $item->borrowed_quantity ?? "-"}}
                                                 </p>
                                             </div>
                                         </div>
@@ -291,31 +248,14 @@
                                             class="block w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-3 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all border border-gray-300 hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none {{ $isInactive ? 'border-gray-500' : '' }}"
                                             type="button" data-item-id="{{ $item->id }}" data-item-name="{{ $item->nama_item }}"
                                             data-item-type="{{ $item->type_item ?? "N/A"}}" data-item-image="{{$item->image1_url}}"
-                                            data-item-status="{{ $item->status->name_status ?? "N/A"}}"
-                                            data-item-brand="{{ $item->brand->name_brand ?? "N/A" }}"
+                                            data-item-brand="{{ $item->brand->name_brand ?? "N/A" }}" data-item-status="{{$item->status->name_status}}"
                                             data-item-category="{{ $item->category->name_category ?? "N/A" }}"
                                             data-item-location="{{ $item->location->nama_lokasi ?? 'N/A' }}"
                                             data-item-vendor="{{ $item->nama_vendor ?? 'N/A' }}"
-                                            data-available-quantity="{{ $item->jumlah_item - $item->borrowed_quantity }}"
+                                            data-item-permohonan="{{$item->borrowed_quantity }}"
                                             onclick="openModal(this)">
                                             Ajukan Peminjaman
                                         </button>
-                                        <form action="{{ route('cart.add') }}" method="POST"
-                                            class="py-3 border border-gray-300 rounded-lg bg-blue-gray-900/10 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none {{ $isInactive ? 'border-gray-500' : '' }}">
-                                            @csrf
-                                            <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                            <input type="hidden" name="item_name" value="{{ $item->nama_item }}">
-                                            <!-- Input tersembunyi untuk item_name -->
-                                            <button type="submit" class="block w-1/5 select-none ">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                    class="bi bi-bag-heart-fill ms-3 me-3" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
-                                                </svg>
-                                            </button>
-                                        </form>
-
-
                                     </div>
                                 </div>
                 @endforeach
@@ -328,11 +268,11 @@
         // JavaScript to handle image switching
         const itemImages = {
             @foreach ($item_details as $item)
-                                                                                                                                    '{{ $item->id }}': [
+                                                                                                                                '{{ $item->id }}': [
                     @foreach ([$item->image1_url, $item->image2_url, $item->image3_url, $item->image4_url] as $image)
-                                                                                                                                                                                                                                                    @if ($image)
-                                                                                                                                                                                                                                                        '{{ $image }}',
-                                                                                                                                                                                                                                                    @endif
+                                                                                                                                                                                                                                            @if ($image)
+                                                                                                                                                                                                                                                '{{ $image }}',
+                                                                                                                                                                                                                                            @endif
                     @endforeach
                 ],
             @endforeach };
@@ -359,14 +299,13 @@
     <div id="loanRequestModal"
         class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center">
         <div class="bg-transparant flex gap-10 p-6 w-140">
-
             <!-- Keterangan Barang -->
             <div id="itemDetails" class=" w-full min-h-[40rem] h-full bg-white rounded-xl p-5">
 
-                <div class="relative mt-2 h-64 overflow-hidden rounded-xl bg-white bg-clip-border border border-gray-300 text-gray-700 ">
+                <div
+                    class="relative mt-2 h-64 overflow-hidden rounded-xl bg-white bg-clip-border border border-gray-300 text-gray-700 ">
                     <!-- Image Display -->
-                    <img id="itemImage" 
-                        class="h-full w-full object-cover" alt="Image Not Found">
+                    <img id="itemImage" class="h-full w-full object-cover" alt="Image Not Found">
                 </div>
                 <div class="">
                     <div class="p-2 mt-4 flex items-center justify-between gap-2 rounded-xl">
@@ -385,8 +324,7 @@
 
                     </p>
 
-                    <div
-                        class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 ">
+                    <div class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 ">
                         <div class="flex justify-between">
                             <p class="block font-sans text-sm leading-relaxed b text-blue-gray-900 antialiased">
                                 Brand
@@ -408,14 +346,13 @@
                         </div>
                     </div>
 
-                    <div
-                        class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 ">
+                    <div class="flex-row border border-gray-30 w-full p-3 rounded-xl mb-3 ">
                         <div class="flex justify-between">
                             <p class="block font-sans text-sm leading-relaxed b text-blue-gray-900 antialiased">
                                 Status
                             </p>
                             <p class="block font-sans text-sm leading-relaxed b text-blue-gray-900 antialiased">
-                                Jumlah Tersedia
+                                Total Permohonan
                             </p>
                         </div>
 
@@ -424,15 +361,14 @@
                                 class="block font-sans text-sm font-medium leading-relaxed b text-blue-gray-900 antialiased">
 
                             </span>
-                            <span id="itemAvailableQuantity"
+                            <span id="itemPermohonan"
                                 class="block font-sans text-sm font-medium leading-relaxed b text-blue-gray-900 antialiased">
 
                             </span>
                         </div>
                     </div>
 
-                    <div
-                        class="flex-row border border-gray-300 w-full p-3 rounded-xl justify-between mb-3 ">
+                    <div class="flex-row border border-gray-300 w-full p-3 rounded-xl justify-between mb-3 ">
                         <div class="mb-2 flex items-center gap-5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-geo-fill" viewBox="0 0 16 16">
@@ -458,11 +394,12 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="w-full bg-white rounded-xl p-5">
                 <h2 class="text-lg text-center font-bold mb-4">Permohonan Peminjaman Barang/Lisensi</h2>
-                <form id="loanRequestForm" action="{{ route('dashboard.store') }}" method="POST"
+                <form id="loanRequestForm" action="{{ route('layanan.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
 
@@ -475,18 +412,18 @@
                     <!-- Input Item yang dipinjam dalam bentuk array -->
                     <input type="hidden" id="item_details_id" name="items[0][item_details_id]">
 
-                    <div class="mb-4">
+                    <div class="mb-4 opacity-50">
                         <label for="quantity" class="block text-sm font-medium text-gray-700">Jumlah Barang</label>
-                        <input type="number" id="quantity" name="items[0][quantity]" required min="1"
-                            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                        <input type="number" id="quantity" name="items[0][quantity]" required min="1" value="1"
+                            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500 "
                             placeholder="Masukkan jumlah barang">
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-4 opacity-50">
                         <label for="durasi_peminjaman" class="block text-sm font-medium text-gray-700">Durasi Peminjaman
                             (hari)</label>
-                        <input type="number" id="durasi_peminjaman" name="durasi_peminjaman" required min="1"
-                            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                        <input type="number" id="durasi_peminjaman" name="durasi_peminjaman" required min="1" value="1"
+                            class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500 "
                             placeholder="Masukkan durasi peminjaman">
                     </div>
 
@@ -502,12 +439,11 @@
                         <label for="berkas_pendukung" class="block text-sm font-medium text-gray-700">Upload Berkas
                             Pendukung</label>
                         <input type="file" id="berkas_pendukung" name="berkas_pendukung"
-                            accept=".pdf"
+                            accept=".pdf,.doc,.docx,.jpg,.png"
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
-                        <p> Hanya mendukung file pdf</p>
                     </div>
 
-                    <div class="flex justify-center">
+                    <div class="flex justify-end">
                         <button type="button" class="mr-2 px-4 py-2 bg-gray-300 rounded-md"
                             onclick="closeModal()">Batal</button>
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Ajukan</button>
@@ -542,6 +478,7 @@
             const itemLocation = button.getAttribute('data-item-location');
             const itemVendor = button.getAttribute('data-item-vendor');
             const itemStatus = button.getAttribute('data-item-status');
+            const itemPermohonan = button.getAttribute('data-item-permohonan');
             const availableQuantity = button.getAttribute('data-available-quantity'); // Ambil jumlah tersedia
 
             // Set nilai ke elemen modal
@@ -553,15 +490,8 @@
             document.getElementById('itemLocation').innerText = itemLocation;
             document.getElementById('itemVendor').innerText = itemVendor;
             document.getElementById('itemStatus').innerText = itemStatus;
+            document.getElementById('itemPermohonan').innerText = itemPermohonan;
             document.getElementById('itemImage').src = itemImage;
-            document.getElementById('itemAvailableQuantity').innerText = availableQuantity + " pcs";
-
-            console.log(" . json_encode($itemImage) . ");
-
-            // Set jumlah maksimum pada input
-            const quantityInput = document.getElementById('quantity');
-            quantityInput.setAttribute('max', availableQuantity); // Set atribut max
-            quantityInput.value = ''; // Reset nilai input
 
             // Tampilkan modal
             document.getElementById('loanRequestModal').classList.remove('hidden');
@@ -588,121 +518,6 @@
         function closeModal() {
             // Sembunyikan modal peminjaman
             document.getElementById('loanRequestModal').classList.add('hidden');
-        }
-    </script>
-
-    <!-- Modal Keranjang -->
-    <div id="cartModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
-        <div class="bg-white rounded-lg p-5 w-2/3">
-            <h2 class="text-lg text-center text-red-500 font-bold mb-4">Keranjang Peminjaman (Fitur Ini Belum Tersedia
-                Saat Ini)</h2>
-
-            <!-- Daftar Item dalam Keranjang -->
-            <div id="cartItems">
-                <table class="w-full border-collapse border border-gray-200">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border p-2">Nama Item</th>
-                            <th class="border p-2">Jumlah</th>
-                            <th class="border p-2">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cartItemList">
-                        <!-- Data keranjang akan di-load melalui JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Form Permohonan Peminjaman -->
-            <form id="loanForm" action="{{ route('storefromcart') }}" method="POST" enctype="multipart/form-data"
-                class="opacity-50 bg-gray-100 border-gray-500 pointer-events-none rounded-xl p-3 mt-2">
-                @csrf
-                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                <input type="hidden" name="tanggal_pengajuan" value="{{ now()->format('Y-m-d') }}">
-
-                <div class="mt-4">
-                    <label class="block text-sm font-semibold">Durasi Peminjaman (hari)</label>
-                    <input type="number" name="durasi_peminjaman" class="w-full border rounded p-2" required min="1">
-                </div>
-
-                <div class="mt-2">
-                    <label class="block text-sm font-semibold">Alasan Peminjaman</label>
-                    <textarea name="alasan_peminjaman" class="w-full border rounded p-2" required></textarea>
-                </div>
-
-                <div class="mt-2">
-                    <label class="block text-sm font-semibold">Berkas Pendukung (Opsional)</label>
-                    <input type="file" name="berkas_pendukung" class="w-full border rounded p-2">
-                </div>
-
-                <input type="hidden" name="items" id="cartItemsInput">
-
-                <!-- Tombol Submit -->
-                <div class="mt-4 flex justify-between">
-
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Buat Permohonan</button>
-                </div>
-            </form>
-
-            <button type="button" onclick="closeCartModal()"
-                class="bg-red-500 text-white px-4 py-2 rounded-xl mt-2">Tutup</button>
-        </div>
-    </div>
-
-
-    <!-- JavaScript untuk Menampilkan & Memproses Keranjang -->
-    <script>
-        function openCartModal() {
-            document.getElementById('cartModal').classList.remove('hidden');
-            loadCartItems(); // Memuat item keranjang
-
-            // Tambahkan console log untuk memeriksa saat modal dibuka
-            console.log("Modal Keranjang Dibuka");
-        }
-        document.addEventListener('DOMContentLoaded', function () {
-            loadCartItems();
-        });
-
-        // Fungsi untuk Memuat Item dari Keranjang
-        function loadCartItems() {
-            const cartItems = @json(session('cart', [])); // Mengambil data dari session
-
-            const cartItemList = document.getElementById('cartItemList');
-            cartItemList.innerHTML = ''; // Kosongkan daftar item
-
-            // Loop melalui item di keranjang dan tambahkan ke tabel
-            for (const [itemId, item] of Object.entries(cartItems)) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-            <td class="border p-2">${item.name}</td>
-            <td class="border p-2">${item.quantity}</td>
-            <td class="border p-2">
-            <button onclick="removeFromCart('${itemId}')" class="text-red-500">Hapus</button>
-            </td>
-        `;
-                cartItemList.appendChild(row);
-            }
-        }
-
-        // Fungsi untuk Menghapus Item dari Keranjang
-        function removeFromCart(itemId) {
-            fetch(`/cart/remove/${itemId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                },
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        loadCartItems(); // Muat ulang item keranjang
-                    }
-                });
-        }
-
-        // Fungsi untuk Menutup Modal
-        function closeCartModal() {
-            document.getElementById('cartModal').classList.add('hidden'); // Sembunyikan modal
         }
     </script>
 

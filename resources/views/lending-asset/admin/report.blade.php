@@ -11,7 +11,7 @@
     <div>
         <div class="me-7 mt-1">
             @php      
-                                $title = 'Laporan';
+                $title = 'Laporan';
                 $description = 'Halaman ini berisi Laporan yang dapat Anda kelola.';
                 $columns = [
                     ['key' => 'id', 'title' => 'ID'],

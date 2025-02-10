@@ -17,7 +17,10 @@ class LoanRequestController extends Controller
     {
         // Mengambil data permohonan dengan relasi item        
         $loan_requests = LoanRequest::with('items.itemDetail', 'user')
-            ->where('approval_status', 'pending') // Filter berdasarkan status       
+            ->where('approval_status', 'pending') // Filter berdasarkan status
+            ->whereDoesntHave('items.itemDetail.category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })       
             ->when($request->search, function ($query) use ($request) {
                 $searchTerm = $request->search;
 
@@ -48,12 +51,53 @@ class LoanRequestController extends Controller
         return view('lending-asset.admin.transaksi-pengajuan', compact('loan_requests'));
     }
 
+    public function pengajuanlayananindex(Request $request)
+    {
+        // Mengambil data permohonan dengan relasi item        
+        $loan_requests = LoanRequest::with('items.itemDetail', 'user',)
+            ->where('approval_status', 'pending') // Filter berdasarkan status    
+            ->whereHas('items.itemDetail.category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })
+            ->when($request->search, function ($query) use ($request) {
+                $searchTerm = $request->search;
+
+                // Mengubah search term menjadi lowercase    
+                $searchTermLower = strtolower($searchTerm);
+
+                // Mencari berdasarkan nama pengguna, alasan peminjaman, dan item      
+                $query->whereHas('user', function ($q) use ($searchTermLower) {
+                    $q->whereRaw('LOWER(fullname) LIKE ?', ['%' . $searchTermLower . '%']);
+                })
+                    ->orWhereRaw('LOWER(alasan_peminjaman) LIKE ?', ['%' . $searchTermLower . '%'])
+                    ->orWhereHas('items', function ($q) use ($searchTermLower) {
+                    $q->whereHas('itemDetail', function ($subQuery) use ($searchTermLower) {
+                        $subQuery->whereRaw('LOWER(nama_item) LIKE ?', ['%' . $searchTermLower . '%']);
+                    });
+                });
+            })
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
+
+        // Menangani jika tidak ada data yang ditemukan  
+        if ($loan_requests->isEmpty()) {
+            return view('lending-asset.admin.transaksi-pengajuan-layanan', [
+                'loan_requests' => $loan_requests,
+                'message' => 'Tidak ada permohonan yang ditemukan.' // Pesan untuk ditampilkan di tampilan  
+            ]);
+        }
+
+        return view('lending-asset.admin.transaksi-pengajuan-layanan', compact('loan_requests'));
+    }
+
     // Menampilkan daftar permohonan peminjaman    
     public function pengembalianindex(Request $request)
     {
         // Mengambil data permohonan dengan relasi item        
         $loan_requests = LoanRequest::with('items.itemDetail', 'user')
-            ->where('approval_status', 'approved') // Filter berdasarkan status       
+            ->where('approval_status', 'approved') // Filter berdasarkan status      
+            ->whereDoesntHave('items.itemDetail.category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })    
             ->when($request->search, function ($query) use ($request) {
                 $searchTerm = $request->search;
 
@@ -116,6 +160,78 @@ class LoanRequestController extends Controller
             ]);
         }
         return view('lending-asset.admin.transaksi-dibatalkan', compact('loan_requests'));
+    }
+
+    public function layananindex(Request $request)
+    {
+        // Mengambil data permohonan dengan relasi item        
+        $loan_requests = LoanRequest::with('items.itemDetail', 'user') 
+            ->whereHas('items.itemDetail.category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })     
+            ->when($request->search, function ($query) use ($request) {
+                $searchTerm = $request->search;
+
+                // Mengubah search term menjadi lowercase    
+                $searchTermLower = strtolower($searchTerm);
+
+                // Mencari berdasarkan nama pengguna, alasan peminjaman, dan item      
+                $query->whereHas('user', function ($q) use ($searchTermLower) {
+                    $q->whereRaw('LOWER(fullname) LIKE ?', ['%' . $searchTermLower . '%']);
+                })
+                    ->orWhereRaw('LOWER(alasan_peminjaman) LIKE ?', ['%' . $searchTermLower . '%'])
+                    ->orWhereHas('items', function ($q) use ($searchTermLower) {
+                    $q->whereHas('itemDetail', function ($subQuery) use ($searchTermLower) {
+                        $subQuery->whereRaw('LOWER(nama_item) LIKE ?', ['%' . $searchTermLower . '%']);
+                    });
+                });
+            })
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
+
+        // Menangani jika tidak ada data yang ditemukan  
+        if ($loan_requests->isEmpty()) {
+            return view('lending-asset.admin.transaksi-riwayat-layanan', [
+                'loan_requests' => $loan_requests,
+                'message' => 'Tidak ada permohonan yang ditemukan.' // Pesan untuk ditampilkan di tampilan  
+            ]);
+        }
+        return view('lending-asset.admin.transaksi-riwayat-layanan', compact('loan_requests'));
+    }
+
+    public function peminjamanindex(Request $request)
+    {
+        // Mengambil data permohonan dengan relasi item        
+        $loan_requests = LoanRequest::with('items.itemDetail', 'user')
+            ->whereDoesntHave('items.itemDetail.category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })     
+            ->when($request->search, function ($query) use ($request) {
+                $searchTerm = $request->search;
+
+                // Mengubah search term menjadi lowercase    
+                $searchTermLower = strtolower($searchTerm);
+
+                // Mencari berdasarkan nama pengguna, alasan peminjaman, dan item      
+                $query->whereHas('user', function ($q) use ($searchTermLower) {
+                    $q->whereRaw('LOWER(fullname) LIKE ?', ['%' . $searchTermLower . '%']);
+                })
+                    ->orWhereRaw('LOWER(alasan_peminjaman) LIKE ?', ['%' . $searchTermLower . '%'])
+                    ->orWhereHas('items', function ($q) use ($searchTermLower) {
+                    $q->whereHas('itemDetail', function ($subQuery) use ($searchTermLower) {
+                        $subQuery->whereRaw('LOWER(nama_item) LIKE ?', ['%' . $searchTermLower . '%']);
+                    });
+                });
+            })
+            ->paginate(9); // Atur jumlah data per halaman sesuai kebutuhan      
+
+        // Menangani jika tidak ada data yang ditemukan  
+        if ($loan_requests->isEmpty()) {
+            return view('lending-asset.admin.transaksi-riwayat-layanan', [
+                'loan_requests' => $loan_requests,
+                'message' => 'Tidak ada permohonan yang ditemukan.' // Pesan untuk ditampilkan di tampilan  
+            ]);
+        }
+        return view('lending-asset.admin.transaksi-riwayat-layanan', compact('loan_requests'));
     }
 
     // Menampilkan daftar permohonan peminjaman    
@@ -300,12 +416,57 @@ class LoanRequestController extends Controller
             'approval_status' => $loan_request->approval_status,
             'note' => $loan_request->note,
             'templateview' => 'lending-asset.admin.email-print',
-        ]; 
+        ];
 
         Mail::to($details['email'])->send(new MailSend($details));
 
         // Anda bisa menambahkan logika tambahan jika diperlukan
     }
+
+    public function returned(Request $request, $loanRequestId)
+    {
+        // Validasi input
+        $request->validate([
+            'approval_status' => 'required|in:approved,rejected,returned',
+            'note' => 'nullable|string',
+        ]);
+
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            $loan_request = LoanRequest::findOrFail($loanRequestId);
+
+            // Jika status diubah menjadi 'returned', maka kurangi borrowed_quantity
+            if ($request->approval_status === 'returned') {
+                foreach ($loan_request->loanRequestItems as $loanItem) {
+                    $itemDetail = ItemDetail::lockForUpdate()->find($loanItem->item_details_id);
+                    if ($itemDetail) {
+                        $itemDetail->borrowed_quantity -= $loanItem->quantity;
+                        $itemDetail->save();
+                    }
+                }
+            }
+
+            // Perbarui status peminjaman
+            $loan_request->approval_status = $request->approval_status;
+            $loan_request->note = $request->note;
+            $loan_request->save();
+
+            // Kirim email setelah pembaruan
+            $this->kirimEmail($loan_request);
+
+            // Commit transaksi
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Status peminjaman berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // Rollback jika terjadi error
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
+        }
+    }
+
 
     // Menampilkan daftar permohonan peminjaman hanya untuk user yang sedang login
     public function user_pengajuanindex(Request $request)
@@ -476,7 +637,7 @@ class LoanRequestController extends Controller
         }
 
         // Mengambil data dengan pagination
-        $loan_requests = $loan_requests->paginate(10);
+        $loan_requests = $loan_requests->paginate(8);
 
         // Menangani jika tidak ada data yang ditemukan  
         if ($loan_requests->isEmpty()) {

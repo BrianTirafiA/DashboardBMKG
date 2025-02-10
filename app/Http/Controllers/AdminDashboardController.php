@@ -10,6 +10,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemBrand;
 use App\Models\ItemLocation;
 use App\Models\LoanRequest;
+use App\Models\LoanRequestItem;
 
 class AdminDashboardController extends Controller
 {
@@ -23,7 +24,17 @@ class AdminDashboardController extends Controller
             'totalrolepending' => User::where('role', 'pending')->count(),
             'totalunitkerja' => UnitKerja::count(),
             'totalitem' => ItemDetail::count(),
-            'totalborrowed' => ItemDetail::sum('borrowed_quantity'),
+            'totalborrowed' => ItemDetail::whereDoesntHave('category', function ($query) {
+        $query->where('name_category', 'Layanan'); // Filter kategori "Layanan"
+    })
+    ->whereHas('loanRequestItems.LoanRequest', function ($query) {
+        $query->where('approval_status', 'approved'); // Hanya untuk loan_request yang sudah disetujui
+    })
+    ->sum('borrowed_quantity'),
+
+            'totalservice' => ItemDetail::whereHas('category', function ($query) {
+                $query->where('name_category', 'Layanan'); // Filter berdasarkan kategori "Layanan"
+            })->sum('borrowed_quantity'),
             'totalcategory' => ItemCategory::count(),
             'totalbrand' => ItemBrand::count(),
             'totallocation' => ItemLocation::count(),

@@ -22,7 +22,7 @@ class UserDashboard extends Controller
         $categoryFilter = $request->input('category');
         $statusFilter = $request->input('status');
         $locationFilter = $request->input('location');
-    
+
         // Jika kategori yang dipilih adalah "Layanan", redirect ke halaman /user/layanan
         if ($categoryFilter) {
             $category = ItemCategory::find($categoryFilter);
@@ -30,7 +30,7 @@ class UserDashboard extends Controller
                 return redirect('/user/layanan');
             }
         }
-    
+
         // Memulai query untuk ItemDetail  
         $item_details = ItemDetail::with('brand', 'category', 'status', 'location')
             ->whereDoesntHave('category', function ($query) {
@@ -74,7 +74,7 @@ class UserDashboard extends Controller
                 });
             })
             ->paginate(10);
-    
+
         // Mengambil URL gambar
         foreach ($item_details as $item) {
             $item->image1_url = Storage::url($item->image1);
@@ -82,16 +82,16 @@ class UserDashboard extends Controller
             $item->image3_url = Storage::url($item->image3);
             $item->image4_url = Storage::url($item->image4);
         }
-    
+
         $categories = ItemCategory::all();
         $brands = ItemBrand::all();
         $locations = ItemLocation::all();
         $status = ItemStatus::all();
-    
+
         // Mengembalikan view dengan data item  
         return view('lending-asset.user.user-dashboard', compact('item_details', 'brands', 'categories', 'status', 'locations'));
     }
-    
+
 
     public function layananindex(Request $request)
     {
@@ -236,61 +236,99 @@ class UserDashboard extends Controller
         }
     }
 
-        public function layananstore(Request $request)
-        {
-            // Validasi data
-            $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'durasi_peminjaman' => 'required|integer|min:1',
-                'alasan_peminjaman' => 'required|string',
-                'tanggal_pengajuan' => 'required|date',
-                'berkas_pendukung' => 'nullable|file',
-                'items' => 'required|array',
-                'items.*.item_details_id' => 'required|exists:item_details,id',
-                'items.*.quantity' => 'required|integer|min:1',
+    public function layananstore(Request $request)
+    {
+        // Validasi data
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'durasi_peminjaman' => 'required|integer|min:1',
+            'alasan_peminjaman' => 'required|string',
+            'tanggal_pengajuan' => 'required|date',
+            'berkas_pendukung' => 'nullable|file',
+            'items' => 'required|array',
+            'items.*.item_details_id' => 'required|exists:item_details,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            // Simpan permohonan peminjaman
+            $loanRequest = LoanRequest::create([
+                'user_id' => $request->user_id,
+                'durasi_peminjaman' => $request->durasi_peminjaman,
+                'alasan_peminjaman' => $request->alasan_peminjaman,
+                'tanggal_pengajuan' => $request->tanggal_pengajuan,
+                'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('berkas_pendukung', 'public') : null,
+                'approval_status' => 'pending',
             ]);
 
-            // Mulai transaksi database
-            DB::beginTransaction();
-
-            try {
-                // Simpan permohonan peminjaman
-                $loanRequest = LoanRequest::create([
-                    'user_id' => $request->user_id,
-                    'durasi_peminjaman' => $request->durasi_peminjaman,
-                    'alasan_peminjaman' => $request->alasan_peminjaman,
-                    'tanggal_pengajuan' => $request->tanggal_pengajuan,
-                    'berkas_pendukung' => $request->file('berkas_pendukung') ? $request->file('berkas_pendukung')->store('berkas_pendukung', 'public') : null,
-                    'approval_status' => 'pending',
+            // Simpan item peminjaman dan update borrowed_quantity
+            foreach ($request->items as $item) {
+                LoanRequestItem::create([
+                    'loan_request_id' => $loanRequest->id,
+                    'item_details_id' => $item['item_details_id'],
+                    'quantity' => $item['quantity'],
                 ]);
 
-                // Simpan item peminjaman dan update borrowed_quantity
-                foreach ($request->items as $item) {
-                    LoanRequestItem::create([
-                        'loan_request_id' => $loanRequest->id,
-                        'item_details_id' => $item['item_details_id'],
-                        'quantity' => $item['quantity'],
-                    ]);
-
-                        // Update jumlah barang yang sedang dipinjam
-                        $itemDetail = ItemDetail::lockForUpdate()->find($item['item_details_id']);
-                        if ($itemDetail) {
-                            $itemDetail->borrowed_quantity += $item['quantity'];
-                            $itemDetail->save();
-                        }
+                // Update jumlah barang yang sedang dipinjam
+                $itemDetail = ItemDetail::lockForUpdate()->find($item['item_details_id']);
+                if ($itemDetail) {
+                    $itemDetail->borrowed_quantity += $item['quantity'];
+                    $itemDetail->save();
                 }
-
-                // Commit transaksi jika semua berhasil
-                DB::commit();
-
-                return redirect()->back()->with('success', 'Permohonan peminjaman berhasil ditambahkan.');
-            } catch (\Exception $e) {
-                // Rollback jika terjadi error
-                DB::rollback();
-                return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
             }
-        }
 
+            // Commit transaksi jika semua berhasil
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Permohonan peminjaman berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            // Rollback jika terjadi error
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
+        }
+    }
+
+    public function returned(Request $request, $loanRequestId)
+    {
+        // Validasi input
+        $request->validate([
+            'approval_status' => 'required|in:approved,rejected,returned',
+        ]);
+
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            $loanRequest = LoanRequest::findOrFail($loanRequestId);
+
+            // Jika status diubah menjadi 'returned', maka kurangi borrowed_quantity
+            if ($request->approval_status === 'returned') {
+                foreach ($loanRequest->loanRequestItems as $loanItem) {
+                    $itemDetail = ItemDetail::lockForUpdate()->find($loanItem->item_details_id);
+                    if ($itemDetail) {
+                        $itemDetail->borrowed_quantity -= $loanItem->quantity;
+                        $itemDetail->save();
+                    }
+                }
+            }
+
+            // Perbarui status peminjaman
+            $loanRequest->approval_status = $request->approval_status;
+            $loanRequest->save();
+
+            // Commit transaksi
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Status peminjaman berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // Rollback jika terjadi error
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
+        }
+    }
 
     public function storefromcart(Request $request)
     {

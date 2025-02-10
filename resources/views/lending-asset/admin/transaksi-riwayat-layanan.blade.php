@@ -40,7 +40,7 @@
 
                         <div class="flex flex-col gap-2 shrink-0 me-5 sm:flex-row">
                             <div class="w-full md:w-72">
-                                <form action="{{ route('rejected.index') }}" method="GET"
+                                <form action="{{ route('layanan.index') }}" method="GET"
                                     class="relative h-10 w-full min-w-[200px] bg-white">
                                     <input id="searchInput" name="search"
                                         class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 focus:border-2 focus:border-gray-900"
@@ -65,7 +65,7 @@
                                     <tr>
                                         <th
                                             class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">
-                                            No</th>
+                                            #</th>
                                         @foreach ($columns as $column)  
                                             <th
                                                 class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 whitespace-normal break-words max-w-[150px]">

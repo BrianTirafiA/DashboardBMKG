@@ -13,7 +13,7 @@ class DeviceController extends Controller
     public function index()
     {
         $devices = Device::all();
-        return view('itasset.device', compact('devices'));
+        return view('itAsset.device', compact('devices'));
     }
 
     /**

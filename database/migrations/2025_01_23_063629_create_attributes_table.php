@@ -12,7 +12,7 @@ class CreateAttributesTable extends Migration
             $table->id();
             $table->foreignId('rack_type_id')->constrained('rack_types')->onDelete('cascade');
             $table->string('name');
-            $table->enum('data_type', ['string', 'integer', 'float', 'boolean', 'date']);
+            $table->enum('data_type', ['string', 'integer', 'float', 'boolean', 'date','json']);
             $table->boolean('is_required')->default(false);
             $table->timestamps();
         });

@@ -27,6 +27,8 @@ use App\Http\Middleware\LogoutMiddleware;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TypeDeviceController;
 use App\Http\Controllers\UserControllerForAdmin;
+use App\Http\Controllers\DashboardServer;
+
 
 
 Route::get('/', [HomeController::class, 'home']);
@@ -47,19 +49,29 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
 
     Route::prefix('itasset')->group(function () {
         Route::view('/dashboard', 'itAsset.dashboard');
+        Route::resource('/dashboard',DashboardServer::class);
+
         Route::view('/device', 'itAsset.device');
-        Route::view('/rack', 'itAsset.rack');
-        // Route::view('/power', 'itAsset.power');      
+        // Route::view('/rack', 'itAsset.rack-controller');
+        Route::resource('racks', RackController::class);
+        Route::post('/rack/update/{rack}', [RackController::class, 'updateValues']);
+        Route::post('rack/{rack}/add-row', [RackController::class, 'addRow']);
+        Route::view('/rack/add', 'itAsset.rack-controller');  
+        Route::get('rack/{rack}', [RackController::class, 'show'])->name('rack.show');
+        Route::delete('/rack/delete/{rack}', [RackController::class, 'destroy'])->name('rack.destroy');
+
         Route::view('/report', 'itAsset.report');
         Route::view('/maintenance', 'itAsset.maintenance');
         Route::view('/log', 'itAsset.log');
         Route::Resource('/device', DeviceController::class);
         Route::Resource('/power', RakPanelController::class);
-        Route::Resource('/device', RackController::class);
-
+        Route::resource('rak', RackController::class);
+        Route::get('/rack/add', [RackController::class, 'create'])->name('add.create');
 
         Route::get('/power', [RakPanelController::class, 'index'])->name('power.index');
         Route::post('/power/{rakPanel}/add-panel', [RakPanelController::class, 'addPanel'])->name('power.addPanel');
+        Route::post('/power/update', [PanelController::class, 'updatePanelData'])->name('power.updatePanelData');
+
         Route::delete('/power/{id}', [RakPanelController::class, 'destroy'])->name('power.destroy');
         Route::delete('/power/panel/{id}', [RakPanelController::class, 'destroy_panel'])->name('power.destroy_panel');
         Route::get('/device', [DeviceController::class, 'index'])->name('device.index');

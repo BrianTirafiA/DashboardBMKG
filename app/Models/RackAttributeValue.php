@@ -9,7 +9,7 @@ class RackAttributeValue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['rack_id', 'attribute_id', 'value'];
+    protected $fillable = ['rack_id', 'attribute_id', 'value','row_index'];
 
     public function rack()
     {
@@ -21,3 +21,4 @@ class RackAttributeValue extends Model
         return $this->belongsTo(RackAttribute::class);
     }
 }
+

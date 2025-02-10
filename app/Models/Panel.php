@@ -23,4 +23,8 @@ class Panel extends Model
     {
         return $this->belongsTo(RakPanel::class, 'rak_panel_id');
     }
+    protected $casts = [
+        'rak' => 'array',
+    ];
+    
 }

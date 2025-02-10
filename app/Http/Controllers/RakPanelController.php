@@ -106,7 +106,7 @@ class RakPanelController extends Controller
 
         if ($lastPanel) {
             // Pecah PDU terakhir menjadi angka dan huruf
-            preg_match('/(\d+)([A-Z]?)/', $lastPanel->pdu, $matches);
+            preg_match('/(\d+)([A-Z]?)/', $lastPanel->pdu, matches: $matches);
             $lastNumber = $matches[1] ?? 0; // Angka terakhir
             $lastLetter = $matches[2] ?? ''; // Huruf terakhir
         } else {

@@ -1,6 +1,6 @@
 @php 
 
-                            use App\Models\TypeDevice;
+                                                    use App\Models\TypeDevice;
     $typeDevices = TypeDevice::all();  
 
 @endphp

@@ -15,4 +15,9 @@ class RackType extends Model
     {
         return $this->hasMany(RackAttribute::class);
     }
+
+    public function racks()
+    {
+        return $this->hasMany(Rack::class);
+    }
 }

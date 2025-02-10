@@ -11,9 +11,10 @@ class CreateRacksTable extends Migration
         Schema::create('racks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('type');
+            $table->foreignId('rack_type_id')->constrained('rack_types')->onDelete('cascade'); // Foreign key
             $table->timestamps();
         });
+        
     }
 
     public function down()

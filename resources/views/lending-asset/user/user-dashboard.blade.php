@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Barang/Lisensi Peminjaman - Admin</title>
+</head>
+
 <x-user-layout-template>
     <div class="mt-1 flex flex-wrap gap-4">
         <div class="flex-row">
@@ -170,25 +179,7 @@
                                             src="{{ $item->image1_url ?? asset('assets/default-profile.png') }}"
                                             class="h-full w-full object-cover" alt="Image Not Found">
 
-                                        <!-- Left Navigation Button -->
-                                        <button onclick="changeImage({{ $item->id }}, -1)"
-                                            class="absolute left-3 -mt-7 transform -translate-y-1/2 rounded-xl p-2 bg-white shadow-md z-10">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-                                                <path
-                                                    d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
-                                            </svg>
-                                        </button>
-
-                                        <!-- Right Navigation Button -->
-                                        <button onclick="changeImage({{ $item->id }}, 1)"
-                                            class="absolute right-3 -mt-7 transform -translate-y-1/2 rounded-xl p-2 bg-white shadow-md z-10">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                                                <path
-                                                    d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
-                                            </svg>
-                                        </button>
+                            
                                     </div>
 
                                     <div class="p-5">
@@ -325,18 +316,6 @@
     </div>
 
     <script>
-        // JavaScript to handle image switching
-        const itemImages = {
-            @foreach ($item_details as $item)
-                                                                                                                                    '{{ $item->id }}': [
-                    @foreach ([$item->image1_url, $item->image2_url, $item->image3_url, $item->image4_url] as $image)
-                                                                                                                                                                                                                                                    @if ($image)
-                                                                                                                                                                                                                                                        '{{ $image }}',
-                                                                                                                                                                                                                                                    @endif
-                    @endforeach
-                ],
-            @endforeach };
-
         const currentIndex = {};
 
         function changeImage(itemId, direction) {

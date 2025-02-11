@@ -15,21 +15,18 @@ class ItemLocationsTableSeeder extends Seeder
     public function run()  
     {  
         ItemLocation::create([  
-            'nama_lokasi' => 'Ruangan DDK',  
-            'alamat_lokasi' => 'Alamat A',  
-            'penanggung_jawab' => 'Penanggung Jawab A',  
-            'latitude' => -6.200000,  
-            'longitude' => 106.816666,  
+            'nama_lokasi' => 'Online',  
+            'alamat_lokasi' => 'Tidak ada alamat Fisik',  
+            'penanggung_jawab' => 'Bambang Setyo Prayitno, M.Si.',  
+            'latitude' => -6.1560 ,  
+            'longitude' => 106.8420,  
         ]);  
-  
         ItemLocation::create([  
-            'nama_lokasi' => 'Ruangan Server',  
-            'alamat_lokasi' => 'Alamat B',  
-            'penanggung_jawab' => 'Penanggung Jawab B',  
-            'latitude' => -6.300000,  
-            'longitude' => 106.816666,  
+            'nama_lokasi' => 'BMKG Pusat',  
+            'alamat_lokasi' => 'Jl. Angkasa 1 No.2, RT.1/RW.10, Gn. Sahari Sel., Kec. Kemayoran, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10610',  
+            'penanggung_jawab' => 'Prof. Dwikorita Karnawati, Ph.D.',  
+            'latitude' => -6.1560 ,  
+            'longitude' => 106.8420,  
         ]);  
-  
-        // Tambahkan lebih banyak data sesuai kebutuhan  
     }  
 }  

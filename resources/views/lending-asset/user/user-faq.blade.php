@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar FAQ - User</title>
+</head>
+
 <x-user-layout-template>  
     <section class="py-1 me-5">      
         <div class="flex flex-col lg:flex-row w-full mb-6 h-full text-gray-700 bg-[#FFFFFF] border border-blue-gray-100 border-collapse shadow-md rounded-xl bg-clip-border">      

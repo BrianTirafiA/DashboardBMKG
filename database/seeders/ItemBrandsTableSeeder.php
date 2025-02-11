@@ -3,8 +3,7 @@
 namespace Database\Seeders;  
   
 use Illuminate\Database\Seeder;  
-use Illuminate\Support\Facades\DB; 
-use  App\Models\ItemBrand;
+use Illuminate\Support\Facades\DB;  
   
 class ItemBrandsTableSeeder extends Seeder  
 {  
@@ -15,23 +14,17 @@ class ItemBrandsTableSeeder extends Seeder
      */  
     public function run()  
     {  
-        ItemBrand::create([  
+        DB::table('item_brands')->insert([  
             [  
                 'name_brand' => 'Esri Indonesia',  
                 'origin_brand' => 'Indonesia',  
                 'description_brand' => 'Perusahaan Penyedia Lisensi ArcGis di Indonesia',  
             ],   
-             
-        ]);  
-
-        ItemBrand::create([  
             [  
                 'name_brand' => 'Pusat Database',  
                 'origin_brand' => 'Indonesia',  
                 'description_brand' => 'Layanan Database yang disediakan Direktorat Data dan Komputasi',  
-            ],  
+            ],
         ]);  
-
-
     }  
 }  

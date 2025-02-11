@@ -29,7 +29,7 @@ class CreateItemsTable extends Migration
             $table->string('image2')->nullable(); // Kolom untuk gambar 2  
             $table->string('image3')->nullable(); // Kolom untuk gambar 3  
             $table->string('image4')->nullable(); // Kolom untuk gambar 4  
-            $table->integer('borrowed_quantity'); // Jumlah item  
+            $table->integer('borrowed_quantity')->nullable(); // Jumlah item  
             $table->timestamps(); // Kolom created_at dan updated_at  
         });  
     }  

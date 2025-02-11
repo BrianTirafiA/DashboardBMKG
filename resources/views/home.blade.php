@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QC Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -33,114 +33,124 @@
 
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <div style="width: 100%; margin: auto;">
-                    <form action="{{ route('stations.filter') }}" method="GET"
-                        style="display: flex; flex-direction: column; gap: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <div style="flex: 1; margin-right: 15px;">
-                                <label for="start_date"
-                                    style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">Start
-                                    Date</label>
-                                <input type="date" name="start_date" id="start_date" required
-                                    placeholder="Select start date"
-                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;" value="{{ request('start_date') }}"/>
-                            </div>
-                            <div style="flex: 1; position: relative;">
-                                <label for="end_date"
-                                    style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">End
-                                    Date</label>
-                                <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
-                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;" value="{{ request('end_date') }}" />
-                                <button type="button" id="downloadAllDataButton"
-                                    style="position: absolute; top: 0; right: 0; padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
-                                    Download Seluruh Data
-                                </button>
+                <div id="table" class="border border-[#64719b] rounded-xl mb-6" style="padding: 15px;">
+                    <div style="width: 100%; margin: auto;">
+                        <form action="{{ route('stations.filter') }}" method="GET"
+                            style="display: flex; flex-direction: column; gap: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div style="flex: 1; margin-right: 15px;">
+                                    <label for="start_date"
+                                        style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">Start
+                                        Date</label>
+                                    <input type="date" name="start_date" id="start_date" required
+                                        placeholder="Select start date"
+                                        style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;"
+                                        value="{{ request('start_date') }}" />
+                                </div>
+                                <div style="flex: 1; position: relative;">
+                                    <label for="end_date"
+                                        style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">End
+                                        Date</label>
+                                    <input type="date" name="end_date" id="end_date" required
+                                        placeholder="Select end date"
+                                        style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;"
+                                        value="{{ request('end_date') }}" />
+                                    <button type="button" id="downloadAllDataButton"
+                                        style="position: absolute; top: 0; right: 0; padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
+                                        Download Seluruh Data
+                                    </button>
 
+                                </div>
                             </div>
+
+
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; gap: 10px;">
+                                <div style="display: flex; flex-grow: 1; gap: 10px;">
+                                    <button type="button" id="todayButton"
+                                        style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                        Today
+                                    </button>
+                                    <button type="button" id="last7DaysButton"
+                                        style="padding: 10px 20px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                        Last 7 Days
+                                    </button>
+                                    <button type="button" id="last30DaysButton"
+                                        style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
+                                        Last 30 Days
+                                    </button>
+                                </div>
+                                <button type="submit"
+                                    style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 6;">
+                                    Filter By Date
+                                </button>
+                            </div>
+
+
+                        </form>
+                    </div>
+
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
+                        <div>
+                            <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Data
+                                Type:</label>
+                            <select style="padding: 10px;" id="flagVal"
+                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
+                                <option style="padding: 10px;" value="overall_value">All Data Reading</option>
+                                @foreach($dropdownOptions['flags'] as $flag)
+                                    <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
-
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: stretch; width: 100%; gap: 10px;">
-                            <div style="display: flex; flex-grow: 1; gap: 10px;">
-                                <button type="button" id="todayButton"
-                                    style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
-                                    Today
-                                </button>
-                                <button type="button" id="last7DaysButton"
-                                    style="padding: 10px 20px; background-color: #ffc107; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
-                                    Last 7 Days
-                                </button>
-                                <button type="button" id="last30DaysButton"
-                                    style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 1;">
-                                    Last 30 Days
-                                </button>
-                            </div>
-                            <button type="submit"
-                                style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s; flex: 6;">
-                                Filter By Date
-                            </button>
+                        <div>
+                            <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine
+                                Type:</label>
+                            <select style="padding: 10px;" id="TypeVal"
+                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
+                                <option style="padding: 10px;" value="all">All Machines</option>
+                                @foreach($dropdownOptions['machineTypes'] as $type)
+                                    <option value="{{ $type }}">{{ $type }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
-
-                    </form>
-                </div>
-
-
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
-                    <div>
-                        <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Data Type:</label>
-                        <select id="flagVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="overall_value">All Data Reading</option>
-                            @foreach($dropdownOptions['flags'] as $flag)
-                                <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine
-                            Type:</label>
-                        <select id="TypeVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="all">All Machines</option>
-                            @foreach($dropdownOptions['machineTypes'] as $type)
-                                <option value="{{ $type }}">{{ $type }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="provinceVal" class="block text-sm font-medium text-gray-700">Select
-                            Province:</label>
-                        <select id="provinceVal" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="all">All Provinces</option>
-                            @foreach($dropdownOptions['provinces'] as $province)
-                                <option value="{{ $province }}">{{ $province }}</option>
-                            @endforeach
-                        </select>
+                        <div>
+                            <label for="provinceVal" class="block text-sm font-medium text-gray-700">Select
+                                Province:</label>
+                            <select style="padding: 10px;" id="provinceVal"
+                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
+                                <option style="padding: 10px;" value="all">All Provinces</option>
+                                @foreach($dropdownOptions['provinces'] as $province)
+                                    <option value="{{ $province }}">{{ $province }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div id="map" class="mt-6 mb-10"></div>
+                <div id="table" class="border border-[#64719b] rounded-xl mt- 6 mb-6" style="padding: 15px;">
+                    <div id="map" class="rounded-xl"></div>
+                </div>
 
-
-                <div class="flex flex-wrap lg:flex-nowrap justify-between items-start gap-12 mt-10 w-full"
+                <div class="flex flex-wrap lg:flex-nowrap justify-between items-start gap-6 mt-10 w-full"
                     style="margin: auto;">
                     <!-- Bar Chart -->
-                    <div class="chart-container w-full lg:w-4/5">
+                    <div class="chart-container w-full lg:w-4/5 border border-[#64719b] rounded-xl p-2">
                         <div class="relative h-[70vh] max-h-[600px]" id="bar-chart-container">
                             <canvas id="chart1"></canvas>
                         </div>
                     </div>
 
                     <!-- Pie/Doughnut Charts -->
-                    <div class="flex flex-col w-full lg:w-1/5 relative h-[70vh] max-h-[500px] gap-1">
-                        <div class="chart-container flex-1">
+                    <div class="flex flex-col w-full lg:w-1/5 relative h-[70vh] max-h-[500px] gap-4">
+                        <div class="chart-container flex-1 border border-[#64719b] rounded-xl p-2">
                             <div class="relative h-full">
                                 <canvas id="chart2"></canvas>
                             </div>
                         </div>
-                        <div class="chart-container flex-1">
+                        <div class="chart-container flex-1 border border-[#64719b] rounded-xl p-2">
                             <div class="relative h-full">
                                 <canvas id="chart3"></canvas>
                             </div>
@@ -330,9 +340,9 @@
 
                             Object.keys(groupedByDate).forEach(date => {
                                 const total = groupedByDate[date].total || 1;
-                                groupedByDate[date].valid = (groupedByDate[date].valid / total) * 100;
-                                groupedByDate[date].invalid = (groupedByDate[date].invalid / total) * 100;
-                                groupedByDate[date].missing = (groupedByDate[date].missing / total) * 100;
+                                groupedByDate[date].valid = ((groupedByDate[date].valid / total) * 100).toFixed(2);
+                                groupedByDate[date].invalid = ((groupedByDate[date].invalid / total) * 100).toFixed(2);
+                                groupedByDate[date].missing = ((groupedByDate[date].missing / total) * 100).toFixed(2);
                             });
 
                             const dates = Object.keys(groupedByDate).sort();
@@ -476,9 +486,9 @@
 
                         function updateChart1(data) {
                             const labels = Object.keys(data);
-                            const validData = labels.map(label => data[label].valid);
-                            const invalidData = labels.map(label => data[label].invalid);
-                            const missingData = labels.map(label => data[label].missing);
+                            const validData = labels.map(label => Number(data[label].valid).toFixed(2));
+                            const invalidData = labels.map(label => Number(data[label].invalid).toFixed(2));
+                            const missingData = labels.map(label => Number(data[label].missing).toFixed(2));
 
                             chart1Instance.data.labels = labels;
                             chart1Instance.data.datasets = [
@@ -501,10 +511,11 @@
 
                             chart2Instance.data.labels = ['Valid', 'Invalid', 'Missing'];
                             chart2Instance.data.datasets[0].data = [
-                                (overallSum.valid / overallSum.total) * 100,
-                                (overallSum.invalid / overallSum.total) * 100,
-                                (overallSum.missing / overallSum.total) * 100
+                                ((overallSum.valid / overallSum.total) * 100).toFixed(2),
+                                ((overallSum.invalid / overallSum.total) * 100).toFixed(2),
+                                ((overallSum.missing / overallSum.total) * 100).toFixed(2)
                             ];
+
                             chart2Instance.update();
                         }
 
@@ -701,8 +712,9 @@
                     });
 
                 </script>
-
+            </div>
         </main>
+        <x-footer />
     </div>
 </body>
 

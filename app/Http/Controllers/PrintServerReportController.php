@@ -14,7 +14,7 @@ class PrintServerReportController extends Controller
     public function generatePDF($rackId)
     {
         // Pastikan rack_id yang dimasukkan valid
-        $rack = Rack::findOrFail($rackId);
+        $rack = Rack::findOrFail($rackId);  
 
         // Ambil data rak beserta relasinya
         $attributeMap = [

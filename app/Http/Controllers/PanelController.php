@@ -16,7 +16,7 @@ class PanelController extends Controller
 
         $panels = Panel::with('rakPanel')->get(); // Ambil semua panel beserta rak
 
-        
+
         return view('itAsset.power', compact('panels'));
     }
     public function destroy($id)
@@ -67,14 +67,13 @@ class PanelController extends Controller
                 }
             }
 
-            // Jika ada data yang cocok, simpan ke dalam kolom rak dengan format multiline
-            if (!empty($racksData)) {
-                $panel->rak = implode("\n", $racksData);
-                $panel->save();
-            }
+            // Perbarui kolom `rak`
+            $panel->rak = !empty($racksData) ? implode("\n", $racksData) : null;
+            $panel->save();
         }
 
         return redirect()->back()->with('success', 'Data panel telah diperbarui.');
+
     }
 
 

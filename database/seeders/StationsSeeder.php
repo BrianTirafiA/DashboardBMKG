@@ -15,7 +15,7 @@ class StationsSeeder extends Seeder
      */
     public function run(): void
     {
-        $file = Storage::path('station_data_20250201.csv');
+        $file = Storage::path('flagqc7days1-5.csv');
         $handle = fopen($file, 'r');
         $header = true;
         $startRow = 0; // Adjust as needed

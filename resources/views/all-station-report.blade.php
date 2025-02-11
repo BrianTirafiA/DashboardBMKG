@@ -111,6 +111,11 @@
         </table>
     </div>
 
+    <h1><strong>Pembacaan Data Seluruh Station</strong></h1>
+    <h3 style="color: gray;">Tipe Data: {{$selectedFlag}}</h3>
+    <h3 style="color: gray;">Tipe Alat: {{$type}}</h3>
+    <h3 style="color: gray;">Provinsi: {{$province}}</h3>
+
     @foreach ($reportData as $data)
         <h2><strong>{{ $data['stationName'] }}</strong></h2>
 
@@ -168,28 +173,6 @@
                 @endforeach
             </tbody>
         </table>
-
-        <!-- <div class="chart-container">
-            <h3>Chart: {{ $data['stationName'] }}</h3>
-            <canvas id="chart-{{ $loop->index }}"></canvas>
-            <script>
-                var ctx = document.getElementById("chart-{{ $loop->index }}").getContext('2d');
-                var chartData = {!! $data['chartData'] !!};
-
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: chartData.dates,
-                        datasets: [
-                            { label: 'Valid', data: chartData.valid, backgroundColor: '#006d7e' },
-                            { label: 'Invalid', data: chartData.invalid, backgroundColor: '#f7c92e' },
-                            { label: 'Missing', data: chartData.missing, backgroundColor: '#b12629' }
-                        ]
-                    },
-                    options: { responsive: true }
-                });
-            </script>
-        </div> -->
 
         <hr>
     @endforeach

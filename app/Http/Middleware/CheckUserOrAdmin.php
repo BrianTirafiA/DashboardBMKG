@@ -21,7 +21,7 @@ class CheckUserOrAdmin
         $role = Session::get('role');  
   
         // Memeriksa apakah role adalah admin atau user  
-        if ($role === 'admin' || $role === 'user') {  
+        if ($role === 'admin' || $role === 'user' || $role === 'awsuser') {  
             return $next($request); // Mengizinkan akses  
         }  
   

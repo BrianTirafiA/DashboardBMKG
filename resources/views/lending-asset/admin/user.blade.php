@@ -348,6 +348,7 @@
                                     <option value="admin">Admin</option>
                                     <option value="user">User</option>
                                     <option value="pending">Pending</option>
+                                    <option value="awsuser">AWS User</option>
                                 </select>
                             </div>
 

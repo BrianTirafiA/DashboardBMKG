@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;  
 use App\Models\LoanRequestItem;  
 
-  
 class LoanRequestItemSeeder extends Seeder  
 {  
     /**  

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class OnlyAdminMiddleware
@@ -17,10 +18,12 @@ class OnlyAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->session()->exists("user") && $request->session()->get("role") === 'admin'){
+        $user = Auth::user(); // Ambil user yang sedang login
+
+        if ($user && $user->role === 'admin') {
             return $next($request);
-        } else {
-            return redirect("/login")->with('error', 'Unauthorized access');
         }
+
+        return redirect('/login')->with('error', 'Unauthorized access');
     }
 }

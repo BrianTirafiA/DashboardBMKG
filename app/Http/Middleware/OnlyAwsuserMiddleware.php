@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class OnlyUserMiddleware
+class OnlyAwsuserMiddleware
 {
     /**
      * Handle an incoming request.
@@ -20,7 +20,7 @@ class OnlyUserMiddleware
     {
         $user = Auth::user(); // Ambil user yang sedang login
 
-        if ($user && $user->role === 'user') {
+        if ($user && $user->role === 'awsuser') {
             return $next($request);
         }
 

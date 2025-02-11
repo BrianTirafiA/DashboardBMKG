@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Permintaan Peminjaman - Admin</title>
+    <title>Daftar Permintaan Peminjaman - User</title>
 </head>
 
 <x-user-layout-template>

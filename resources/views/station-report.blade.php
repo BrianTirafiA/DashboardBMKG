@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Station Report</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,10 +13,10 @@
         }
 
         .header {
-        margin-bottom: 20px;
-        background-color: #f0f0f0;
-        padding: 20px;
-        border-bottom: 2px solid #000;
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-bottom: 2px solid #000;
         }
 
         .header-table {
@@ -46,7 +46,8 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            border: 1px solid black; /* Default border */
+            border: 1px solid black;
+            /* Default border */
         }
 
         table th,
@@ -106,7 +107,7 @@
                     <h2 style="font-weight: bold;">DIREKTORAT DATA DAN KOMPUTASI</h2>
                     <h3>Jl. Angkasa I No. 2, Jakarta 10610 Telp: (021) 4246321 Fax: (021) 4246703</h3>
                     <h3>P.O. BOX 3540 JKT, Website: <a href="http://www.bmkg.go.id">www.bmkg.go.id</a> Email: <a
-                    href="pusatdatabase@bmkg.go.id">pusatdatabase@bmkg.go.id</a></h3>
+                            href="pusatdatabase@bmkg.go.id">pusatdatabase@bmkg.go.id</a></h3>
                 </td>
             </tr>
         </table>
@@ -190,28 +191,28 @@
             </tr>
         </thead>
         <tbody>
-    @foreach ($validData as $date => $value)
-    <tr>
-        {{-- Date Column --}}
-        <td>{{ $date }}</td>
+            @foreach ($validData as $date => $value)
+                <tr>
+                    {{-- Date Column --}}
+                    <td>{{ $date }}</td>
 
-        {{-- Valid Data --}}
-        <td>
-            {{ $value }}%
-        </td>
+                    {{-- Valid Data --}}
+                    <td>
+                        {{ $value }}%
+                    </td>
 
-        {{-- Invalid Data --}}
-        <td>
-            {{ isset($invalidData[$date]) ? array_sum($invalidData[$date]) : '0' }}%
-        </td>
+                    {{-- Invalid Data --}}
+                    <td>
+                        {{ isset($invalidData[$date]) ? array_sum($invalidData[$date]) : '0' }}%
+                    </td>
 
-        {{-- Missing Data --}}
-        <td>
-            {{ $missingData[$date] ?? '0' }}%
-        </td>
-    </tr>
-    @endforeach
-</tbody>
+                    {{-- Missing Data --}}
+                    <td>
+                        {{ $missingData[$date] ?? '0' }}%
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 </body>
 

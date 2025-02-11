@@ -125,7 +125,7 @@ class DashboardServer extends Controller
 
 
         // Kirim data ringkasan ke view
-        return view('itasset.dashboard', compact(
+        return view('itAsset.dashboard', compact(
             'rackData',
             'rackPanelData',
             'percentages',

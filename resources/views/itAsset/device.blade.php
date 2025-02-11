@@ -14,7 +14,7 @@
     <div class="me-7 mt-1">
         @php
             $title = 'Daftar Perangkat Ruang Server';
-            $description = 'Halaman ini berisi daftar perangkat ruang server yang dapat Anda kelola.';
+            $description = '';
             $add = 'Tambah Perangkat';
             $columns = [
                 ['key' => 'name_device', 'title' => 'Nama'],
@@ -29,7 +29,7 @@
         @endphp
 
         <div id="table"
-            class="relative flex flex-col w-full h-full text-gray-700 bg-white border border-blue-gray-100 shadow-md rounded-xl mb-2">
+            class="relative flex flex-col w-full max-h-[54rem] text-gray-700 bg-white border border-blue-gray-100 shadow-md rounded-xl mb-2">
             <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">
                 <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                     <div>
@@ -53,11 +53,11 @@
                     </div>
                 </div>
 
-                <div class="ms-5 me-5 flex p-6 px-0 -mt-5 overflow-hidden">
-                    <div class="w-full rounded-xl overflow-hidden border border-blue-gray-100">
-                        <div class="overflow-x-auto max-h-screen overflow-y-auto mb-6">
-                            <table id="deviceTable" class=" mt-4 text-left border-collapse table-auto min-w-full">
-                                <thead>
+                <div class="ms-5 me-5 flex p-6 px-0 -mt-5 ">
+                    <div class="w-full rounded-xl border border-blue-gray-100 mb-6">
+                        <div class=" max-h-[40rem] overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 mb-6">
+                            <table id="deviceTable" class="text-left border-collapse table-auto min-w-full overflow-y-scroll">
+                                <thead class="bg-white sticky top-0 shadow-sm">
                                     <tr>
                                         <th
                                             class="p-4 border-y border-blue-gray-100 bg-blue-gray-50 text-sm font-normal text-blue-gray-900 text-center">

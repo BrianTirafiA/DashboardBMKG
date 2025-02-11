@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('panels', function (Blueprint $table) {
             $table->id();
-            $table->string('pdu');
-            $table->json('rak');
-            $table->integer('kapasitas')->default(0);
+            $table->string('pdu')->nullable();
+            $table->json('rak')->nullable();
+            $table->integer('kapasitas')->default(0)->nullable();
             $table->foreignId('rak_panel_id')->constrained('rak_panels')->onDelete('cascade');
             $table->timestamps();
         });

@@ -1,7 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Room : Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
 <x-layout-server>
   <h2 class="text-2xl font-semibold mb-4">Dashboard : Ruang Server</h2>
   </p>
-  <div class="max-h-[47rem] overflow-y-auto p-4 bg-white shadow-xl rounded-lg">
+  <div class="max-h-[47rem] overflow-y-scroll p-4 bg-white shadow-xl rounded-xl border border-blue-gray-900 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 mb-6">
 
     <div class="space-y-10">
       <!-- Distribusi Kapasitas Rak Server -->

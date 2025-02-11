@@ -18,7 +18,7 @@
                 <div class="mb-4">
                     <label for="namaRak" class="block text-sm font-medium text-gray-700">Nama Rak</label>
                     <input type="text" name="name" id="namaRak"
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        class="mt-1 block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         required>
                 </div>
 
@@ -28,7 +28,7 @@
                     <div class="relative">
                         <!-- Dropdown Tipe Rak -->
                         <select name="rack_type_id" id="tipeRak"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            class="mt-1 block w-full border border-gray-300 p-3 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Pilih Tipe Rak</option>
                             @foreach ($rackTypes as $type)
                                 <option value="1">{{ $type->name }}</option>

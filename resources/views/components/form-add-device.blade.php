@@ -13,19 +13,19 @@
             <div class="mb-4">
                 <label for="addNamaPerangkat" class="block text-sm font-medium text-gray-700">Nama Perangkat</label>
                 <input type="text" name="name_device" id="addNamaPerangkat"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
             </div>
             <div class="mb-4">
                 <label for="addBrand" class="block text-sm font-medium text-gray-700">Merek</label>
                 <input type="text" name="brand_device" id="addBrand"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
             </div>
             <div class="mb-4">
                 <label for="addJenis" class="block text-sm font-medium text-gray-700">Jenis</label>
                 <select name="type_device" id="addJenis"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
                     <option value="" disabled selected>Pilih Jenis</option>
                     @foreach ($typeDevices as $tipe_device)
@@ -43,7 +43,7 @@
             <div class="mb-4">
                 <label for="addTahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
                 <input type="number" name="year_device" id="addTahun"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 h-[30px] py-2">
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 h-[30px] py-2">
                 <small class="text-gray-500 text-xs mt-1">*Input harus berupa angka</small>
             </div>
 
@@ -51,25 +51,25 @@
             <div class="mb-4">
                 <label for="addOS" class="block text-sm font-medium text-gray-700">OS</label>
                 <input type="text" name="os_device" id="addOS"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
             </div>
             <div class="mb-4">
                 <label for="addProcessor" class="block text-sm font-medium text-gray-700">Processor</label>
                 <input type="text" name="processor_device" id="addProcessor"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
             </div>
             <div class="mb-4">
                 <label for="addRAM" class="block text-sm font-medium text-gray-700">RAM</label>
                 <input type="number" name="ram_device" id="addRAM"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
             </div>
             <div class="mb-4">
                 <label for="addDisk" class="block text-sm font-medium text-gray-700">Disk</label>
                 <input type="text" name="disk_device" id="addDisk"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     required>
             </div>
             <div class="flex justify-end">

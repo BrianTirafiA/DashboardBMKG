@@ -15,8 +15,8 @@ class CreateBrandsTable extends Migration
     {  
         Schema::create('item_brands', function (Blueprint $table) {  
             $table->id(); // ID otomatis  
-            $table->string('name_brand')->unique(); // Nama brand  
-            $table->string('origin_brand'); // Asal brand  
+            $table->string('name_brand'); // Nama brand  
+            $table->string('origin_brand')->nullable(); // Asal brand  
             $table->text('description_brand')->nullable(); // Informasi penting tentang brand  
             $table->timestamps(); // Kolom created_at dan updated_at  
         });  

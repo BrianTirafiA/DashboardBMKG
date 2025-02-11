@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QC Dashboard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -209,7 +210,13 @@
                             return;
                         }
 
-                        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}`;
+                        // Capture chart images (same as displayed on screen)
+                        const chart1Image = captureChartAsImage(`chart1`);
+                        const chart2Image = captureChartAsImage(`chart2`);
+
+                        // Construct URL with extracted chart data
+                        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}&chart_image1=${encodeURIComponent(chart1Image || '')}&chart_image2=${encodeURIComponent(chart2Image || '')}`;
+
                         window.open(url, "_blank");
                     });
 

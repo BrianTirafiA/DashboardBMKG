@@ -13,6 +13,8 @@ class StationFlagController extends Controller
 {
     public function filter(Request $request)
     {
+
+        ini_set('max_execution_time', 3600); // Increase execution time
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
@@ -54,6 +56,8 @@ class StationFlagController extends Controller
 
     public function downloadPdf(Request $request)
     {
+
+        ini_set('max_execution_time', 3600); // Increase execution time
         $stationName = $request->input('station_name');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
@@ -140,18 +144,19 @@ class StationFlagController extends Controller
 
     public function downloadAllStationsPdf(Request $request)
     {
-        ini_set('max_execution_time', 1800); // Increase execution time
+        ini_set('max_execution_time', 3600); // Increase execution time
 
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $selectedFlag = $request->input('selected_flag', 'overall_value');
         $type = $request->input('type', 'all');
         $province = $request->input('province', 'all');
+        $chart1Image = $request->input('chart_image1');
+        $chart2Image = $request->input('chart_image2');
 
         if ($selectedFlag === 'all') {
             $selectedFlag = 'overall_value';
         }
-        ;
 
         // Validate Date Inputs
         if (!$startDate || !$endDate) {
@@ -168,7 +173,20 @@ class StationFlagController extends Controller
             ->whereBetween('date_only', [$startDate, $endDate])
             ->orderBy('name_station')
             ->orderBy('date_only', 'ASC')
-            ->select(['name_station', 'date_only', 'overall_value_0_percent', 'overall_value_1_percent', 'overall_value_2_percent', 'overall_value_3_percent', 'overall_value_4_percent', 'overall_value_5_percent', 'overall_value_6_percent', 'overall_value_7_percent', 'overall_value_9_percent'])
+            ->select([
+                'name_station',
+                'date_only',
+                'tipe_station',
+                'overall_value_0_percent',
+                'overall_value_1_percent',
+                'overall_value_2_percent',
+                'overall_value_3_percent',
+                'overall_value_4_percent',
+                'overall_value_5_percent',
+                'overall_value_6_percent',
+                'overall_value_7_percent',
+                'overall_value_9_percent'
+            ])
             ->get();
 
         // Handle Case Where No Data is Found
@@ -176,9 +194,61 @@ class StationFlagController extends Controller
             return response()->json(['error' => 'No data found for the given filters.'], 404);
         }
 
-        // Group Stations by Name
-        $groupedStations = $stations->groupBy('name_station');
+        // **🔥 Chart 1: Validation by Machine Type**
+        $chart1Data = [];
+        foreach ($stations as $station) {
+            $type = $station->tipe_station;
+            if (!isset($chart1Data[$type])) {
+                $chart1Data[$type] = [
+                    'chart1Valid' => 0,
+                    'chart1Invalid' => 0,
+                    'chart1Missing' => 0,
+                    'total' => 0
+                ];
+            }
 
+            for ($i = 0; $i <= 9; $i++) {
+                $value = $station->{"{$selectedFlag}_{$i}_percent"} ?? 0;
+                $chart1Data[$type]['total'] += $value;
+
+                if ($i === 0) {
+                    $chart1Data[$type]['chart1Valid'] += $value;
+                } elseif ($i >= 1 && $i <= 8) {
+                    $chart1Data[$type]['chart1Invalid'] += $value;
+                } elseif ($i === 9) {
+                    $chart1Data[$type]['chart1Missing'] += $value;
+                }
+            }
+        }
+
+        // Normalize Chart 1 Data to Percentage
+        foreach ($chart1Data as &$data) {
+            $total = max($data['total'], 1); // Prevent division by zero
+            $data['chart1Valid'] = round(($data['chart1Valid'] / $total) * 100, 2);
+            $data['chart1Invalid'] = round(($data['chart1Invalid'] / $total) * 100, 2);
+            $data['chart1Missing'] = round(($data['chart1Missing'] / $total) * 100, 2);
+            unset($data['total']);
+        }
+
+        // **🔥 Chart 2: Overall Validation**
+        $overallSum = ['chart2Valid' => 0, 'chart2Invalid' => 0, 'chart2Missing' => 0, 'total' => 0];
+
+        foreach ($chart1Data as $typeData) {
+            $overallSum['chart2Valid'] += $typeData['chart1Valid'];
+            $overallSum['chart2Invalid'] += $typeData['chart1Invalid'];
+            $overallSum['chart2Missing'] += $typeData['chart1Missing'];
+            $overallSum['total'] += 100; // Since each type's values already sum to 100%
+        }
+
+        // Normalize Overall Data
+        $chart2Data = [
+            'chart2Valid' => round(($overallSum['chart2Valid'] / max($overallSum['total'], 1)) * 100, 2),
+            'chart2Invalid' => round(($overallSum['chart2Invalid'] / max($overallSum['total'], 1)) * 100, 2),
+            'chart2Missing' => round(($overallSum['chart2Missing'] / max($overallSum['total'], 1)) * 100, 2),
+        ];
+
+        // Existing Report Data Logic
+        $groupedStations = $stations->groupBy('name_station');
         $reportData = [];
 
         foreach ($groupedStations as $stationName => $stationData) {
@@ -207,19 +277,11 @@ class StationFlagController extends Controller
                 }
             }
 
-            $chartData = json_encode([
-                'dates' => array_keys($validData),
-                'valid' => array_map(fn($value) => round($value, 2), array_values($validData)),
-                'invalid' => array_map(fn($flags) => round(array_sum($flags), 2), $invalidData),
-                'missing' => array_map(fn($value) => round($value, 2), array_values($missingData)),
-            ]);
-
             $reportData[] = [
                 'stationName' => $stationName,
                 'validData' => $validData,
                 'invalidData' => $invalidData,
                 'missingData' => $missingData,
-                'chartData' => $chartData,
             ];
         }
 
@@ -228,7 +290,11 @@ class StationFlagController extends Controller
             'reportData' => $reportData,
             'selectedFlag' => $selectedFlag,
             'type' => $type,
-            'province' => $province
+            'province' => $province,
+            'chartTypeData' => $chart1Data,   // Renamed for uniqueness
+            'chartOverallData' => $chart2Data, // Renamed for uniqueness
+            'chart1Image' => $chart1Image,
+            'chart2Image' => $chart2Image,
         ]);
 
         // Return the PDF for Download

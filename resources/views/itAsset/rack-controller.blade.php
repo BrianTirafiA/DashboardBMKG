@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Room : Rack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
 <x-layout-server>
     <div id="modalTambahRak" class="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-6 w-1/3">

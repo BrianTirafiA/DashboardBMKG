@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-cover bg-center items-center justify-center" style="background-image: url('{{ asset('assets/cloudanime.webp') }}');">
+
+<body class="bg-cover bg-center items-center justify-center"
+    style="background-image: url('{{ asset('assets/cloudanime.webp') }}');">
     @if(isset($error))
-        <div id="error-alert"    
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-4 py-3 mt-6 rounded-lg shadow-lg transition-opacity duration-400 opacity-100">    
-            <span>{{ $error }}</span>    
-        </div>     
+        <div id="error-alert"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-4 py-3 mt-6 rounded-lg shadow-lg transition-opacity duration-400 opacity-100">
+            <span>{{ $error }}</span>
+        </div>
 
         <script>
             setTimeout(() => {
@@ -26,7 +29,7 @@
 
     <x-login-component />
 
-<!-- <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1 max-h-screen-xl">
+    <!-- <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1 max-h-screen-xl">
     <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
         <div class="mt-12 flex flex-col items-center">
             <div class="flex justify-center mb-6">
@@ -65,4 +68,5 @@
     </div>
 </div> -->
 </body>
+
 </html>

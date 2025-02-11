@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Unit Kerja - Admin</title>
+</head>
+
 <x-lend-layout-template>
     <div>
         <div class="me-7 mt-1">

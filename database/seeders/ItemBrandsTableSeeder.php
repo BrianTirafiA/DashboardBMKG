@@ -3,7 +3,8 @@
 namespace Database\Seeders;  
   
 use Illuminate\Database\Seeder;  
-use Illuminate\Support\Facades\DB;  
+use Illuminate\Support\Facades\DB; 
+use  App\Models\ItemBrand;
   
 class ItemBrandsTableSeeder extends Seeder  
 {  
@@ -14,29 +15,17 @@ class ItemBrandsTableSeeder extends Seeder
      */  
     public function run()  
     {  
-        DB::table('item_brands')->insert([  
+        ItemBrand::create([  
             [  
-                'name_brand' => 'Brand A',  
+                'name_brand' => 'Esri Indonesia',  
                 'origin_brand' => 'Indonesia',  
-                'description_brand' => 'Brand A adalah brand terkemuka di Indonesia.',  
-                'created_at' => now(),  
-                'updated_at' => now(),  
-            ],  
+                'description_brand' => 'Perusahaan Penyedia Lisensi ArcGis di Indonesia',  
+            ],   
             [  
-                'name_brand' => 'Brand B',  
-                'origin_brand' => 'Jepang',  
-                'description_brand' => 'Brand B terkenal dengan produk berkualitas tinggi.',  
-                'created_at' => now(),  
-                'updated_at' => now(),  
-            ],  
-            [  
-                'name_brand' => 'Brand C',  
-                'origin_brand' => 'Amerika',  
-                'description_brand' => 'Brand C memiliki inovasi yang luar biasa.',  
-                'created_at' => now(),  
-                'updated_at' => now(),  
-            ],  
-            // Tambahkan lebih banyak data sesuai kebutuhan  
+                'name_brand' => 'Pusat Database',  
+                'origin_brand' => 'Indonesia',  
+                'description_brand' => 'Layanan Database yang disediakan Direktorat Data dan Komputasi',  
+            ],   
         ]);  
     }  
 }  

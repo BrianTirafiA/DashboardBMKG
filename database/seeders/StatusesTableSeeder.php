@@ -11,27 +11,17 @@ class StatusesTableSeeder extends Seeder
     {  
         ItemStatus::create([  
             'name_status' => 'Available',  
-            'description_status' => 'Deskripsi Status A',  
+            'description_status' => 'Barang/Lisensi/Layanan dapat dipinjam dan diajukan permohonan',  
         ]);  
   
         ItemStatus::create([  
-            'name_status' => 'On Going',  
-            'description_status' => 'Deskripsi Status B',  
-        ]);  
-
-        ItemStatus::create([  
             'name_status' => 'Maintetance',  
-            'description_status' => 'Deskripsi Status B',  
-        ]);  
-
-        ItemStatus::create([  
-            'name_status' => 'Out of Stock',  
-            'description_status' => 'Deskripsi Status B',  
+            'description_status' => 'Barang/Lisensi/Layanan sedang dalam proses perbaikan',  
         ]);  
 
         ItemStatus::create([  
             'name_status' => 'Not Available',  
-            'description_status' => 'Deskripsi Status B',  
+            'description_status' => 'Barang/Lisensi/Layanan sudah tidak tersedia lagi',  
         ]);  
   
     }  

@@ -59,7 +59,7 @@ class RackController extends Controller
         }
 
         // Redirect kembali dengan pesan sukses
-        return redirect('/admin/itAsset/dashboard')->with('success', 'Perubahan berhasil disimpan!');
+        return redirect('/admin/itasset/dashboard')->with('success', 'Perubahan berhasil disimpan!');
     }
 
     public function show($id)

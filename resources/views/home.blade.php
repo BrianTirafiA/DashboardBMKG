@@ -207,7 +207,13 @@
                             return;
                         }
 
-                        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}`;
+                        // Capture chart images (same as displayed on screen)
+                        const chart1Image = captureChartAsImage(`chart1`);
+                        const chart2Image = captureChartAsImage(`chart2`);
+
+                        // Construct URL with extracted chart data
+                        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}&chart_image1=${encodeURIComponent(chart1Image || '')}&chart_image2=${encodeURIComponent(chart2Image || '')}`;
+
                         window.open(url, "_blank");
                     });
 

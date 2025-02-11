@@ -116,6 +116,60 @@
     <h3 style="color: gray;">Tipe Alat: {{$type}}</h3>
     <h3 style="color: gray;">Provinsi: {{$province}}</h3>
 
+    <div class="chart-container">
+        <h3>Chart 1: Persentase Validasi Berdasarkan Tipe Mesin</h3>
+        <img src="{{ $chart1Image }}" alt="Chart 1" style="width: 100%; max-width: 800px;">
+    </div>
+
+    <!-- Table 1: Validation Data by Machine Type -->
+    <h3 class="table-title">Detail Persentase Berdasarkan Tipe Mesin</h3>
+    <table id="chart1-table">
+        <thead>
+            <tr>
+                <th style="background-color: #f0f0f0; font-weight: bold;">Tipe</th>
+                <th style="background-color: #006d7e; font-weight: bold; text-align: center;">Valid</th>
+                <th style="background-color: #f7c92e; text-align: center;">Invalid</th>
+                <th style="background-color: #b12629; text-align: center;">Missing</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($chartTypeData as $type => $values)
+                <tr>
+                    <td>{{ $type }}</td>
+                    <td>{{ $values['chart1Valid'] }}%</td>
+                    <td>{{ $values['chart1Invalid'] }}%</td>
+                    <td>{{ $values['chart1Missing'] }}%</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <!-- Chart 2: Global Validation -->
+    <div class="chart-container">
+        <h3>Chart 2: Persentase Validasi Global</h3>
+        <img src="{{ $chart2Image }}" alt="Chart 2" style="width: 100%; max-width: 800px;">
+    </div>
+
+    <!-- Table 2: Overall Validation Data -->
+    <h3 class="table-title">Persentase Validasi Global</h3>
+    <table id="chart2-table">
+        <thead>
+            <tr>
+                <th style="background-color: #006d7e; font-weight: bold; text-align: center;">Valid</th>
+                <th style="background-color: #f7c92e; text-align: center;">Invalid</th>
+                <th style="background-color: #b12629; text-align: center;">Missing</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $chartOverallData['chart2Valid'] }}%</td>
+                <td>{{ $chartOverallData['chart2Invalid'] }}%</td>
+                <td>{{ $chartOverallData['chart2Missing'] }}%</td>
+            </tr>
+        </tbody>
+    </table>
+
+
     @foreach ($reportData as $data)
         <h2><strong>{{ $data['stationName'] }}</strong></h2>
 

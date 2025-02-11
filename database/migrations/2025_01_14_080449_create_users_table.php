@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('profile_photo')->nullable()->after('no_telepon'); // Kolom untuk foto profil  
             $table->rememberToken();    
             $table->timestamps();   
-    
             $table->foreign('unit_kerja_id')->references('id')->on('unitkerjas')->onDelete('set null');    
         });    
     

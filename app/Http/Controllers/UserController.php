@@ -52,40 +52,44 @@ class UserController extends Controller
     }
 
     // Proses login
-    public function doLogin(Request $request)
-    {
-        $credentials = $request->validate([
-            'user' => 'required|string',
-            'password' => 'required|string'
-        ]);
+        public function doLogin(Request $request)
+        {
+            $credentials = $request->validate([
+                'user' => 'required|string',
+                'password' => 'required|string'
+            ]);
 
-        if (!Auth::attempt(['name' => $credentials['user'], 'password' => $credentials['password']])) {
-            return back()->withErrors(['login' => 'Username atau password salah.']);
+            if (!Auth::attempt(['name' => $credentials['user'], 'password' => $credentials['password']])) {
+                return back()->withErrors(['login' => 'Username atau password salah.']);
+            }
+
+            $user = Auth::user();
+
+            if ($user->role === 'pending') {
+                Auth::logout();
+                return back()->withErrors(['login' => 'Akun Anda masih dalam proses verifikasi.']);
+            }
+
+            // Simpan informasi user di session
+            session([
+                'id' => $user->id,
+                'user' => $user->name,
+                'role' => $user->role,
+                'email' => $user->email,
+                'fullname' => $user->fullname,
+                'nip' => $user->nip,
+                'unit_kerja_id' => $user->unit_kerja_id,
+                'no_telepon' => $user->no_telepon,
+                'profile_photo' => $user->profile_photo,
+                'unit_kerja_name' => $user->unit_kerja ? $user->unit_kerja->nama_unit_kerja : null,
+            ]);
+
+            return redirect(
+                $user->role === 'admin' ? '/admin/dashboard' : 
+                ($user->role === 'awsuser' ? '/awsqcuser/dashboard' : '/user/dashboard')
+            );
+            
         }
-
-        $user = Auth::user();
-
-        if ($user->role === 'pending') {
-            Auth::logout();
-            return back()->withErrors(['login' => 'Akun Anda masih dalam proses verifikasi.']);
-        }
-
-        // Simpan informasi user di session
-        session([
-            'id' => $user->id,
-            'user' => $user->name,
-            'role' => $user->role,
-            'email' => $user->email,
-            'fullname' => $user->fullname,
-            'nip' => $user->nip,
-            'unit_kerja_id' => $user->unit_kerja_id,
-            'no_telepon' => $user->no_telepon,
-            'profile_photo' => $user->profile_photo,
-            'unit_kerja_name' => $user->unit_kerja ? $user->unit_kerja->nama_unit_kerja : null,
-        ]);
-
-        return redirect($user->role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
-    }
 
     // Proses logout
     public function doLogout(Request $request)

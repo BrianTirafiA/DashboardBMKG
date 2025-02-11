@@ -21,11 +21,17 @@ class ItemBrandsTableSeeder extends Seeder
                 'origin_brand' => 'Indonesia',  
                 'description_brand' => 'Perusahaan Penyedia Lisensi ArcGis di Indonesia',  
             ],   
+             
+        ]);  
+
+        ItemBrand::create([  
             [  
                 'name_brand' => 'Pusat Database',  
                 'origin_brand' => 'Indonesia',  
                 'description_brand' => 'Layanan Database yang disediakan Direktorat Data dan Komputasi',  
-            ],   
+            ],  
         ]);  
+
+
     }  
 }  

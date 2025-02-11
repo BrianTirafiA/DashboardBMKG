@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AwsuserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemDetailController;
 use App\Http\Controllers\ItemLocationController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\UserControllerForUpdateData;
 use App\Http\Controllers\ProfilePhotoController;
 use App\Http\Controllers\UserDashboard;
 use App\Http\Middleware\CheckUserOrAdmin;
+use App\Http\Middleware\OnlyAwsuserMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\StationFlagController;
@@ -32,9 +34,6 @@ use App\Http\Controllers\RackController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\PrintServerReportController;
 
-
-
-
 Route::get('/', [HomeController::class, 'home']);
 
 Route::controller(UserController::class)->group(function () {
@@ -49,12 +48,12 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
     Route::view('/home', 'home');
     Route::view('/dashboard', 'dashboard');
 
+
     // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profileadmin.index');   
 
     Route::prefix('itasset')->group(function () {
         Route::view('/dashboard', 'itAsset.dashboard');
-        Route::resource('/dashboard',DashboardServer::class);
-
+        Route::resource('/dashboard', DashboardServer::class);
         Route::view('/device', 'itAsset.device');
         Route::view('/rack', 'itAsset.rack');
         Route::resource('racks', RackController::class);
@@ -146,7 +145,12 @@ Route::prefix('user')->middleware(OnlyUserMiddleware::class)->group(function () 
     Route::post('/pengembalian', [UserDashboard::class, 'returned'])->name('returned');
     Route::resource('/riwayat', LoanRequestController::class, );
     Route::get('/riwayat', [LoanRequestController::class, 'user_riwayatindex'])->name('user_riwayatindex');
+});
 
+// Aws Routes
+Route::prefix('awsqcuser')->middleware(OnlyAwsuserMiddleware::class)->group(function () {
+    Route::resource('/dashboard', AwsuserController::class);
+    Route::get('/dashboard', [AwsuserController::class, 'index'])->name('awsqcuser');
 });
 
 Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware(OnlyGuestMiddleware::class)->name('register.form');

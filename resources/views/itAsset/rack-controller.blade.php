@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Room : Rack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
 <x-layout-server>
     <div id="modalTambahRak" class="fixed inset-0 z-50 bg-gray-800 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-6 w-1/3">
@@ -21,15 +31,10 @@
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Pilih Tipe Rak</option>
                             @foreach ($rackTypes as $type)
-                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                <option value="1">{{ $type->name }}</option>
                             @endforeach
                         </select>
 
-                        <!-- Button Tambah Tipe Rak -->
-                        <button type="button" id="addTipeRakBtn"
-                            class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Tambah Tipe Rak
-                        </button>
                     </div>
                 </div>
 
@@ -46,7 +51,6 @@
                     </button>
                 </div>
             </form>
-
         </div>
     </div>
 </x-layout-server>

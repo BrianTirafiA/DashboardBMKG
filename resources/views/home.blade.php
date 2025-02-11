@@ -43,14 +43,14 @@
                                     Date</label>
                                 <input type="date" name="start_date" id="start_date" required
                                     placeholder="Select start date"
-                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;" value="{{ request('start_date') }}"/>
                             </div>
                             <div style="flex: 1; position: relative;">
                                 <label for="end_date"
                                     style="display: block; font-weight: bold; color: #333; margin-bottom: 18px;">End
                                     Date</label>
                                 <input type="date" name="end_date" id="end_date" required placeholder="Select end date"
-                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;" value="{{ request('end_date') }}" />
                                 <button type="button" id="downloadAllDataButton"
                                     style="position: absolute; top: 0; right: 0; padding: 7px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; transition: background-color 0.3s;">
                                     Download Seluruh Data
@@ -159,70 +159,12 @@
                         return canvas.toDataURL('image/png'); // Convert the chart to a base64 image
                     }
 
-                    function getQueryParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    let selectedFlag = urlParams.get("selected_flag") || "overall_value";
-
-    return {
-        selectedFlag: selectedFlag === "overall_value" ? "all" : selectedFlag, // Ensure UI sync
-        type: urlParams.get("type") || "all",
-        province: urlParams.get("province") || "all",
-        startDate: urlParams.get("start_date"),
-        endDate: urlParams.get("end_date"),
-    };
-}
-
-
-
-
-function updateQueryStringParameter(key, value) {
-    let url = new URL(window.location.href);
-
-    if (value === null || value === "" || (key !== "selected_flag" && value === "all")) {
-        url.searchParams.delete(key);
-    } else if (key === "selected_flag" && value === "all") {
-        url.searchParams.set(key, "overall_value"); // Convert 'all' to 'overall_value' for selected_flag
-        document.getElementById("flagVal").value = "overall_value"; // Ensure dropdown reflects the change
-    } else {
-        url.searchParams.set(key, value);
-    }
-
-    window.history.replaceState(null, "", url);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const { selectedFlag, type, province } = getQueryParams();
-
-    const flagSelect = document.getElementById("flagVal");
-    const typeSelect = document.getElementById("TypeVal");
-    const provinceSelect = document.getElementById("provinceVal");
-
-    flagSelect.value = selectedFlag; // Ensure correct dropdown value
-    typeSelect.value = type;
-    provinceSelect.value = province;
-
-    flagSelect.addEventListener("change", (event) => {
-        updateQueryStringParameter("selected_flag", event.target.value);
-        updateCharts();
-    });
-
-    typeSelect.addEventListener("change", (event) => {
-        updateQueryStringParameter("type", event.target.value);
-        addMarkers();
-    });
-
-    provinceSelect.addEventListener("change", (event) => {
-        updateQueryStringParameter("province", event.target.value);
-        addMarkers();
-    });
-});
-
-
-
 
                     function downloadStationReport(stationName) {
                         // Fetch start_date and end_date from the URL
-                        const { startDate, endDate, selectedFlag } = getQueryParams();
+                        const startDate = document.getElementById('start_date').value;
+                        const endDate = document.getElementById('end_date').value;
+                        const selectedFlag = document.getElementById('flagVal').value;
 
                         // Fallback to defaults if dates are not present in the URL
                         if (!startDate || !endDate) {
@@ -244,17 +186,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     document.getElementById("downloadAllDataButton").addEventListener("click", () => {
-        const { startDate, endDate, selectedFlag, type, province } = getQueryParams();
+                        const startDate = document.getElementById('start_date').value;
+                        const endDate = document.getElementById('end_date').value;
+                        const selectedFlag = document.getElementById('flagVal').value;
+                        const type = document.getElementById('TypeVal').value;
+                        const province = document.getElementById('provinceVal').value;
 
-        if (!startDate || !endDate) {
-            alert("Please select a valid start date and end date.");
-            return;
-        }
+                        if (!startDate || !endDate) {
+                            alert("Please select a valid start date and end date.");
+                            return;
+                        }
 
-        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}`;
-
-        window.open(url, "_blank");
-    });
+                        const url = `/stations/download-all-pdf?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&selected_flag=${encodeURIComponent(selectedFlag)}&type=${encodeURIComponent(type)}&province=${encodeURIComponent(province)}`;
+                        window.open(url, "_blank");
+                    });
 
 
 
@@ -416,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                         },
                                     },
                                 });
-                            }, 500); // Ensures the popup is fully rendered before initializing the chart
+                            }, 200); // Ensures the popup is fully rendered before initializing the chart
 
                             return `
         <b>Station:</b> ${station.name_station}<br>

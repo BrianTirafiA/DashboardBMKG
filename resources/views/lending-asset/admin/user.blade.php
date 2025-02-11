@@ -24,9 +24,9 @@
     </script>
 @endif
 
-<x-lend-layout-template>
+<x-layout-user-upt-template>
     <div>
-        <div class="me-7 mt-1">
+        <div class="">
             @php              
                 $title = 'Daftar Pengguna';
                 $description = 'Halaman ini berisi daftar pengguna yang dapat Anda kelola.';
@@ -44,7 +44,7 @@
             @endphp              
 
             <div id="table"
-                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-gray-900 shadow-md rounded-xl mb-2">
+                class="relative flex flex-col w-full  h-full min-h-[54rem] text-gray-700 bg-white border border-gray-900 shadow-md rounded-xl mb-2">
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                         <div>
@@ -204,44 +204,44 @@
                                 <label for="addUsername"
                                     class="block text-sm font-medium text-gray-700">Username</label>
                                 <input type="text" name="name" id="addUsername"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500"
                                     required>
                             </div>
                             <div class="mb-4">
                                 <label for="addEmail" class="block text-sm font-medium text-gray-700">Email</label>
                                 <input type="email" name="email" id="addEmail"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500"
                                     required>
                             </div>
                             <div class="mb-4">
                                 <label for="addFullname" class="block text-sm font-medium text-gray-700">Nama
                                     Lengkap</label>
                                 <input type="text" name="fullname" id="addFullname"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500">
                             </div>
                             <div class="mb-4">
                                 <label for="addPassword"
                                     class="block text-sm font-medium text-gray-700">Password</label>
                                 <input type="password" name="password" id="addPassword"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500"
                                     required>
                             </div>
                             <div class="mb-4">
                                 <label for="addNIP" class="block text-sm font-medium text-gray-700">NIP</label>
                                 <input type="text" name="nip" id="addNIP"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500">
                             </div>
                             <div class="mb-4">
                                 <label for="addTelepon" class="block text-sm font-medium text-gray-700">Nomor
                                     Telepon</label>
                                 <input type="text" name="no_telepon" id="addTelepon"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500">
                             </div>
                             <div class="mb-4">
                                 <label for="addUnitKerja" class="block text-sm font-medium text-gray-700">Unit
                                     Kerja</label>
                                 <select name="unitkerja_id" id="addUnitKerja"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500">
                                     <option value="">Pilih Unit Kerja</option>
                                     @foreach($unitKerjas as $unitKerja)      
                                         <option value="{{ $unitKerja->id }}">{{ $unitKerja->nama_unit_kerja }}</option>
@@ -251,7 +251,7 @@
                             <div class="mb-4">
                                 <label for="addRole" class="block text-sm font-medium text-gray-700">Role</label>
                                 <select name="role" id="addRole"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500"
                                     required>
                                     <option value="">Pilih Role</option>
                                     <option value="admin">Admin</option>
@@ -289,14 +289,14 @@
                                 <label for="editUsername"
                                     class="block text-sm font-medium text-gray-700">Username</label>
                                 <input type="text" name="name" id="editUsername"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                     required>
                             </div>
 
                             <div class="mb-4">
                                 <label for="editEmail" class="block text-sm font-medium text-gray-700">Email</label>
                                 <input type="email" name="email" id="editEmail"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                     required>
                             </div>
 
@@ -304,34 +304,34 @@
                                 <label for="editFullname" class="block text-sm font-medium text-gray-700">Nama
                                     Lengkap</label>
                                 <input type="text" name="fullname" id="editFullname"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 p-2 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div class="mb-4">
                                 <label for="editPassword" class="block text-sm font-medium text-gray-700">Password
                                     (biarkan kosong jika tidak ingin mengubah)</label>
                                 <input type="password" name="password" id="editPassword"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div class="mb-4">
                                 <label for="editNIP" class="block text-sm font-medium text-gray-700">NIP</label>
                                 <input type="text" name="nip" id="editNIP"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div class="mb-4">
                                 <label for="editTelepon" class="block text-sm font-medium text-gray-700">Nomor
                                     Telepon</label>
                                 <input type="text" name="no_telepon" id="editTelepon"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div class="mb-4">
                                 <label for="editUnitKerja" class="block text-sm font-medium text-gray-700">Unit
                                     Kerja</label>
                                 <select name="unit_kerja_id" id="editUnitKerja"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500">
                                     <option value="">Pilih Unit Kerja</option>
                                     @foreach($unitKerjas as $unitKerja)        
                                         <option value="{{ $unitKerja->id }}">{{ $unitKerja->nama_unit_kerja }}</option>
@@ -342,7 +342,7 @@
                             <div class="mb-4">
                                 <label for="editRole" class="block text-sm font-medium text-gray-700">Role</label>
                                 <select name="role" id="editRole"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 p-2 focus:border-indigo-500"
                                     required>
                                     <option value="">Pilih Role</option>
                                     <option value="admin">Admin</option>

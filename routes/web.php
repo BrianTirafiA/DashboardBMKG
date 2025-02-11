@@ -47,6 +47,10 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
     Route::view('/qcdashboard', 'home');
     Route::view('/home', 'home');
     Route::view('/dashboard', 'dashboard');
+    Route::resource('/users', UserControllerForAdmin::class);
+    Route::get('/users', [UserControllerForAdmin::class, 'index'])->name('users.index');
+    Route::get('/unitkerja', [UnitKerjaController::class, 'adminindex'])->name('unitkerja.index');
+    Route::get('/unitkerja', [UnitKerjaController::class, 'search'])->name('unitkerja.search');
 
 
     // Route::get('/profile', [UserControllerForUpdateData::class, 'index'])->name('profileadmin.index');   
@@ -63,9 +67,6 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('rack/{rack}', [RackController::class, 'show'])->name('rack.show');
         Route::delete('/rack/delete/{rack}', [RackController::class, 'destroy'])->name('rack.destroy');
 
-        Route::view('/report', 'itAsset.report');
-        Route::view('/maintenance', 'itAsset.maintenance');
-        Route::view('/log', 'itAsset.log');
         Route::Resource('/device', DeviceController::class);
         Route::Resource('/power', RakPanelController::class);
         Route::resource('rak', RackController::class);
@@ -115,11 +116,8 @@ Route::prefix('admin')->middleware(OnlyAdminMiddleware::class)->group(function (
         Route::get('/kategori', [ItemCategoryController::class, 'index'])->name('kategori.index');
         Route::resource('/lokasi', ItemLocationController::class);
         Route::get('/lokasi', [ItemLocationController::class, 'locationindex'])->name('location.index');
-        Route::resource('/users', UserControllerForAdmin::class);
-        Route::get('/users', [UserControllerForAdmin::class, 'index'])->name('users.index');
-        Route::get('/unitkerja', [UnitKerjaController::class, 'adminindex'])->name('unitkerja.index');
         Route::get('/edit-faq', [PertanyaanController::class, 'adminindex'])->name('faq.index');
-        Route::get('/unitkerja', [UnitKerjaController::class, 'search'])->name('unitkerja.search');
+  
     });
 });
 

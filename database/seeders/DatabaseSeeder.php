@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             UnitKerjaSeeder::class,
+            CategoriesTableSeeder::class,
+            ItemLocationsTableSeeder::class,
+            ItemBrandsTableSeeder::class,
+            StatusesTableSeeder::class,
+            ItemDetailsTableSeeder::class,
             RackTypeSeeder::class,
             RackAttributeSeeder::class,
             RackStatusSeeder::class,

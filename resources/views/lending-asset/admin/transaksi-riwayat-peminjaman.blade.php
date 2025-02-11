@@ -25,7 +25,7 @@
             @endphp      
 
             <div id="table"
-                class="relative flex flex-col w-full h-full min-h-[54rem] text-gray-700 bg-white border border-gray-900 shadow-md rounded-xl mb-2">
+                class="relative flex flex-col w-full h-full max-h-[54rem] text-gray-700 bg-white border border-gray-900 shadow-md rounded-xl mb-2">
                 <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none">
                     <div class="flex items-center justify-between gap-8 mb-4 ms-5 mt-2">
                         <div>

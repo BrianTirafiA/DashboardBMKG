@@ -16,45 +16,60 @@ class ItemDetailsTableSeeder extends Seeder
     {  
         DB::table('item_details')->insert([  
             [  
-                'nama_item' => 'Item A',  
-                'type_item' => 'Tipe 1',  
+                'nama_item' => 'ArcGis',  
+                'type_item' => 'Lisensi Terbatas',  
                 'brand_item_id' => 1, // Pastikan ID ini ada di tabel item_brands  
                 'tanggal_pengadaan' => '2025-01-01',  
-                'nama_vendor' => 'Vendor A',  
-                'jumlah_item' => 100,  
+                'nama_vendor' => 'ESRI Indonesia',  
+                'jumlah_item' => 6,  
                 'kategori_item_id' => 1, // Pastikan ID ini ada di tabel item_categories  
                 'status_item_id' => 1, // Pastikan ID ini ada di tabel item_statuses  
                 'lokasi_item_id' => 1, // Pastikan ID ini ada di tabel item_locations  
-                'created_at' => now(),  
-                'updated_at' => now(),  
             ],  
             [  
-                'nama_item' => 'Item B',  
-                'type_item' => 'Tipe 2',  
-                'brand_item_id' => 2, // Pastikan ID ini ada di tabel item_brands  
-                'tanggal_pengadaan' => '2025-01-02',  
-                'nama_vendor' => 'Vendor B',  
-                'jumlah_item' => 200,  
-                'kategori_item_id' => 2, // Pastikan ID ini ada di tabel item_categories  
-                'status_item_id' => 2, // Pastikan ID ini ada di tabel item_statuses  
-                'lokasi_item_id' => 2, // Pastikan ID ini ada di tabel item_locations  
-                'created_at' => now(),  
-                'updated_at' => now(),  
-            ],  
+                'nama_item' => 'Map Server',  
+                'type_item' => 'API',  
+                'brand_item_id' => 2,  
+                'tanggal_pengadaan' => '2025-01-01',  
+                'nama_vendor' => 'Pusat Database',  
+                'jumlah_item' => 1,  
+                'kategori_item_id' => 3, 
+                'status_item_id' => 1,  
+                'lokasi_item_id' => 1, 
+            ], 
             [  
-                'nama_item' => 'Item C',  
-                'type_item' => 'Tipe 3',  
-                'brand_item_id' => 3, // Pastikan ID ini ada di tabel item_brands  
-                'tanggal_pengadaan' => '2025-01-03',  
-                'nama_vendor' => 'Vendor C',  
-                'jumlah_item' => 150,  
-                'kategori_item_id' => 1, // Pastikan ID ini ada di tabel item_categories  
-                'status_item_id' => 1, // Pastikan ID ini ada di tabel item_statuses  
-                'lokasi_item_id' => 3, // Pastikan ID ini ada di tabel item_locations  
-                'created_at' => now(),  
-                'updated_at' => now(),  
-            ],  
-            // Tambahkan lebih banyak data sesuai kebutuhan  
+                'nama_item' => 'BMKGSoft',  
+                'type_item' => 'API',  
+                'brand_item_id' => 2,  
+                'tanggal_pengadaan' => '2025-01-01',  
+                'nama_vendor' => 'Pusat Database',  
+                'jumlah_item' => 1,  
+                'kategori_item_id' => 3, 
+                'status_item_id' => 1,  
+                'lokasi_item_id' => 1, 
+            ], 
+            [  
+                'nama_item' => 'AWSCenter',  
+                'type_item' => 'API',  
+                'brand_item_id' => 2,  
+                'tanggal_pengadaan' => '2025-01-01',  
+                'nama_vendor' => 'Pusat Database',  
+                'jumlah_item' => 1,  
+                'kategori_item_id' => 3, 
+                'status_item_id' => 1,  
+                'lokasi_item_id' => 1, 
+            ], 
+            [  
+                'nama_item' => 'Metadata Oscar',
+                'type_item' => 'API',
+                'brand_item_id' => 2,
+                'tanggal_pengadaan' => '2025-01-01',
+                'nama_vendor' => 'Pusat Database', 
+                'jumlah_item' => 1,
+                'kategori_item_id' => 3,
+                'status_item_id' => 1,
+                'lokasi_item_id' => 1, 
+            ], 
         ]);  
     }  
 }  

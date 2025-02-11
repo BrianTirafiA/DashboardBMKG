@@ -7,9 +7,9 @@
     <title>Daftar Unit Kerja - Admin</title>
 </head>
 
-<x-lend-layout-template>
+<x-layout-user-upt-template>
     <div>
-        <div class="me-7 mt-1">
+        <div class="mt-1">
             @php              
                             $title = 'Daftar Unit Kerja / UPT';
                 $description = 'Halaman ini berisi daftar Unit Kerja / UPT yang dapat Anda kelola.';
@@ -35,7 +35,7 @@
 
                         <div class="flex flex-col me-5 gap-2 shrink-0 sm:flex-row">
                             <div class="w-full md:w-72">
-                                <form action="{{ route('unitkerja.search') }}" method="GET"
+                                <form action="{{ route('unitkerja.index') }}" method="GET"
                                     class="relative h-10 w-full min-w-[200px] bg-white">
                                     <input id="searchInput" name="search"
                                         class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 !pr-9 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
@@ -185,14 +185,14 @@
                             <label for="addnama_unit_kerja" class="block text-sm font-medium text-gray-700">Unit Kerja /
                                 UPT</label>
                             <input type="text" name="nama_unit_kerja" id="addnama_unit_kerja"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 required>
                         </div>
 
                         <div class="mb-4">
                             <label for="addalamat" class="block text-sm font-medium text-gray-700">Jawaban</label>
                             <textarea name="alamat" id="addalamat" rows="4"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 required></textarea>
                         </div>
 
@@ -219,19 +219,21 @@
                     <form id="editForm" action="{{ route('unitkerja.update', '') }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
-                        @method('PUT')                         <input type="hidden" name="id" id="editUnitKerjaId"> <!-- Input tersembunyi untuk ID -->
+                        @method('PUT')                         
+                        
+                        <input type="hidden" name="id" id="editUnitKerjaId"> <!-- Input tersembunyi untuk ID -->
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Unit Kerja / UPT</label>
                             <input type="text" name="nama_unit_kerja" id="editnama_unit_kerja"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 required placeholder="Masukkan Unit Kerja / UPT">
                         </div>
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Jawaban</label>
                             <textarea name="alamat" id="editalamat" rows="4"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 required placeholder="Masukkan Jawaban"></textarea>
                         </div>
 
@@ -337,4 +339,4 @@
         });              
     </script>
 
-</x-lend-layout-template>
+</x-layout-user-upt-template>

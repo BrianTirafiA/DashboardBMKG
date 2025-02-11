@@ -59,7 +59,7 @@ class RackController extends Controller
         }
 
         // Redirect kembali dengan pesan sukses
-        return redirect('/admin/itasset/dashboard')->with('success', 'Perubahan berhasil disimpan!');
+        return redirect('/admin/itAsset/dashboard')->with('success', 'Perubahan berhasil disimpan!');
     }
 
     public function show($id)
@@ -162,7 +162,7 @@ class RackController extends Controller
     public function showAllReports()
     {
         $racks = Rack::all(); // Ambil semua rak dari database
-        return view('itasset.report', compact('racks'));
+        return view('itAsset.report', compact('racks'));
     }
     
 }

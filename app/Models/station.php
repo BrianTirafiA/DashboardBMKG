@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class station extends Model
+class Station extends Model
 {
     use HasFactory;
     protected $table = 'station_flag_summary'; // The name of the view

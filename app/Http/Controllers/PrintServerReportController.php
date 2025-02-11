@@ -164,7 +164,7 @@ class PrintServerReportController extends Controller
         $formattedData = collect($formattedData)->sortBy('No')->values()->toArray();
 
         // Kirim ke view
-        return view('itasset.report-server-print', compact('formattedData', 'rack'));
+        return view('itAsset.report-server-print', compact('formattedData', 'rack'));
     }
 
 }

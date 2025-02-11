@@ -20,7 +20,7 @@ WITH aggregated_data AS (
 		long_station,
 		latt_station,
 		nama_propinsi,
-        DATE(tanggal) AS date_only,
+        TO_CHAR(TO_DATE(DATE(tanggal)::TEXT, 'YYYY-MM-DD'), 'YYYY-MM-DD')::DATE AS date_only,
         COUNT(*) AS total_records,
 
         -- Calculate counts for rr_flag (values 0-9)

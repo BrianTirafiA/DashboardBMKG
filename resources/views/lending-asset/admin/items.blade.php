@@ -25,7 +25,7 @@
 @endif
 
 @php  
-        use App\Models\ItemCategory;
+            use App\Models\ItemCategory;
     use App\Models\ItemLocation;
     use App\Models\ItemStatus;
     use App\Models\ItemBrand;
@@ -41,7 +41,7 @@
     <div>
         <div class="me-7 mt-1">
             @php                  
-                $title = 'Daftar Item Terdaftar';
+                                $title = 'Daftar Item Terdaftar';
                 $description = 'Halaman ini berisi daftar item yang terdaftar yang dapat Anda kelola.';
                 $add = 'Tambah Item Baru';
                 $columns = [
@@ -160,21 +160,21 @@
                                                     <!-- Tombol Edit -->
                                                     <button type="button" class="text-blue-500 flex items-center gap-2"
                                                         onclick="openEditModal(
-                                                            '{{ $itemDetail->id }}', 
-                                                            '{{ $itemDetail->nama_item }}', 
-                                                            '{{ $itemDetail->type_item }}', 
-                                                             '{{ $itemDetail->description }}', 
-                                                            '{{ $itemDetail->brand_item_id }}', 
-                                                            '{{ $itemDetail->tanggal_pengadaan }}', 
-                                                            '{{ $itemDetail->nama_vendor }}', 
-                                                            '{{ $itemDetail->jumlah_item }}', 
-                                                            '{{ $itemDetail->kategori_item_id }}', 
-                                                            '{{ $itemDetail->status_item_id }}', 
-                                                            '{{ $itemDetail->lokasi_item_id }}', 
-                                                            '{{ asset('storage/' . $itemDetail->image1) }}', 
-                                                            '{{ asset('storage/' . $itemDetail->image2) }}', 
-                                                            '{{ asset('storage/' . $itemDetail->image3) }}', 
-                                                            '{{ asset('storage/' . $itemDetail->image4) }}')">
+                                                                '{{ $itemDetail->id }}', 
+                                                                '{{ $itemDetail->nama_item }}', 
+                                                                '{{ $itemDetail->type_item }}', 
+                                                                 '{{ $itemDetail->description }}', 
+                                                                '{{ $itemDetail->brand_item_id }}', 
+                                                                '{{ $itemDetail->tanggal_pengadaan }}', 
+                                                                '{{ $itemDetail->nama_vendor }}', 
+                                                                '{{ $itemDetail->jumlah_item }}', 
+                                                                '{{ $itemDetail->kategori_item_id }}', 
+                                                                '{{ $itemDetail->status_item_id }}', 
+                                                                '{{ $itemDetail->lokasi_item_id }}', 
+                                                                '{{ asset('storage/' . $itemDetail->image1) }}', 
+                                                                '{{ asset('storage/' . $itemDetail->image2) }}', 
+                                                                '{{ asset('storage/' . $itemDetail->image3) }}', 
+                                                                '{{ asset('storage/' . $itemDetail->image4) }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                             fill="currentColor" class="bi bi-pencil-square"
                                                             viewBox="0 0 16 16">
@@ -257,11 +257,11 @@
                 <div id="addModal"
                     class="fixed inset-0 z-50 hidden bg-gray-800 bg-opacity-50 flex items-center justify-center">
                     <div class="bg-white rounded-lg p-6 w-1/3">
-                        <h3 class="text-lg font-bold mb-4">Tambah Item Baru</h3>
+                        <h3 class="text-lg text-center font-bold mb-4">Tambah Item Baru</h3>
                         <form id="addForm" action="{{ route('items.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
-                            <div class="flex flex-row w-full space-x-8 justify-center">
+                            <div class="flex w-full space-x-8 justify-center">
                                 <div class="w-1/2">
                                     <div class="mb-4">
                                         <label for="addNamaItem"
@@ -309,6 +309,9 @@
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                             placeholder="Tambahkan Nama Vendor Baru">
                                     </div>
+                                </div>
+
+                                <div class="w-1/2">
                                     <div class="mb-4">
                                         <label for="addJumlahItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Jumlah Item</label>
@@ -316,10 +319,6 @@
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                             placeholder="Tambahkan Jumlah Item Baru">
                                     </div>
-
-                                </div>
-
-                                <div class="w-1/2">
                                     <div class="mb-4">
                                         <label for="addKategoriItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Kategori Item</label>
@@ -359,27 +358,10 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="addImage1"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 1</label>
+                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar
+                                            Item/Layanan</label>
                                         <input type="file" name="image1" id="addImage1"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="addImage2"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 2</label>
-                                        <input type="file" name="image2" id="addImage2"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="addImage3"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
-                                        <input type="file" name="image3" id="addImage3"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="addImage4"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 4</label>
-                                        <input type="file" name="image4" id="addImage4"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                            class="block w-full text-sm text-gray-900 border p-2 border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                     </div>
                                 </div>
                             </div>
@@ -407,38 +389,36 @@
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT') <input type="hidden" name="id" id="editItemId">
-
-                            <div class="flex flex-row w-full space-x-10 justify-center">
+                            <div class="flex w-full space-x-10 justify-center">
                                 <div class="w-1/2">
                                     <div class="mb-4">
                                         <label for="editNamaItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Nama Item</label>
                                         <input type="text" name="nama_item" id="editNamaItem"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Nama Item Terbaru" required>
+                                            placeholder="Tambahkan Nama Item Baru">
                                     </div>
                                     <div class="mb-4">
                                         <label for="editTypeItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Tipe Item</label>
                                         <input type="text" name="type_item" id="editTypeItem"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Tipe Item Terbaru" required>
+                                            placeholder="Tambahkan Tipe Item Baru">
                                     </div>
                                     <div class="mb-4">
                                         <label for="editDescription"
                                             class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
                                         <input type="text" name="description" id="editDescription"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Tipe Item Terbaru" required>
+                                            placeholder="Tambahkan Tipe Item Baru">
                                     </div>
                                     <div class="mb-4">
                                         <label for="editBrandItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Merek Item</label>
                                         <select name="brand_item_id" id="editBrandItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
+                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600">
                                             <option value="">Pilih Merek</option>
-                                            @foreach($item_brands as $itemBrand)                                        
+                                            @foreach($item_brands as $itemBrand)    
                                                 <option value="{{ $itemBrand->id }}">{{ $itemBrand->name_brand }}</option>
                                             @endforeach
                                         </select>
@@ -455,24 +435,26 @@
                                             class="block text-sm font-medium text-gray-700 mb-2">Nama Vendor</label>
                                         <input type="text" name="nama_vendor" id="editNamaVendor"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Nama Vendor Terbaru">
+                                            placeholder="Tambahkan Nama Vendor Baru">
                                     </div>
+                                </div>
+
+                                <div class="w-1/2">
                                     <div class="mb-4">
                                         <label for="editJumlahItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Jumlah Item</label>
                                         <input type="number" name="jumlah_item" id="editJumlahItem"
                                             class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            placeholder="Tambahkan Jumlah Item Terbaru" required>
+                                            placeholder="Tambahkan Jumlah Item Baru">
                                     </div>
                                     <div class="mb-4">
                                         <label for="editKategoriItem"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Kategori
-                                            Item</label>
+                                            class="block text-sm font-medium text-gray-700 mb-2">Kategori Item</label>
                                         <select name="kategori_item_id" id="editKategoriItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
+                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600">
                                             <option value="">Pilih Kategori</option>
-                                            @foreach($item_categories as $itemCategory)                                         <option value="{{ $itemCategory->id }}">{{ $itemCategory->name_category }}  
+                                            @foreach($item_categories as $itemCategory)    
+                                                <option value="{{ $itemCategory->id }}">{{ $itemCategory->name_category }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -481,10 +463,10 @@
                                         <label for="editStatusItem"
                                             class="block text-sm font-medium text-gray-700 mb-2">Status Item</label>
                                         <select name="status_item_id" id="editStatusItem"
-                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                                            required>
+                                            class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-md outline-blue-600">
                                             <option value="">Pilih Status</option>
-                                            @foreach($item_statuses as $itemStatus)                                          <option value="{{ $itemStatus->id }}">{{ $itemStatus->name_status }}  
+                                            @foreach($item_statuses as $itemStatus)    
+                                                <option value="{{ $itemStatus->id }}">{{ $itemStatus->name_status }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -502,44 +484,15 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-
-                                <div>
-                                    <div class="mb-4">
-                                        <label for="editImage1"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 1</label>
-                                        <input type="file" name="image1" id="editImage1"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                        <!-- Display current image if exists -->
+                                    <div class="mb-4 flex">
                                         <img id="currentImage1" src="" alt="Current Image 1"
-                                            class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editImage2"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 2</label>
-                                        <input type="file" name="image2" id="editImage2"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                        <!-- Display current image if exists -->
-                                        <img id="currentImage2" src="" alt="Current Image 2"
-                                            class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editImage3"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
-                                        <input type="file" name="image3" id="editImage3"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                        <!-- Display current image if exists -->
-                                        <img id="currentImage3" src="" alt="Current Image 3"
-                                            class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="editImage4"
-                                            class="block text-sm font-medium text-gray-700 mb-2">Gambar 4</label>
-                                        <input type="file" name="image4" id="editImage4"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                        <!-- Display current image if exists -->
-                                        <img id="currentImage4" src="" alt="Current Image 4"
-                                            class="w-32 h-32 border border-gray-300 p-2 rounded-2xl mx-auto">
+                                            class=" w-36 h-36 border border-gray-300 p-2 rounded-2xl mx-auto">
+                                        <div>
+                                            <label for="editImage1"
+                                                class="block text-sm font-medium text-gray-700 mb-2">Gambar Item/Layanan</label>
+                                            <input type="file" name="image1" id="editImage1"
+                                                class="block w-full text-sm text-gray-900 border p-2 border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -611,7 +564,7 @@
             document.getElementById('addModal').classList.add('hidden');
         });
 
-        function openEditModal(id, nama_item, type_item, description, brand_item_id, tanggal_pengadaan, nama_vendor, jumlah_item, kategori_item_id, status_item_id, lokasi_item_id, image1, image2, image3, image4) {
+        function openEditModal(id, nama_item, type_item, description, brand_item_id, tanggal_pengadaan, nama_vendor, jumlah_item, kategori_item_id, status_item_id, lokasi_item_id, image1) {
             document.getElementById('editItemId').value = id; // Set ID item        
             document.getElementById('editNamaItem').value = nama_item; // Set value Nama Item        
             document.getElementById('editTypeItem').value = type_item; // Set value Tipe Item        
@@ -629,9 +582,6 @@
 
             // Set current images    
             document.getElementById('currentImage1').src = image1 ? image1 : '{{ asset('assets/default-profile.png') }}';
-            document.getElementById('currentImage2').src = image2 ? image2 : '{{ asset('assets/default-profile.png') }}';
-            document.getElementById('currentImage3').src = image3 ? image3 : '{{ asset('assets/default-profile.png') }}';
-            document.getElementById('currentImage4').src = image4 ? image4 : '{{ asset('assets/default-profile.png') }}';
 
             // Tampilkan modal        
             document.getElementById('editModal').classList.remove('hidden');

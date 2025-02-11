@@ -20,11 +20,11 @@ class UnitKerjaController extends Controller
   
         // Jika query kosong, kembalikan semua UnitKerja  
         if (empty($query)) {  
-            $unitkerjas = UnitKerja::paginate(8);  
+            $unitkerjas = UnitKerja::paginate(5);  
         } else {  
             $unitkerjas = UnitKerja::where('question', 'ILIKE', "%{$query}%")  
                 ->orWhere('answer', 'ILIKE', "%{$query}%")  
-                ->paginate(8);  
+                ->paginate(5);  
         }  
   
         return view('lending-asset.admin.unitkerja', compact('unitkerjas', 'query'));    
@@ -41,7 +41,7 @@ class UnitKerjaController extends Controller
         } else {  
             $unitkerjas = UnitKerja::where('nama_unit_kerja', 'ILIKE', "%{$query}%")  
                 ->orWhere('alamat', 'ILIKE', "%{$query}%")  
-                ->paginate(10);  
+                ->paginate(8);  
         }  
     
         return view('lending-asset.admin.unitkerja', compact('unitkerjas', 'query')); // Pastikan 'query' ada di sini  

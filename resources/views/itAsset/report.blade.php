@@ -20,11 +20,6 @@
                     <h3 class="font-semibold text-lg mb-3">{{ $rack->name }}</h3>
 
                     <div class="flex flex-col gap-3 w-full items-center">
-                        <a href="{{ route('rack.report.show', $rack->id) }}"
-                            class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-5 rounded w-1/2">
-                            Lihat Laporan
-                        </a>
-
                         <a href="{{ route('rack.report.download', $rack->id) }}"
                             class="bg-green-500 hover:bg-green-700 text-white text-sm font-bold py-2 px-5 rounded w-1/2">
                             Download Laporan

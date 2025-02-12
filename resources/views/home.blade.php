@@ -630,7 +630,7 @@
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Persentase Validasi Global', // Chart title
+                                        text: 'Persentase Validasi Keseluruhan', // Chart title
                                         font: {
                                             size: 16, // Title font size
                                             weight: 'bold', // Title font weight

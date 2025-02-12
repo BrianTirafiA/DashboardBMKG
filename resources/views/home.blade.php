@@ -96,25 +96,25 @@
 
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
                         <div>
-                            <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Data
+                            <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Instrument
                                 Type:</label>
-                            <select style="padding: 10px;" id="flagVal"
+                            <select style="padding: 10px;" id="TypeVal"
                                 class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                                <option style="padding: 10px;" value="overall_value">All Data Reading</option>
-                                @foreach($dropdownOptions['flags'] as $flag)
-                                    <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
+                                <option style="padding: 10px;" value="all">All Instrument</option>
+                                @foreach($dropdownOptions['machineTypes'] as $type)
+                                    <option value="{{ $type }}">{{ $type }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div>
-                            <label for="TypeVal" class="block text-sm font-medium text-gray-700">Select Machine
+                            <label for="flagVal" class="block text-sm font-medium text-gray-700">Select Parameter
                                 Type:</label>
-                            <select style="padding: 10px;" id="TypeVal"
+                            <select style="padding: 10px;" id="flagVal"
                                 class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                                <option style="padding: 10px;" value="all">All Machines</option>
-                                @foreach($dropdownOptions['machineTypes'] as $type)
-                                    <option value="{{ $type }}">{{ $type }}</option>
+                                <option style="padding: 10px;" value="overall_value">All Parameter Reading</option>
+                                @foreach($dropdownOptions['flags'] as $flag)
+                                    <option value="{{ $flag }}">{{ ucfirst(str_replace('_', ' ', $flag)) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -135,6 +135,44 @@
 
                 <div id="table" class="border border-[#64719b] rounded-xl mt- 6 mb-6" style="padding: 15px;">
                     <div id="map" class="rounded-xl"></div>
+                    <label class="mt- 6 mb-6">Keterangan Warna Station</label>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #6d9773; border-radius: 5px;"></span>
+                            <span>AWS (Automatic Weather Station)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #746bba; border-radius: 5px;"></span>
+                            <span>AAWS (Automatic Agroclimate Weather Station)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #200741; border-radius: 5px;"></span>
+                            <span>AWSSHIP (Automatic Weather Station for Ship)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #e1b431; border-radius: 5px;"></span>
+                            <span>ASRS (Automatic Solar Radiation Station)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #45bbe2; border-radius: 5px;"></span>
+                            <span>ARG (Automatic Rain Gauge)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #d9556a; border-radius: 5px;"></span>
+                            <span>Iklimmikro (Microclimate Monitoring)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span
+                                style="width: 10px; height: 10px; background-color: #bb8a52; border-radius: 5px;"></span>
+                            <span>Soil (Soil Monitoring Station)</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex flex-wrap lg:flex-nowrap justify-between items-start gap-6 mt-10 w-full"
@@ -299,9 +337,8 @@
                         // Color of pin
                         function getColor(value) {
                             const colors = [
-                                '#369bcf', '#28a79e', '#39b449', '#8cc63e',
-                                '#e1cf23', '#f8af3e', '#f7941f',
-                                '#ec5828', '#e91c23', '#b21a26',
+                                '#45bbe2', '#746bba', '#6d9773', '#bb8a52',
+                                '#200741', '#d9556a', '#e1b431', '#000000',
                             ];
                             return colors[value];
                         }
@@ -545,7 +582,7 @@
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Persentase Validasi Berdasarkan Tipe Mesin', // Bar chart title
+                                        text: 'Persentase Validasi Berdasarkan Tipe Instrumen', // Bar chart title
                                         font: {
                                             size: 16, // Title font size
                                             weight: 'bold', // Title font weight
@@ -646,7 +683,8 @@
                             const uniqueCounts = countUniqueStationsByType(rawData);
                             const labels = Object.keys(uniqueCounts);
                             const counts = Object.values(uniqueCounts);
-                            const colors = ['#369bcf', '#28a79e', '#39b449', '#8cc63e', '#e1cf23', '#f8af3e', '#f7941f'];
+                            const colors = ['#45bbe2', '#746bba', '#6d9773', '#e1b431',
+                                '#d9556a', '#200741', '#bb8a52',];
 
                             chart3Instance.data.labels = labels;
                             chart3Instance.data.datasets[0].data = counts;
@@ -700,7 +738,7 @@
                                         display: true,
                                         text: (ctx) => {
                                             const total = calculateTotal(ctx.chart.data.datasets[0].data);
-                                            return `Distribusi Mesin (Total=${total})`;
+                                            return `Distribusi Instrumen (Total=${total})`;
                                         }, // Dynamically updates the title
                                         font: {
                                             size: 16, // Title font size

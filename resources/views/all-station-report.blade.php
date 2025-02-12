@@ -112,8 +112,8 @@
     </div>
 
     <h1><strong>Pembacaan Data Seluruh Station</strong></h1>
-    <h3 style="color: gray;">Tipe Data: {{$selectedFlag}}</h3>
-    <h3 style="color: gray;">Tipe Alat: {{$type}}</h3>
+    <h3 style="color: gray;">Tipe Parameter: {{$selectedFlag}}</h3>
+    <h3 style="color: gray;">Tipe Instrumen: {{$type}}</h3>
     <h3 style="color: gray;">Provinsi: {{$province}}</h3>
 
     <div class="chart-container">

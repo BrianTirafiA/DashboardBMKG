@@ -114,7 +114,7 @@
     </div>
 
     <h1><strong>{{ $stationName }}</strong></h1>
-    <h3 style="color: gray;">Tipe Data: {{$selectedFlag}}</h3>
+    <h3 style="color: gray;">Tipe Parameter: {{$selectedFlag}}</h3>
 
     <h3 class="table-title">Detail Persentase Pembacaan Flagging</h3>
     <table id="flagging-table">

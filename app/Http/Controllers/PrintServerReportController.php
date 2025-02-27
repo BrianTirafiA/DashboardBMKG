@@ -87,7 +87,7 @@ class PrintServerReportController extends Controller
 
         $file_name = "Laporan Detail Rak {$rack->name} pada {$tanggal}.pdf";
 
-        $pdf = PDF::loadView('itasset.report-server-print', compact('formattedData', 'rack'))->setPaper('a4','landscape');
+        $pdf = PDF::loadView('itAsset.report-server-print', compact('formattedData', 'rack'))->setPaper('a4','landscape');
 
         return $pdf->stream($file_name);
     }
